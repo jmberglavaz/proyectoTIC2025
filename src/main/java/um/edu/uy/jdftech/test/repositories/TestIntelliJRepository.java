@@ -1,6 +1,6 @@
-package um.edu.uy.jdftech.repositories;
+package um.edu.uy.jdftech.test.repositories;
 
-import um.edu.uy.jdftech.entities.TestIntelliJ;
+import um.edu.uy.jdftech.test.TestIntelliJ;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

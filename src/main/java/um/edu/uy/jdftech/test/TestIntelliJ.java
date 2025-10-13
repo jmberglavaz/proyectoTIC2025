@@ -1,4 +1,4 @@
-package um.edu.uy.jdftech.entities;
+package um.edu.uy.jdftech.test;
 
 import jakarta.persistence.*;
 
