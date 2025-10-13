@@ -1,4 +1,4 @@
-package um.edu.uy.jdftech.entities;
+package um.edu.uy.jdftech.test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

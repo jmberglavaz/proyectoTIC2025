@@ -1,13 +1,13 @@
-package um.edu.uy.jdftech.entities;
+package um.edu.uy.jdftech;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import um.edu.uy.jdftech.repositories.TestIntelliJRepository;
+import um.edu.uy.jdftech.test.repositories.TestIntelliJRepository;
 
-import um.edu.uy.jdftech.entities.TestIntelliJ;
+import um.edu.uy.jdftech.test.TestIntelliJ;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
