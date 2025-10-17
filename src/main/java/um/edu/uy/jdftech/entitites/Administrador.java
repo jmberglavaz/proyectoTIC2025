@@ -13,11 +13,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Administrador {
-
-    @Id
+public class Administrador extends Usuario {
     @Column(name = "ADMIN_ID")
     private Long adminId;
-
-    private Usuario usuario;
 }

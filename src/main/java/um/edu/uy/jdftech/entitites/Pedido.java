@@ -93,4 +93,8 @@ public class Pedido {
         this.acompanamientos = new HashSet<>();
         this.bebidas = new HashSet<>();
     }
+
+    public void calculateTotal() {
+        this.totalCost = bebidas.stream().mapToDouble(Bebida::getPrice).sum() + acompanamientos.stream().mapToDouble(Acompanamiento::getPrice).sum(); // agregar pizza y hamburguesa
+    }
 }

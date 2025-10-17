@@ -27,4 +27,5 @@ public class Usuario {
     @Temporal(TemporalType.DATE)
     @Column(name = "BIRTH_DATE", nullable = false)
     private Date birthDate;
+
 }
