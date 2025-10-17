@@ -1,0 +1,37 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Motocicleta de delivery -->
+  <g>
+    <!-- Llanta trasera -->
+    <circle cx="25" cy="75" r="12" fill="#333" stroke="#000" stroke-width="2"/>
+    <circle cx="25" cy="75" r="8" fill="#666"/>
+    
+    <!-- Llanta delantera -->
+    <circle cx="75" cy="75" r="12" fill="#333" stroke="#000" stroke-width="2"/>
+    <circle cx="75" cy="75" r="8" fill="#666"/>
+    
+    <!-- Marco de la moto -->
+    <path d="M30 75 L70 75" stroke="#8B4513" stroke-width="3"/>
+    <path d="M70 75 L70 55" stroke="#8B4513" stroke-width="3"/>
+    <path d="M70 55 L50 45" stroke="#8B4513" stroke-width="3"/>
+    
+    <!-- Asiento -->
+    <ellipse cx="35" cy="70" rx="8" ry="4" fill="#8B4513"/>
+    
+    <!-- Manubrio -->
+    <path d="M50 45 L50 40" stroke="#333" stroke-width="2"/>
+    <path d="M45 40 L55 40" stroke="#333" stroke-width="2"/>
+    
+    <!-- Caja de delivery -->
+    <rect x="20" y="50" width="20" height="15" fill="#FF6B35" stroke="#E55A2B" stroke-width="1"/>
+    <rect x="22" y="52" width="16" height="11" fill="#FF8C42"/>
+    
+    <!-- Logo en la caja -->
+    <text x="30" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#fff">🍕</text>
+    
+    <!-- Escape -->
+    <path d="M25 75 L20 80" stroke="#666" stroke-width="2"/>
+  </g>
+</svg>
+
+
+

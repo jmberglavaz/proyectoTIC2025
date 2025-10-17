@@ -1,0 +1,211 @@
+/* =========================
+   Botones
+   ========================= */
+   .btn{
+    --btn-bg: var(--color-primary);
+    --btn-bg-hover: var(--color-primary-600);
+    --btn-color: #fff;
+    --btn-border: transparent;
+  
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .7rem 1rem;
+    border: 1px solid var(--btn-border);
+    border-radius: var(--radius-md);
+    background: var(--btn-bg);
+    color: var(--btn-color);
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: background .15s ease, color .15s ease, border-color .15s ease, transform .02s ease;
+    text-decoration: none;
+  }
+  .btn:hover{ background: var(--btn-bg-hover); text-decoration: none; }
+  .btn:active{ transform: translateY(1px); }
+  .btn:disabled{ opacity: .6; cursor: not-allowed; }
+  
+  /* variantes */
+  .btn--primary { /* usa defaults */ }
+  .btn--secondary{
+    --btn-bg: var(--color-accent);
+    --btn-bg-hover: var(--color-accent-600);
+  }
+  .btn--ghost{
+    --btn-bg: transparent;
+    --btn-bg-hover: color-mix(in oklab, var(--color-primary) 12%, transparent);
+    --btn-color: var(--color-primary);
+    --btn-border: var(--color-primary);
+    box-shadow: none;
+  }
+  .btn--danger{
+    --btn-bg: #b3261e;
+    --btn-bg-hover: #992019;
+  }
+  
+  /* Links estilo texto (para acciones pequeñas) */
+  .link{
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .link:hover{ text-decoration: underline; }
+  .link--danger{ color: #b3261e; }
+  .inline-form{ display: inline; }
+  
+  /* =========================
+     Badges / etiquetas
+     ========================= */
+  .badge{
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 1.35rem; height: 1.35rem;
+    padding: 0 .4rem;
+    border-radius: 999px;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: .8rem; font-weight: 800;
+  }
+  
+  /* =========================
+     Cards genéricas
+     ========================= */
+  .card{
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-5);
+  }
+  .card--muted{
+    background: var(--color-muted);
+    border-style: dashed;
+  }
+  
+  /* =========================
+     Controles “option” (radio/checkbox bonitos)
+     ========================= */
+  .option{
+    user-select: none;
+    transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .option:hover{
+    border-color: color-mix(in oklab, var(--color-primary) 40%, var(--color-border));
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 10%, transparent);
+  }
+  .option input{
+    width: 1rem; height: 1rem;
+  }
+  .option--checkbox .option__label{
+    font-weight: 600;
+  }
+  
+  /* =========================
+     Cantidad (inputs numéricos)
+     ========================= */
+  .input--number{
+    text-align: center;
+  }
+  
+  /* =========================
+     Totales (dl estilizado)
+     ========================= */
+  .totals{
+    margin: 0;
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    display: grid;
+    gap: .5rem;
+  }
+  .totals__row{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+  }
+  .totals__row dt{ color: var(--color-text-soft); }
+  .totals__row dd{ margin: 0; font-weight: 700; }
+  .totals__row--total dt,
+  .totals__row--total dd{
+    font-size: 1.1rem;
+  }
+  .totals__row--total{
+    border-top: 1px dashed var(--color-border);
+    padding-top: .6rem;
+  }
+  
+  /* =========================
+     Cart / Checkout botones y pequeñas piezas
+     ========================= */
+  .cart-summary__actions,
+  .hero__actions{
+    display: flex; gap: var(--space-3); flex-wrap: wrap;
+  }
+  
+  /* =========================
+     Modales simples (si en algún momento los usan)
+     ========================= */
+  .modal{
+    position: fixed; inset: 0; display: none;
+    background: rgba(0,0,0,.35);
+    padding: var(--space-6);
+    z-index: 200;
+  }
+  .modal[open], .modal.is-open{ display: grid; place-items: center; }
+  .modal__content{
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-md);
+    padding: var(--space-6);
+    width: min(600px, 96vw);
+  }
+  
+  /* =========================
+     Estados / Helpers
+     ========================= */
+  .is-current{ color: var(--color-primary); }
+  .is-done{ color: var(--color-accent); }
+  .is-hidden{ display: none !important; }
+
+/* ====== Selección con radios en tarjeta/dirección ====== */
+.select-card {
+  align-items: flex-start;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.select-card input[type="radio"] {
+  margin: .1rem .5rem 0 0;
+}
+
+.select-card__body {
+  display: grid;
+  gap: .15rem;
+}
+
+.select-card__title {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.select-card__meta small {
+  color: var(--color-text-soft);
+}
+
+/* Resaltar la opción seleccionada (CSS :has) */
+.select-card:has(input[type="radio"]:checked) {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 12%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 4%, var(--color-surface));
+}
+
+/* Badge suave para "Seleccionada" */
+.badge--ghost {
+  background: color-mix(in oklab, var(--color-primary) 20%, transparent);
+  color: var(--color-primary);
+  font-weight: 700;
+}
