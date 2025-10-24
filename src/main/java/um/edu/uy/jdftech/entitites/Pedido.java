@@ -26,6 +26,10 @@ public class Pedido {
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente client;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "card_number", nullable = false)
+    private MedioDePago medioDePago;
+
     @Column(name = "ADDRESS")
     private String address;
 
@@ -87,6 +91,7 @@ public class Pedido {
     public Pedido(Cliente cliente) { // no le paso dirección xq las tendría que buscar entre las que el cliente ya tiene, o darle la opción de agregar otra
         this.client = cliente;
         this.date = LocalDateTime.now();
+        // Falta agregar medio de pago
         this.totalCost = 0.0;
         this.pizzas = new HashSet<>();
         this.hamburguesas = new HashSet<>();

@@ -1,16 +1,28 @@
-package um.edu.uy.jdftech.components;
+package um.edu.uy.jdftech.validators;
 
 import org.springframework.stereotype.Component;
+import um.edu.uy.jdftech.entitites.MedioDePago;
 
 import java.util.Date;
 
 @Component
 public class ValidacionDeMetodoDePago {
-    public boolean esTarjetaValida(Long nroDeTarjeta, int cvv, Date fechaDeVencimiento) {
-        if (validarNroDeTarjeta(nroDeTarjeta) && validarCVV(cvv, nroDeTarjeta) && validarFechaDeVencimiento(fechaDeVencimiento)) {
-            return true;
+    public ValidationResult validarTarjeta(MedioDePago medioDePago) {
+        ValidationResult result = new ValidationResult();
+
+        if (!validarNroDeTarjeta(medioDePago.getCardNumber())) {
+            result.addError("Número de tarjeta inválido");
         }
-        return false;
+
+        if (!validarCVV(medioDePago.getCvv(), medioDePago.getCardNumber())) {
+            result.addError("CVV inválido");
+        }
+
+        if (!validarFechaDeVencimiento(medioDePago.getExpirationDate())) {
+            result.addError("Tarjeta vencida");
+        }
+
+        return result;
     }
 
     private boolean validarFechaDeVencimiento(Date fechaDeVencimiento) {
