@@ -4,6 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import um.edu.uy.jdftech.entitites.Bebida;
 import um.edu.uy.jdftech.entitites.Cliente;
@@ -12,6 +14,8 @@ import um.edu.uy.jdftech.repositories.BebidaRepository;
 import um.edu.uy.jdftech.repositories.ClienteRepository;
 import um.edu.uy.jdftech.repositories.PedidoRepository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,5 +51,18 @@ public class PedidoService {
         pedido.calculateTotal();
 
         return pedidoRepository.save(pedido);
+    }
+
+    public List<Pedido> findByClienteId(Long clientId) {
+        return pedidoRepository.findByClientId(clientId);
+    }
+
+    public List<Pedido> getLast3OrdersByClient(Long clienteId) {
+        Pageable pageable = PageRequest.of(0, 3);
+        return pedidoRepository.getLast3OrdersByClient(clienteId, pageable);
+    }
+
+    public List<Pedido> findHistoricByClient(Long clienteId, LocalDateTime from, LocalDateTime to) {
+        return pedidoRepository.findHistoricByClient(clienteId, from, to);
     }
 }

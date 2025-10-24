@@ -29,7 +29,7 @@ public class Pedido {
     @Column(name = "ADDRESS")
     private String address;
 
-    @Column(nullable = false)
+    @Column(name = "DATE", nullable = false)
     private LocalDateTime date;
 
     @Column(name = "STATUS")
