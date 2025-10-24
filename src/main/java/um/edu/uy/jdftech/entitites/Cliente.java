@@ -2,15 +2,13 @@ package um.edu.uy.jdftech.entitites;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.Date;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "clientes")
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
+@SuperBuilder
 @AllArgsConstructor
 public class Cliente extends Usuario {
 }
