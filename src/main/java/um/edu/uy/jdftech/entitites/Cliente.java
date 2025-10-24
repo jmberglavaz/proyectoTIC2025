@@ -1,4 +1,14 @@
 package um.edu.uy.jdftech.entitites;
 
-public class Cliente {
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+@Entity
+@Table(name = "clientes")
+@Getter
+@Setter
+@SuperBuilder
+@AllArgsConstructor
+public class Cliente extends Usuario {
 }
