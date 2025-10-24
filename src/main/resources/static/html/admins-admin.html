@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PizzUM & BurgUM — Admin / Administradores</title>
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body>
+  <!-- Header admin -->
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="../html/index.html">
+        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
+        <span class="brand__name">PizzUM &amp; BurgUM</span>
+      </a>
+      <nav class="site-nav">
+        <a class="nav__link" href="../html/index-admin.html">Panel</a>
+        <a class="nav__link" href="../html/productos-admin.html">Productos</a>
+        <a class="nav__link" href="../html/pedidos-admin.html">Pedidos</a>
+        <a class="nav__link" href="../html/historial-admin.html">Historial</a>
+        <a class="nav__link is-active" href="../html/admins-admin.html">Administradores</a>
+        <a class="nav__link" href="../html/login.html">Cerrar sesión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Título -->
+    <section class="container section">
+      <h1>Administradores</h1>
+      <p class="form-hint">Alta y gestión de cuentas de administración.</p>
+    </section>
+
+    <!-- Alta de admin -->
+    <section class="container section">
+      <article class="card">
+        <h2>Crear nuevo administrador</h2>
+        <form class="form form--auth" method="post" action="#">
+          <fieldset class="form-section">
+            <legend class="visually-hidden">Datos del administrador</legend>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="adm_nombre">Nombre</label>
+                <input class="input" id="adm_nombre" name="nombre" type="text" required autocomplete="given-name">
+              </div>
+              <div class="form-group">
+                <label for="adm_apellido">Apellido</label>
+                <input class="input" id="adm_apellido" name="apellido" type="text" required autocomplete="family-name">
+              </div>
+              <div class="form-group form-group--full">
+                <label for="adm_email">Correo</label>
+                <input class="input" id="adm_email" name="email" type="email" required autocomplete="email">
+              </div>
+              <div class="form-group">
+                <label for="adm_pass">Contraseña</label>
+                <input class="input" id="adm_pass" name="password" type="password" required autocomplete="new-password">
+              </div>
+              <div class="form-group">
+                <label for="adm_pass2">Confirmar contraseña</label>
+                <input class="input" id="adm_pass2" name="password_confirm" type="password" required autocomplete="new-password">
+              </div>
+            </div>
+
+            <!-- Nota: todos los empleados son administradores (no hay roles diferenciales) -->
+            <p class="form-hint">Nota: todos los empleados tienen permisos de administrador.</p>
+
+            <div class="form-actions">
+              <button class="btn btn--primary" type="submit">Crear administrador</button>
+              <a class="btn btn--ghost" href="/html/index-admin.html">Cancelar</a>
+            </div>
+          </fieldset>
+        </form>
+      </article>
+    </section>
+
+    <!-- Listado de administradores (placeholders) -->
+    <section class="container section">
+      <article class="card">
+        <h2>Listado de administradores</h2>
+        <ul class="summary-list">
+          <!-- Admin 1 -->
+          <li style="display:grid;grid-template-columns:1fr auto;gap:var(--space-3);align-items:center;">
+            <div>
+              <strong>Juan Pérez</strong> — <small>juan.perez@empresa.com</small>
+            </div>
+            <div class="form-actions">
+              <!-- Acción Eliminar -->
+              <form class="inline-form" method="post" action="#">
+                <input type="hidden" name="admin_id" value="1">
+                <button class="link link--danger" type="submit">Eliminar</button>
+              </form>
+              <!-- Acción Restablecer contraseña -->
+              <form class="inline-form" method="post" action="#">
+                <input type="hidden" name="admin_id" value="1">
+                <button class="link" type="submit">Restablecer contraseña</button>
+              </form>
+            </div>
+          </li>
+
+          <!-- Admin 2 -->
+          <li style="display:grid;grid-template-columns:1fr auto;gap:var(--space-3);align-items:center;">
+            <div>
+              <strong>Ana López</strong> — <small>ana.lopez@empresa.com</small>
+            </div>
+            <div class="form-actions">
+              <form class="inline-form" method="post" action="#">
+                <input type="hidden" name="admin_id" value="2">
+                <button class="link link--danger" type="submit">Eliminar</button>
+              </form>
+              <form class="inline-form" method="post" action="#">
+                <input type="hidden" name="admin_id" value="2">
+                <button class="link" type="submit">Restablecer contraseña</button>
+              </form>
+            </div>
+          </li>
+
+          <!-- Admin 3 -->
+          <li style="display:grid;grid-template-columns:1fr auto;gap:var(--space-3);align-items:center;">
+            <div>
+              <strong>Pedro Silva</strong> — <small>pedro.silva@empresa.com</small>
+            </div>
+            <div class="form-actions">
+              <form class="inline-form" method="post" action="#">
+                <input type="hidden" name="admin_id" value="3">
+                <button class="link link--danger" type="submit">Eliminar</button>
+              </form>
+              <form class="inline-form" method="post" action="#">
+                <input type="hidden" name="admin_id" value="3">
+                <button class="link" type="submit">Restablecer contraseña</button>
+              </form>
+            </div>
+          </li>
+        </ul>
+
+        <!-- Paginación mínima (placeholder) -->
+        <nav class="form-actions" aria-label="Paginación" style="justify-content:flex-end;margin-top:var(--space-4);">
+          <a class="btn btn--ghost" href="#">Anterior</a>
+          <a class="btn btn--ghost" href="#">Siguiente</a>
+        </nav>
+      </article>
+    </section>
+
+    <section class="container section">
+      <div class="final-actions">
+        <a class="btn btn--secondary" href="../html/index-admin.html">Volver al panel</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <small>&copy; 2025 PizzUM &amp; BurgUM — Panel de administración</small>
+      <nav class="footer-nav">
+        <a href="#" class="footer__link">Ayuda</a>
+        <a href="#" class="footer__link">Términos</a>
+        <a href="#" class="footer__link">Privacidad</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

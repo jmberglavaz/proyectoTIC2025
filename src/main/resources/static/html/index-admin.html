@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PizzUM & BurgUM — Admin</title>
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body>
+  <!-- Header admin -->
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="../html/index.html">
+        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
+        <span class="brand__name">PizzUM &amp; BurgUM</span>
+      </a>
+      <nav class="site-nav">
+        <a class="nav__link is-active" href="../html/index-admin.html">Panel</a>
+        <a class="nav__link" href="../html/productos-admin.html">Productos</a>
+        <a class="nav__link" href="../html/pedidos-admin.html">Pedidos</a>
+        <a class="nav__link" href="../html/historial-admin.html">Historial</a>
+        <a class="nav__link" href="../html/admins-admin.html">Administradores</a>
+        <a class="nav__link" href="../html/login.html">Cerrar sesión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Título principal -->
+    <section class="container section">
+      <h1>Panel de administración</h1>
+      <p class="form-hint">Accesos rápidos para gestionar productos, pedidos, historial y administradores.</p>
+    </section>
+
+    <!-- Tarjetas verticales -->
+    <section class="container section">
+      <!-- Productos -->
+      <article class="card">
+        <h2>Productos</h2>
+        <p class="form-hint">
+          Agregar o quitar tipos de masa, salsas, quesos, toppings, hamburguesas base, bebidas, etc.
+        </p>
+        <div class="form-actions">
+          <a class="btn btn--primary" href="../html/productos-admin.html">Gestionar productos</a>
+        </div>
+      </article>
+
+      <!-- Pedidos (cambiar estado) -->
+      <article class="card">
+        <h2>Pedidos</h2>
+        <p class="form-hint">
+          Ver pedidos en curso y cambiar estado: en cola → en preparación → en camino → entregado.
+        </p>
+        <div class="form-actions">
+          <a class="btn btn--primary" href="../html/pedidos-admin.html">Abrir pedidos</a>
+        </div>
+      </article>
+
+      <!-- Historial con filtros -->
+      <article class="card">
+        <h2>Historial</h2>
+        <p class="form-hint">
+          Listado de pedidos históricos. Filtrar por rango de fechas y estado.
+        </p>
+        <div class="form-actions">
+          <a class="btn btn--primary" href="../html/historial-admin.html">Ver historial</a>
+        </div>
+      </article>
+
+      <!-- Administradores -->
+      <article class="card">
+        <h2>Administradores</h2>
+        <p class="form-hint">
+          Crear nuevos administradores y gestionar accesos.
+        </p>
+        <div class="form-actions">
+          <a class="btn btn--primary" href="../html/admins-admin.html">Gestionar administradores</a>
+        </div>
+      </article>
+    </section>
+
+    <!-- Cerrar sesión -->
+    <section class="container section">
+      <div class="final-actions">
+        <a class="btn btn--danger" href="../html/login.html">Cerrar sesión</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <small>&copy; 2025 PizzUM &amp; BurgUM — Panel de administración</small>
+      <nav class="footer-nav">
+        <a href="#" class="footer__link">Ayuda</a>
+        <a href="#" class="footer__link">Términos</a>
+        <a href="#" class="footer__link">Privacidad</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
