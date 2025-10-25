@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PizzUM & BurgUM — Pedido</title>
+
+  <!-- Hojas de estilo globales -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
+</head>
+<body class="theme-italian">
+  <!-- Header global -->
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" th:href="@{/}">
+        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+        <span class="brand__name">PizzUM &amp; BurgUM</span>
+      </a>
+      <nav class="site-nav">
+        <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
+        <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
+        <a class="nav__link" th:href="@{/carrito}">Carrito</a>
+        <a class="nav__link is-active" th:href="@{/pedido}">Pedidos</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Encabezado de confirmación -->
+    <section class="container section">
+      <div class="order-confirm">
+        <div class="order-confirm__icon">
+          <img th:src="@{/img/check-order.svg}" alt="" aria-hidden="true">
+        </div>
+        <div class="order-confirm__content">
+          <h1>¡Pedido confirmado!</h1>
+          <p>Nº de pedido: <strong>#000000</strong></p>
+          <p>Hora estimada de entrega: <strong>—:—</strong></p>
+          <div class="order-confirm__actions">
+            <a class="btn btn--primary" th:href="@{/}">Seguir comprando</a>
+            <a class="btn btn--secondary" th:href="@{#seguimiento}">Ver seguimiento</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seguimiento del pedido -->
+    <section id="seguimiento" class="container section">
+      <h2>Seguimiento del pedido</h2>
+
+      <!-- Timeline de estados -->
+      <ol class="timeline" aria-label="Estados del pedido">
+        <li class="timeline__step is-current">
+          <div class="timeline__marker"></div>
+          <div class="timeline__content">
+            <h3>En cola</h3>
+            <p>Tu pedido está en la cola de la cocina.</p>
+            <!-- Cancelar solo en este estado (placeholder de backend) -->
+            <form class="inline-form" method="post" th:action="@{/pedido}">
+              <button class="btn btn--danger" type="submit">Cancelar pedido</button>
+            </form>
+          </div>
+        </li>
+        <li class="timeline__step">
+          <div class="timeline__marker"></div>
+          <div class="timeline__content">
+            <h3>En preparación</h3>
+            <p>Estamos preparando tus productos.</p>
+          </div>
+        </li>
+        <li class="timeline__step">
+          <div class="timeline__marker"></div>
+          <div class="timeline__content">
+            <h3>En camino</h3>
+            <p>El repartidor ya salió hacia tu domicilio.</p>
+          </div>
+        </li>
+        <li class="timeline__step">
+          <div class="timeline__marker"></div>
+          <div class="timeline__content">
+            <h3>Entregado</h3>
+            <p>¡Buen provecho!</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- Resumen del pedido (solo lectura) -->
+    <section class="container section section--grid-2">
+      <article class="order-card">
+        <h2 class="order-card__title">Detalle del pedido</h2>
+        <ul class="order-items">
+          <li class="order-item">
+            <img class="order-item__img" th:src="@{/img/pizza-thumb.png}" alt="Pizza personalizada">
+            <div class="order-item__info">
+              <p class="order-item__name">Pizza personalizada</p>
+              <p class="order-item__meta">Mediana • Napolitana • Tomate • Muzzarella • Albahaca</p>
+            </div>
+            <div class="order-item__qty">x1</div>
+            <div class="order-item__price">$ 0</div>
+          </li>
+          <li class="order-item">
+            <img class="order-item__img" th:src="@{/img/burger-thumb.png}" alt="Hamburguesa personalizada">
+            <div class="order-item__info">
+              <p class="order-item__name">Hamburguesa personalizada</p>
+              <p class="order-item__meta">2 carnes • Vaca • Pan de papa • Queso extra</p>
+            </div>
+            <div class="order-item__qty">x3</div>
+            <div class="order-item__price">$ 0</div>
+          </li>
+        </ul>
+
+        <dl class="totals">
+          <div class="totals__row"><dt>Subtotal</dt><dd>$ 0</dd></div>
+          <div class="totals__row"><dt>Envío</dt><dd>$ 0</dd></div>
+          <div class="totals__row totals__row--total"><dt>Total</dt><dd>$ 0</dd></div>
+        </dl>
+      </article>
+
+      <!-- Datos de entrega y pago (placeholder) -->
+      <aside class="order-aside">
+        <h2 class="order-aside__title">Entrega</h2>
+        <p class="order-aside__text">
+          <strong>Domicilio:</strong> 18 de Julio 1234, Apto 501<br>
+          <strong>Indicaciones:</strong> Timbre roto, llamar al llegar
+        </p>
+
+        <h2 class="order-aside__title">Pago</h2>
+        <p class="order-aside__text">
+          Tarjeta terminada en <strong>•••• 1234</strong><br>
+          Titular: <strong>Nombre Apellido</strong>
+        </p>
+
+        <h2 class="order-aside__title">Contacto</h2>
+        <p class="order-aside__text">
+          <strong>Tel:</strong> 099 000 000<br>
+          <strong>Email:</strong> cliente@correo.com
+        </p>
+      </aside>
+    </section>
+
+    <!-- Acciones finales -->
+    <section class="container section">
+      <div class="final-actions">
+        <a class="btn btn--primary" th:href="@{/}">Volver al inicio</a>
+        <a class="btn btn--ghost" th:href="@{/pedido}">Actualizar estado</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <small>&copy; 2025 PizzUM &amp; BurgUM</small>
+      <nav class="footer-nav">
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
