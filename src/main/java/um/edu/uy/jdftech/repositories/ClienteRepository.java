@@ -15,6 +15,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     boolean existsById(Long id);
 
+
     @Query("SELECT c FROM Cliente c WHERE CONCAT(c.firstName, ' ', c.lastName) LIKE %:fullName%")
     List<Cliente> findByFullNameContaining(@Param("fullName") String fullName);
 }

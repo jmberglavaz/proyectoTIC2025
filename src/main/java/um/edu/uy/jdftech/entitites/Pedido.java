@@ -91,6 +91,7 @@ public class Pedido {
     public Pedido(Cliente cliente) { // no le paso dirección xq las tendría que buscar entre las que el cliente ya tiene, o darle la opción de agregar otra
         this.client = cliente;
         this.date = LocalDateTime.now();
+        this.status = EstadoPedido.EN_COLA;
         // Falta agregar medio de pago
         this.totalCost = 0.0;
         this.pizzas = new HashSet<>();
@@ -101,5 +102,9 @@ public class Pedido {
 
     public void calculateTotal() {
         this.totalCost = bebidas.stream().mapToDouble(Bebida::getPrice).sum() + acompanamientos.stream().mapToDouble(Acompanamiento::getPrice).sum(); // agregar pizza y hamburguesa
+    }
+
+    public void cambiarEstadoPedido(EstadoPedido estado) {
+        this.status = estado;
     }
 }

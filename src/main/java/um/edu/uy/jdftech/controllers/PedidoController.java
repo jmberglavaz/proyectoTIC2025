@@ -1,4 +1,4 @@
-package um.edu.uy.jdftech;
+package um.edu.uy.jdftech.controllers;
 
 public class PedidoController {
     //
