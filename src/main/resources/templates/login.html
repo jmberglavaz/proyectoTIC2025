@@ -1,74 +1,157 @@
+<!--<!doctype html>-->
+<!--<html lang="es" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="utf-8" />-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1" />-->
+<!--  <title>PizzUM & BurgUM — Iniciar sesión</title>-->
+
+<!--  <link rel="stylesheet" th:href="@{/css/main.css}">-->
+<!--  <link rel="stylesheet" th:href="@{/css/layout.css}">-->
+<!--  <link rel="stylesheet" th:href="@{/css/components.css}">-->
+<!--  <link rel="stylesheet" th:href="@{/css/pages.css}">-->
+<!--</head>-->
+<!--<body class="theme-italian">-->
+<!--  <header class="site-header">-->
+<!--    <div class="container header__inner">-->
+<!--      <a class="brand" th:href="@{/}">-->
+<!--        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">-->
+<!--        <span class="brand__name">PizzUM &amp; BurgUM</span>-->
+<!--      </a>-->
+<!--      <nav class="site-nav">-->
+<!--        <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>-->
+<!--        <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>-->
+<!--        <a class="nav__link" th:href="@{/carrito}">Carrito</a>-->
+<!--        <a class="nav__link" th:href="@{/pedido}">Pedidos</a>-->
+<!--      </nav>-->
+<!--    </div>-->
+<!--  </header>-->
+
+<!--  <main>-->
+<!--    <section class="container section auth">-->
+<!--      <div class="auth-card">-->
+<!--        <div class="auth-card__media">-->
+<!--          <img th:src="@{/img/login-illustration.svg}" alt="Inicio de sesión" class="auth-card__img">-->
+<!--        </div>-->
+<!--        <div class="auth-card__content">-->
+<!--          <h1>Iniciar sesión</h1>-->
+<!--          <p>Accedé para continuar con tu pedido.</p>-->
+
+<!--          <form class="form form&#45;&#45;auth" method="post" th:action="@{/login}">-->
+<!--            <div class="form-group">-->
+<!--              <label for="email">Correo electrónico</label>-->
+<!--              <input class="input" id="email" name="email" type="email" required autocomplete="email">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--              <label for="password">Contraseña</label>-->
+<!--              <input class="input" id="password" name="password" type="password" required autocomplete="current-password">-->
+<!--            </div>-->
+
+<!--            <div class="form-actions">-->
+<!--              <button class="btn btn&#45;&#45;primary" type="submit">Entrar</button>-->
+<!--              <a class="btn btn&#45;&#45;secondary" th:href="@{/register}">Crear cuenta</a>-->
+<!--            </div>-->
+
+<!--            <p class="auth-help">-->
+<!--              <a class="link" th:href="@{#}">¿Olvidaste tu contraseña?</a>-->
+<!--            </p>-->
+<!--          </form>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </section>-->
+<!--  </main>-->
+
+<!--  <footer class="site-footer">-->
+<!--    <div class="container footer__inner">-->
+<!--      <small>&copy; 2025 PizzUM &amp; BurgUM</small>-->
+<!--      <nav class="footer-nav">-->
+<!--        <a th:href="@{#}" class="footer__link">Ayuda</a>-->
+<!--        <a th:href="@{#}" class="footer__link">Términos</a>-->
+<!--        <a th:href="@{#}" class="footer__link">Privacidad</a>-->
+<!--      </nav>-->
+<!--    </div>-->
+<!--  </footer>-->
+<!--</body>-->
+<!--</html>-->
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PizzUM & BurgUM — Iniciar sesión</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PizzUM & BurgUM — Iniciar sesión</title>
 
-  <link rel="stylesheet" th:href="@{/css/main.css}">
-  <link rel="stylesheet" th:href="@{/css/layout.css}">
-  <link rel="stylesheet" th:href="@{/css/components.css}">
-  <link rel="stylesheet" th:href="@{/css/pages.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body class="theme-italian">
-  <header class="site-header">
+<header class="site-header">
     <div class="container header__inner">
-      <a class="brand" th:href="@{/}">
-        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
-        <span class="brand__name">PizzUM &amp; BurgUM</span>
-      </a>
-      <nav class="site-nav">
-        <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
-        <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
-        <a class="nav__link" th:href="@{/carrito}">Carrito</a>
-        <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
-      </nav>
+        <a class="brand" th:href="@{/}">
+            <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+            <span class="brand__name">PizzUM &amp; BurgUM</span>
+        </a>
+        <nav class="site-nav">
+            <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
+            <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
+            <a class="nav__link" th:href="@{/carrito}">Carrito</a>
+            <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
+        </nav>
     </div>
-  </header>
+</header>
 
-  <main>
+<main>
     <section class="container section auth">
-      <div class="auth-card">
-        <div class="auth-card__media">
-          <img th:src="@{/img/login-illustration.svg}" alt="Inicio de sesión" class="auth-card__img">
+        <div class="auth-card">
+            <div class="auth-card__media">
+                <img th:src="@{/img/login-illustration.svg}" alt="Inicio de sesión" class="auth-card__img">
+            </div>
+            <div class="auth-card__content">
+                <h1>Iniciar sesión</h1>
+                <p>Accedé para continuar con tu pedido.</p>
+
+                <!-- Mostrar mensajes de éxito/error -->
+                <div th:if="${msg}" class="alert alert-success">
+                    <span th:text="${msg}"></span>
+                </div>
+                <div th:if="${error}" class="alert alert-error">
+                    <span th:text="${error}"></span>
+                </div>
+
+                <!-- FORMULARIO CORREGIDO: usa cedula en lugar de email -->
+                <form class="form form--auth" method="post" th:action="@{/login}">
+                    <div class="form-group">
+                        <label for="cedula">Cédula</label>
+                        <input class="input" id="cedula" name="cedula" type="number" required placeholder="Ej: 12345678">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input class="input" id="password" name="password" type="password" required autocomplete="current-password">
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn--primary" type="submit">Entrar</button>
+                        <a class="btn btn--secondary" th:href="@{/register}">Crear cuenta</a>
+                    </div>
+
+                    <p class="auth-help">
+                        <a class="link" th:href="@{#}">¿Olvidaste tu contraseña?</a>
+                    </p>
+                </form>
+            </div>
         </div>
-        <div class="auth-card__content">
-          <h1>Iniciar sesión</h1>
-          <p>Accedé para continuar con tu pedido.</p>
-
-          <form class="form form--auth" method="post" th:action="@{/login}">
-            <div class="form-group">
-              <label for="email">Correo electrónico</label>
-              <input class="input" id="email" name="email" type="email" required autocomplete="email">
-            </div>
-            <div class="form-group">
-              <label for="password">Contraseña</label>
-              <input class="input" id="password" name="password" type="password" required autocomplete="current-password">
-            </div>
-
-            <div class="form-actions">
-              <button class="btn btn--primary" type="submit">Entrar</button>
-              <a class="btn btn--secondary" th:href="@{/register}">Crear cuenta</a>
-            </div>
-
-            <p class="auth-help">
-              <a class="link" th:href="@{#}">¿Olvidaste tu contraseña?</a>
-            </p>
-          </form>
-        </div>
-      </div>
     </section>
-  </main>
+</main>
 
-  <footer class="site-footer">
+<footer class="site-footer">
     <div class="container footer__inner">
-      <small>&copy; 2025 PizzUM &amp; BurgUM</small>
-      <nav class="footer-nav">
-        <a th:href="@{#}" class="footer__link">Ayuda</a>
-        <a th:href="@{#}" class="footer__link">Términos</a>
-        <a th:href="@{#}" class="footer__link">Privacidad</a>
-      </nav>
+        <small>&copy; 2025 PizzUM &amp; BurgUM</small>
+        <nav class="footer-nav">
+            <a th:href="@{#}" class="footer__link">Ayuda</a>
+            <a th:href="@{#}" class="footer__link">Términos</a>
+            <a th:href="@{#}" class="footer__link">Privacidad</a>
+        </nav>
     </div>
-  </footer>
+</footer>
 </body>
 </html>
