@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PizzUM & BurgUM — Crear hamburguesa</title>
+
+  <!-- Hojas de estilo globales -->
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body class="theme-italian">
+  <!-- Header global -->
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html">
+        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
+        <span class="brand__name">PizzUM &amp; BurgUM</span>
+      </a>
+      <nav class="site-nav">
+        <a class="nav__link" href="crear-pizza.html">Crear pizza</a>
+        <a class="nav__link is-active" href="crear-burger.html">Crear hamburguesa</a>
+        <a class="nav__link" href="carrito.html">Carrito</a>
+        <a class="nav__link" href="pedido.html">Pedidos</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero/encabezado -->
+    <section class="page-hero">
+      <div class="container page-hero__inner">
+        <div class="page-hero__media">
+          <img src="../img/custom-burger.png" alt="Ingredientes frescos para tu hamburguesa" class="page-hero__img">
+        </div>
+        <div class="page-hero__content">
+          <h1>Creá tu hamburguesa 🍔</h1>
+          <p>Elegí la cantidad de carnes (1 a 3), tipo de carne, pan, aderezos y extras. Agregala al carrito.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formulario principal -->
+    <section class="container section">
+      <!--
+        IMPORTANTE PARA BACKEND:
+        - method="post" y action="#" se reemplazan luego por el endpoint real.
+        - names/ids consistentes con DTO esperado.
+      -->
+      <form class="form form--builder" method="post" action="#">
+        <!-- Cantidad de carnes -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Cantidad de carnes</legend>
+          <div class="options options--inline">
+            <label class="option">
+              <input type="radio" name="cantidad_carnes" id="carnes-1" value="1" required>
+              <span class="option__label">1 carne</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="cantidad_carnes" id="carnes-2" value="2">
+              <span class="option__label">2 carnes</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="cantidad_carnes" id="carnes-3" value="3">
+              <span class="option__label">3 carnes</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Tipo de carne -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Tipo de carne</legend>
+          <div class="options options--inline">
+            <label class="option">
+              <input type="radio" name="tipo_carne" id="carne-vaca" value="vaca" required>
+              <span class="option__label">Vaca</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_carne" id="carne-pollo" value="pollo">
+              <span class="option__label">Pollo</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_carne" id="carne-cerdo" value="cerdo">
+              <span class="option__label">Cerdo</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_carne" id="carne-salmon" value="salmon">
+              <span class="option__label">Salmón</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_carne" id="carne-lentejas" value="lentejas">
+              <span class="option__label">Lentejas</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_carne" id="carne-soja" value="soja">
+              <span class="option__label">Soja</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Tipo de pan -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Tipo de pan</legend>
+          <div class="options options--inline">
+            <label class="option">
+              <input type="radio" name="tipo_pan" id="pan-papa" value="papa" required>
+              <span class="option__label">Pan de papa</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_pan" id="pan-integral" value="integral">
+              <span class="option__label">Integral</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_pan" id="pan-sin-gluten" value="sin_gluten">
+              <span class="option__label">Sin gluten</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Aderezos (checkbox múltiple) -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Aderezos</legend>
+          <p class="form-hint">Podés elegir varios (opcional).</p>
+          <div class="options options--grid">
+            <label class="option option--checkbox">
+              <input type="checkbox" name="aderezos[]" id="adz-ketchup" value="ketchup">
+              <span class="option__label">Ketchup</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="aderezos[]" id="adz-mostaza" value="mostaza">
+              <span class="option__label">Mostaza</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="aderezos[]" id="adz-mayonesa" value="mayonesa">
+              <span class="option__label">Mayonesa</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="aderezos[]" id="adz-bbq" value="bbq">
+              <span class="option__label">BBQ</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="aderezos[]" id="adz-picante" value="picante">
+              <span class="option__label">Picante</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Extras / add-ons (checkbox múltiple) -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Extras</legend>
+          <p class="form-hint">Seleccioná los que quieras (opcional).</p>
+          <div class="options options--grid">
+            <label class="option option--checkbox">
+              <input type="checkbox" name="extras[]" id="ex-queso" value="extra_queso">
+              <span class="option__label">Queso extra</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="extras[]" id="ex-bacon" value="bacon">
+              <span class="option__label">Bacon</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="extras[]" id="ex-huevo" value="huevo">
+              <span class="option__label">Huevo</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="extras[]" id="ex-queso-azul" value="queso_azul">
+              <span class="option__label">Queso azul</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="extras[]" id="ex-cebolla" value="cebolla">
+              <span class="option__label">Cebolla</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="extras[]" id="ex-tomate" value="tomate">
+              <span class="option__label">Tomate</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Cantidad + observaciones -->
+        <fieldset class="form-section form-section--row">
+          <div class="form-group">
+            <label for="cantidad">Cantidad</label>
+            <input type="number" id="cantidad" name="cantidad" min="1" step="1" value="1" inputmode="numeric" class="input input--number">
+          </div>
+          <div class="form-group form-group--grow">
+            <label for="observaciones">Observaciones (opcional)</label>
+            <textarea id="observaciones" name="observaciones" rows="2" class="input input--textarea" placeholder="Ej: sin pepinillos, con mucho ketchup"></textarea>
+          </div>
+        </fieldset>
+
+        <!-- Resumen visual (estático por ahora) -->
+        <section class="summary-box" aria-live="polite">
+          <h2 class="summary-box__title">Resumen</h2>
+          <ul class="summary-list">
+            <li><strong>Cant. carnes:</strong> —</li>
+            <li><strong>Tipo de carne:</strong> —</li>
+            <li><strong>Pan:</strong> —</li>
+            <li><strong>Aderezos:</strong> —</li>
+            <li><strong>Extras:</strong> —</li>
+            <li><strong>Cantidad:</strong> 1</li>
+          </ul>
+          <div class="summary-total">
+            <span class="summary-total__label">Total estimado</span>
+            <span class="summary-total__value">$ —</span>
+          </div>
+        </section>
+
+        <!-- Acciones -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary">Agregar al carrito</button>
+          <a class="btn btn--ghost" href="carrito.html">Ver carrito</a>
+          <a class="btn btn--link" href="index.html">Volver al inicio</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <small>&copy; 2025 PizzUM &amp; BurgUM</small>
+      <nav class="footer-nav">
+        <a href="#" class="footer__link">Ayuda</a>
+        <a href="#" class="footer__link">Términos</a>
+        <a href="#" class="footer__link">Privacidad</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

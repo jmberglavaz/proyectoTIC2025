@@ -25,7 +25,10 @@ repositories {
 }
 
 dependencies {
+<<<<<<< HEAD
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+=======
+>>>>>>> a2de064febe7cfccf9aa037648ca4bba3d73d8d4
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     compileOnly 'org.projectlombok:lombok'
