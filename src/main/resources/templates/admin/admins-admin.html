@@ -1,164 +1,165 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PizzUM & BurgUM — Admin / Administradores</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PizzUM & BurgUM — Admin / Administradores</title>
 
-  <link rel="stylesheet" th:href="@{/css/main.css}">
-  <link rel="stylesheet" th:href="@{/css/layout.css}">
-  <link rel="stylesheet" th:href="@{/css/components.css}">
-  <link rel="stylesheet" th:href="@{/css/pages.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body>
-  <!-- Header admin -->
-  <header class="site-header">
+<!-- Header admin -->
+<header class="site-header">
     <div class="container header__inner">
-      <a class="brand" th:href="@{/static}">
-        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
-        <span class="brand__name">PizzUM &amp; BurgUM</span>
-      </a>
-      <nav class="site-nav">
-        <a class="nav__link" th:href="@{/templates/admin}">Panel</a>
-        <a class="nav__link" th:href="@{/admin/productos}">Productos</a>
-        <a class="nav__link" th:href="@{/admin/pedidos}">Pedidos</a>
-        <a class="nav__link" th:href="@{/admin/historial}">Historial</a>
-        <a class="nav__link is-active" th:href="@{/admin/administradores}">Administradores</a>
-        <a class="nav__link" th:href="@{/login}">Cerrar sesión</a>
-      </nav>
+        <a class="brand" th:href="@{/admin}">
+            <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+            <span class="brand__name">PizzUM &amp; BurgUM</span>
+        </a>
+        <nav class="site-nav">
+            <a class="nav__link" th:href="@{/admin}">Panel</a>
+            <a class="nav__link" th:href="@{/admin/productos}">Productos</a>
+            <a class="nav__link" th:href="@{/admin/pedidos}">Pedidos</a>
+            <a class="nav__link" th:href="@{/admin/historial}">Historial</a>
+            <a class="nav__link is-active" th:href="@{/admin/administradores}">Administradores</a>
+            <a class="nav__link" th:href="@{/login}">Cerrar sesión</a>
+        </nav>
     </div>
-  </header>
+</header>
 
-  <main>
+<main>
     <!-- Título -->
     <section class="container section">
-      <h1>Administradores</h1>
-      <p class="form-hint">Alta y gestión de cuentas de administración.</p>
+        <h1>Administradores</h1>
+        <p class="form-hint">Alta y gestión de cuentas de administración.</p>
+
+        <!-- Mensajes de éxito/error -->
+        <div th:if="${msg}" class="alert alert--success" th:text="${msg}"></div>
+        <div th:if="${error}" class="alert alert--error" th:text="${error}"></div>
     </section>
 
     <!-- Alta de admin -->
     <section class="container section">
-      <article class="card">
-        <h2>Crear nuevo administrador</h2>
-        <form class="form form--auth" method="post" th:action="@{/admin/administradores}">
-          <fieldset class="form-section">
-            <legend class="visually-hidden">Datos del administrador</legend>
+        <article class="card">
+            <h2>Crear nuevo administrador</h2>
+            <form class="form form--auth" method="post" th:action="@{/admin/administradores}">
+                <input type="hidden" name="accion" value="crear">
 
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="adm_nombre">Nombre</label>
-                <input class="input" id="adm_nombre" name="nombre" type="text" required autocomplete="given-name">
-              </div>
-              <div class="form-group">
-                <label for="adm_apellido">Apellido</label>
-                <input class="input" id="adm_apellido" name="apellido" type="text" required autocomplete="family-name">
-              </div>
-              <div class="form-group form-group--full">
-                <label for="adm_email">Correo</label>
-                <input class="input" id="adm_email" name="email" type="email" required autocomplete="email">
-              </div>
-              <div class="form-group">
-                <label for="adm_pass">Contraseña</label>
-                <input class="input" id="adm_pass" name="password" type="password" required autocomplete="new-password">
-              </div>
-              <div class="form-group">
-                <label for="adm_pass2">Confirmar contraseña</label>
-                <input class="input" id="adm_pass2" name="password_confirm" type="password" required autocomplete="new-password">
-              </div>
-            </div>
+                <fieldset class="form-section">
+                    <legend class="visually-hidden">Datos del administrador</legend>
 
-            <p class="form-hint">Nota: todos los empleados tienen permisos de administrador.</p>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="adm_cedula">Cédula</label>
+                            <input class="input" id="adm_cedula" name="cedula" type="number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="adm_nombre">Nombre</label>
+                            <input class="input" id="adm_nombre" name="nombre" type="text" required autocomplete="given-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="adm_apellido">Apellido</label>
+                            <input class="input" id="adm_apellido" name="apellido" type="text" required autocomplete="family-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="adm_fecha_nac">Fecha de Nacimiento</label>
+                            <input class="input" id="adm_fecha_nac" name="fechaNacimiento" type="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="adm_telefono">Teléfono</label>
+                            <input class="input" id="adm_telefono" name="telefono" type="tel" required>
+                        </div>
+                        <div class="form-group form-group--full">
+                            <label for="adm_email">Correo</label>
+                            <input class="input" id="adm_email" name="email" type="email" required autocomplete="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="adm_pass">Contraseña</label>
+                            <input class="input" id="adm_pass" name="password" type="password" required autocomplete="new-password">
+                        </div>
+                        <div class="form-group">
+                            <label for="adm_pass2">Confirmar contraseña</label>
+                            <input class="input" id="adm_pass2" name="password_confirm" type="password" required autocomplete="new-password">
+                        </div>
+                    </div>
 
-            <div class="form-actions">
-              <button class="btn btn--primary" type="submit">Crear administrador</button>
-              <a class="btn btn--ghost" th:href="@{/templates/admin}">Cancelar</a>
-            </div>
-          </fieldset>
-        </form>
-      </article>
+                    <p class="form-hint">Nota: todos los empleados tienen permisos de administrador.</p>
+
+                    <div class="form-actions">
+                        <button class="btn btn--primary" type="submit">Crear administrador</button>
+                        <a class="btn btn--ghost" th:href="@{/admin}">Cancelar</a>
+                    </div>
+                </fieldset>
+            </form>
+        </article>
     </section>
 
-    <!-- Listado de administradores (placeholders) -->
+    <!-- Listado de administradores -->
     <section class="container section">
-      <article class="card">
-        <h2>Listado de administradores</h2>
-        <ul class="summary-list">
-          <!-- Admin 1 -->
-          <li style="display:grid;grid-template-columns:1fr auto;gap:var(--space-3);align-items:center;">
-            <div>
-              <strong>Juan Pérez</strong> — <small>juan.perez@empresa.com</small>
-            </div>
-            <div class="form-actions">
-              <form class="inline-form" method="post" th:action="@{/admin/administradores}">
-                <input type="hidden" name="admin_id" value="1">
-                <button class="link link--danger" type="submit">Eliminar</button>
-              </form>
-              <form class="inline-form" method="post" th:action="@{/admin/administradores}">
-                <input type="hidden" name="admin_id" value="1">
-                <button class="link" type="submit">Restablecer contraseña</button>
-              </form>
-            </div>
-          </li>
+        <article class="card">
+            <h2>Listado de administradores</h2>
 
-          <!-- Admin 2 -->
-          <li style="display:grid;grid-template-columns:1fr auto;gap:var(--space-3);align-items:center;">
-            <div>
-              <strong>Ana López</strong> — <small>ana.lopez@empresa.com</small>
-            </div>
-            <div class="form-actions">
-              <form class="inline-form" method="post" th:action="@{/admin/administradores}">
-                <input type="hidden" name="admin_id" value="2">
-                <button class="link link--danger" type="submit">Eliminar</button>
-              </form>
-              <form class="inline-form" method="post" th:action="@{/admin/administradores}">
-                <input type="hidden" name="admin_id" value="2">
-                <button class="link" type="submit">Restablecer contraseña</button>
-              </form>
-            </div>
-          </li>
+            <!-- Filtro de búsqueda -->
+            <form class="form form--inline" method="get" th:action="@{/admin/administradores}" style="margin-bottom: var(--space-4);">
+                <div class="form-group">
+                    <label for="buscar_nombre" class="visually-hidden">Buscar por nombre</label>
+                    <input class="input" id="buscar_nombre" name="buscar" type="text" placeholder="Buscar por nombre..."
+                           th:value="${param.buscar}">
+                </div>
+                <button class="btn btn--secondary" type="submit">Buscar</button>
+            </form>
 
-          <!-- Admin 3 -->
-          <li style="display:grid;grid-template-columns:1fr auto;gap:var(--space-3);align-items:center;">
-            <div>
-              <strong>Pedro Silva</strong> — <small>pedro.silva@empresa.com</small>
-            </div>
-            <div class="form-actions">
-              <form class="inline-form" method="post" th:action="@{/admin/administradores}">
-                <input type="hidden" name="admin_id" value="3">
-                <button class="link link--danger" type="submit">Eliminar</button>
-              </form>
-              <form class="inline-form" method="post" th:action="@{/admin/administradores}">
-                <input type="hidden" name="admin_id" value="3">
-                <button class="link" type="submit">Restablecer contraseña</button>
-              </form>
-            </div>
-          </li>
-        </ul>
+            <ul class="summary-list" th:if="${not #lists.isEmpty(administradores)}">
+                <li th:each="admin : ${administradores}"
+                    style="display:grid;grid-template-columns:1fr auto;gap:var(--space-3);align-items:center;">
+                    <div>
+                        <strong th:text="${admin.firstName + ' ' + admin.lastName}">Nombre</strong> —
+                        <small th:text="${admin.email}">email</small>
+                        <br>
+                        <small style="color: #666;">Cédula: <span th:text="${admin.id}"></span> |
+                            Tel: <span th:text="${admin.phoneNumber}"></span></small>
+                    </div>
+                    <div class="form-actions">
+                        <form class="inline-form" method="post" th:action="@{/admin/administradores}">
+                            <input type="hidden" name="accion" value="eliminar">
+                            <input type="hidden" name="admin_id" th:value="${admin.id}">
+                            <button class="link link--danger" type="submit"
+                                    onclick="return confirm('¿Está seguro de que desea eliminar este administrador?')">Eliminar</button>
+                        </form>
+                        <form class="inline-form" method="post" th:action="@{/admin/administradores}">
+                            <input type="hidden" name="accion" value="reset_password">
+                            <input type="hidden" name="admin_id" th:value="${admin.id}">
+                            <button class="link" type="submit"
+                                    onclick="return confirm('¿Restablecer contraseña de este administrador?')">Restablecer contraseña</button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
 
-        <!-- Paginación mínima (placeholder) -->
-        <nav class="form-actions" aria-label="Paginación" style="justify-content:flex-end;margin-top:var(--space-4);">
-          <a class="btn btn--ghost" th:href="@{#}">Anterior</a>
-          <a class="btn btn--ghost" th:href="@{#}">Siguiente</a>
-        </nav>
-      </article>
+            <div th:if="${#lists.isEmpty(administradores)}" class="alert alert--info">
+                No se encontraron administradores.
+            </div>
+        </article>
     </section>
 
     <section class="container section">
-      <div class="final-actions">
-        <a class="btn btn--secondary" th:href="@{/templates/admin}">Volver al panel</a>
-      </div>
+        <div class="final-actions">
+            <a class="btn btn--secondary" th:href="@{/admin}">Volver al panel</a>
+        </div>
     </section>
-  </main>
+</main>
 
-  <footer class="site-footer">
+<footer class="site-footer">
     <div class="container footer__inner">
-      <small>&copy; 2025 PizzUM &amp; BurgUM — Panel de administración</small>
-      <nav class="footer-nav">
-        <a th:href="@{#}" class="footer__link">Ayuda</a>
-        <a th:href="@{#}" class="footer__link">Términos</a>
-        <a th:href="@{#}" class="footer__link">Privacidad</a>
-      </nav>
+        <small>&copy; 2025 PizzUM &amp; BurgUM — Panel de administración</small>
+        <nav class="footer-nav">
+            <a th:href="@{#}" class="footer__link">Ayuda</a>
+            <a th:href="@{#}" class="footer__link">Términos</a>
+            <a th:href="@{#}" class="footer__link">Privacidad</a>
+        </nav>
     </div>
-  </footer>
+</footer>
 </body>
 </html>

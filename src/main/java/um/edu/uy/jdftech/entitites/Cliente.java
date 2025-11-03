@@ -15,14 +15,24 @@ import java.util.Set;
 @Setter
 @SuperBuilder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Cliente extends Usuario {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Pedido> pedidos = new HashSet<>();
 
-    public Cliente() {
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Direccion> direcciones = new HashSet<>();
+
+    public void agregarDireccion(Direccion direccion) {
+        direcciones.add(direccion);
+        direccion.setUsuario(this);
     }
 
-    // Método helper para mantener la consistencia
+    public void eliminarDireccion(Direccion direccion) {
+        direcciones.remove(direccion);
+        direccion.setUsuario(null);
+    }
+
     public void agregarPedido(Pedido pedido) {
         pedidos.add(pedido);
         pedido.setClient(this);

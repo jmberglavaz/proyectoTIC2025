@@ -33,6 +33,9 @@ public class AdminPagesController {
     @Autowired
     private PedidoService pedidoService;
 
+    @Autowired
+    private AdministradorService administradorService;
+
     /* ======================
        Páginas (GET) - ACTUALIZADO
        ====================== */
@@ -94,13 +97,22 @@ public class AdminPagesController {
         return "admin/pedidos-admin";
     }
 
-    @GetMapping("/historial")
-    public String historial() {
-        return "admin/historial-admin";
-    }
-
     @GetMapping("/administradores")
-    public String administradores() {
+    public String administradores(@RequestParam(required = false) String buscar, Model model) {
+        try {
+            List<Administrador> administradores;
+            if (buscar != null && !buscar.trim().isEmpty()) {
+                // Buscar por nombre completo
+                administradores = administradorService.findByFullName(buscar, buscar);
+            } else {
+                // Listar todos
+                administradores = administradorService.findAll();
+            }
+            model.addAttribute("administradores", administradores);
+        } catch (Exception e) {
+            model.addAttribute("administradores", Collections.emptyList());
+            model.addAttribute("error", "Error al cargar los administradores: " + e.getMessage());
+        }
         return "admin/admins-admin";
     }
 
@@ -335,23 +347,99 @@ public class AdminPagesController {
         return "redirect:/admin/pedidos";
     }
 
-    @PostMapping("/historial")
-    public String accionesHistorial(RedirectAttributes ra) {
-        ra.addFlashAttribute("msg", "Acción de historial recibida.");
-        return "redirect:/admin/historial";
+    @GetMapping("/historial")
+    public String historial(@RequestParam(required = false) String numero,
+                            @RequestParam(required = false) String clienteId,
+                            @RequestParam(required = false) String estado,
+                            @RequestParam(required = false) String tipo,
+                            @RequestParam(required = false) String desde,
+                            @RequestParam(required = false) String hasta,
+                            Model model) {
+
+        List<Pedido> pedidos;
+
+        // Si hay filtros aplicados, usarlos
+        if (numero != null || clienteId != null || estado != null || tipo != null || desde != null || hasta != null) {
+            pedidos = pedidoService.findWithFilters(numero, clienteId, estado, tipo, desde, hasta);
+        } else {
+            // Si no hay filtros, mostrar los últimos 10 pedidos ordenados por fecha de creación (más recientes primero)
+            pedidos = pedidoService.findLast10Orders();
+        }
+
+        model.addAttribute("pedidos", pedidos != null ? pedidos : Collections.emptyList());
+
+        // Mantener los parámetros en el modelo para que los filtros se mantengan
+        model.addAttribute("filtros", Map.of(
+                "numero", numero != null ? numero : "",
+                "clienteId", clienteId != null ? clienteId : "",
+                "estado", estado != null ? estado : "",
+                "tipo", tipo != null ? tipo : "",
+                "desde", desde != null ? desde : "",
+                "hasta", hasta != null ? hasta : ""
+        ));
+
+        return "admin/historial-admin";
     }
 
     @PostMapping("/administradores")
-    public String gestionarAdministradores(@RequestParam(required = false) String nombre,
+    public String gestionarAdministradores(@RequestParam(required = false) String cedula,
+                                           @RequestParam(required = false) String nombre,
                                            @RequestParam(required = false) String apellido,
                                            @RequestParam(required = false) String email,
                                            @RequestParam(required = false) String password,
                                            @RequestParam(required = false, name = "password_confirm") String passwordConfirm,
-                                           @RequestParam(required = false, name = "admin_id") String adminId,
+                                           @RequestParam(required = false) String telefono,
+                                           @RequestParam(required = false) String fechaNacimiento,
+                                           @RequestParam(required = false, name = "admin_id") Long adminId,
                                            @RequestParam(required = false, name = "accion") String accion,
                                            RedirectAttributes ra) {
-        // TODO: en base a 'accion' y/o presencia de adminId decidir crear/eliminar/reset
-        ra.addFlashAttribute("msg", "Acción de administradores recibida.");
+
+        try {
+            if ("crear".equals(accion)) {
+                // Validar que las contraseñas coincidan
+                if (!password.equals(passwordConfirm)) {
+                    ra.addFlashAttribute("error", "Las contraseñas no coinciden.");
+                    return "redirect:/admin/administradores";
+                }
+
+                // Validar que la cédula sea un número válido
+                Long cedulaLong;
+                try {
+                    cedulaLong = Long.parseLong(cedula);
+                } catch (NumberFormatException e) {
+                    ra.addFlashAttribute("error", "La cédula debe ser un número válido.");
+                    return "redirect:/admin/administradores";
+                }
+
+                // Crear nuevo administrador
+                Administrador nuevoAdmin = Administrador.builder()
+                        .id(cedulaLong)
+                        .firstName(nombre)
+                        .lastName(apellido)
+                        .email(email)
+                        .password(password) // En producción, esto debería estar encriptado
+                        .phoneNumber(telefono)
+                        .birthDate(java.sql.Date.valueOf(fechaNacimiento))
+                        .build();
+
+                administradorService.crear(nuevoAdmin);
+                ra.addFlashAttribute("msg", "Administrador '" + nombre + " " + apellido + "' creado correctamente.");
+
+            } else if ("eliminar".equals(accion) && adminId != null) {
+                // Eliminar administrador
+                administradorService.delete(adminId);
+                ra.addFlashAttribute("msg", "Administrador eliminado correctamente.");
+
+            } else if ("reset_password".equals(accion) && adminId != null) {
+                // Restablecer contraseña (aquí podrías generar una contraseña temporal)
+                // Por ahora solo mostramos un mensaje
+                ra.addFlashAttribute("msg", "Solicitud de restablecimiento de contraseña para el administrador ID: " + adminId);
+            }
+
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", "Error al procesar la solicitud: " + e.getMessage());
+        }
+
         return "redirect:/admin/administradores";
     }
 }

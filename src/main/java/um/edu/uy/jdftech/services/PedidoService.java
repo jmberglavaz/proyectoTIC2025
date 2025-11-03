@@ -188,4 +188,9 @@ public class PedidoService {
             return Collections.emptyList();
         }
     }
+
+    public List<Pedido> findLast10Orders() {
+        Pageable pageable = PageRequest.of(0, 10);
+        return pedidoRepository.findLast10Orders(pageable);
+    }
 }

@@ -52,4 +52,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
                                         @Param("clienteId") Long clienteId,
                                         @Param("desde") LocalDateTime desde,
                                         @Param("hasta") LocalDateTime hasta);
+
+    @Query("SELECT p FROM Pedido p ORDER BY p.date DESC")
+    List<Pedido> findLast10Orders(Pageable pageable);
 }
