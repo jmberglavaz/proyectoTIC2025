@@ -49,119 +49,98 @@
       </form>
     </section>
 
-    <!-- Lista de pedidos (placeholders) -->
-    <section class="container section">
-      <div class="card">
-        <h2 style="margin-bottom: .5rem;">Resultados</h2>
-        <p class="form-hint" style="margin-top: 0;">Mostrando pedidos abiertos.</p>
+    <!-- Lista de pedidos -->
+      <section class="container section">
+          <div class="card">
+              <h2 style="margin-bottom: .5rem;">Resultados</h2>
+              <p class="form-hint" style="margin-top: 0;" th:if="${pedidos != null and !pedidos.isEmpty()}">
+                  Mostrando <span th:text="${pedidos.size()}"></span> pedido(s) activo(s).
+              </p>
+              <p class="form-hint" style="margin-top: 0;" th:if="${pedidos == null or pedidos.isEmpty()}">
+                  No se encontraron pedidos activos.
+              </p>
 
-        <!-- Pedido 1 -->
-        <article class="order-item" style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);padding:var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-top:var(--space-4);">
-          <div style="display:grid;gap:.35rem;">
-            <h3 style="margin:0;">Pedido #000123</h3>
-            <small>Creado: 20/10/2025 20:31 — Cliente: Juan Pérez — Tel: 099 000 000</small>
-            <small>Domicilio: 18 de Julio 1234, Apto 501</small>
-            <div class="summary-list">
-              <div><strong>Items:</strong> Pizza mediana (Napolitana) x1 · Burger 2 carnes (Pan de papa) x2</div>
-            </div>
-            <div><strong>Total:</strong> $ —</div>
-            <div><strong>Estado actual:</strong> <span class="badge">En cola</span></div>
-          </div>
-          <!-- Acciones de cambio de estado -->
-          <div>
-            <form method="post" th:action="@{/admin/pedidos}" class="card" style="padding:var(--space-4);min-width:260px;">
-              <h4 style="margin-bottom:var(--space-3);">Cambiar estado</h4>
-              <div class="form-group">
-                <label class="option"><input type="radio" name="estado" value="en_cola" checked> <span class="option__label">En cola</span></label>
-                <label class="option"><input type="radio" name="estado" value="en_preparacion"> <span class="option__label">En preparación</span></label>
-                <label class="option"><input type="radio" name="estado" value="en_camino"> <span class="option__label">En camino</span></label>
-                <label class="option"><input type="radio" name="estado" value="entregado"> <span class="option__label">Entregado</span></label>
+              <!-- Mensajes de éxito/error -->
+              <div th:if="${msg}" class="alert alert-success" style="margin-top: var(--space-4);">
+                  <span th:text="${msg}"></span>
               </div>
-              <div class="form-actions">
-                <button class="btn btn--primary" type="submit">Actualizar</button>
+              <div th:if="${error}" class="alert alert-error" style="margin-top: var(--space-4);">
+                  <span th:text="${error}"></span>
               </div>
-              <input type="hidden" name="pedido_id" value="000123">
-            </form>
-          </div>
-        </article>
 
-        <!-- Pedido 2 -->
-        <article class="order-item" style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);padding:var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-top:var(--space-4);">
-          <div style="display:grid;gap:.35rem;">
-            <h3 style="margin:0;">Pedido #000124</h3>
-            <small>Creado: 20/10/2025 20:36 — Cliente: Ana López — Tel: 098 111 111</small>
-            <small>Domicilio: Colonia 555, Apto 302</small>
-            <div class="summary-list">
-              <div><strong>Items:</strong> Pizza grande (Integral) x1</div>
-            </div>
-            <div><strong>Total:</strong> $ —</div>
-            <div><strong>Estado actual:</strong> <span class="badge" style="background:var(--color-accent);">En preparación</span></div>
-          </div>
-          <div>
-            <form method="post" th:action="@{/admin/pedidos}" class="card" style="padding:var(--space-4);min-width:260px;">
-              <h4 style="margin-bottom:var(--space-3);">Cambiar estado</h4>
-              <div class="form-group">
-                <label class="option"><input type="radio" name="estado" value="en_cola"> <span class="option__label">En cola</span></label>
-                <label class="option"><input type="radio" name="estado" value="en_preparacion" checked> <span class="option__label">En preparación</span></label>
-                <label class="option"><input type="radio" name="estado" value="en_camino"> <span class="option__label">En camino</span></label>
-                <label class="option"><input type="radio" name="estado" value="entregado"> <span class="option__label">Entregado</span></label>
-              </div>
-              <div class="form-actions">
-                <button class="btn btn--primary" type="submit">Actualizar</button>
-              </div>
-              <input type="hidden" name="pedido_id" value="000124">
-            </form>
-          </div>
-        </article>
+              <!-- Pedidos dinámicos -->
+              <article th:each="pedido : ${pedidos}"
+                       class="order-item"
+                       style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);padding:var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-top:var(--space-4);">
 
-        <!-- Pedido 3 -->
-        <article class="order-item" style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);padding:var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-top:var(--space-4);">
-          <div style="display:grid;gap:.35rem;">
-            <h3 style="margin:0;">Pedido #000125</h3>
-            <small>Creado: 20/10/2025 20:44 — Cliente: Pedro Silva — Tel: 092 222 222</small>
-            <small>Domicilio: Bvar. Artigas 1800</small>
-            <div class="summary-list">
-              <div><strong>Items:</strong> Burger 1 carne (Integral) x1 · Bebida: Agua 500ml</div>
-            </div>
-            <div><strong>Total:</strong> $ —</div>
-            <div><strong>Estado actual:</strong> <span class="badge" style="background:var(--color-primary);">En camino</span></div>
+                  <div style="display:grid;gap:.35rem;">
+                      <h3 style="margin:0;">Pedido #<span th:text="${#strings.format('%06d', pedido.id)}">000000</span></h3>
+                      <small>
+                          Creado: <span th:text="${#temporals.format(pedido.date, 'dd/MM/yyyy HH:mm')}">fecha</span> —
+                          Cliente: <span th:text="${pedido.client.nombre + ' ' + pedido.client.apellido}">Cliente</span> —
+                          Tel: <span th:text="${pedido.client.telefono}">teléfono</span>
+                      </small>
+                      <small>Domicilio: <span th:text="${pedido.address}">dirección</span></small>
+
+                      <div class="summary-list">
+                          <div><strong>Items:</strong>
+                              <span th:each="pizza : ${pedido.pizzas}">
+              Pizza <span th:text="${pizza.tamaño}">tamaño</span> (<span th:text="${pizza.nombre}">nombre</span>) x1 ·
+            </span>
+                              <span th:each="hamburguesa : ${pedido.hamburguesas}">
+              Burger <span th:text="${hamburguesa.nombre}">nombre</span> x1 ·
+            </span>
+                              <span th:each="acompanamiento : ${pedido.acompanamientos}">
+              <span th:text="${acompanamiento.name}">acompañamiento</span> x1 ·
+            </span>
+                              <span th:each="bebida : ${pedido.bebidas}">
+              <span th:text="${bebida.name}">bebida</span> x1
+            </span>
+                          </div>
+                      </div>
+
+                      <div><strong>Total:</strong> $<span th:text="${#numbers.formatDecimal(pedido.totalCost, 1, 2)}">0.00</span></div>
+                      <div><strong>Estado actual:</strong>
+                          <span class="badge"
+                                th:classappend="${pedido.status?.name() == 'EN_COLA'} ? '' :
+                               ${pedido.status?.name() == 'EN_PREPARACION'} ? 'badge--accent' :
+                               ${pedido.status?.name() == 'EN_CAMINO'} ? 'badge--primary' : 'badge--success'"
+                                th:text="${pedido.status?.name()?.replace('_', ' ')}">Estado</span>
+                      </div>
+                  </div>
+
+                  <!-- Acciones de cambio de estado -->
+                  <div>
+                      <form method="post" th:action="@{/admin/pedidos}" class="card" style="padding:var(--space-4);min-width:260px;">
+                          <h4 style="margin-bottom:var(--space-3);">Cambiar estado</h4>
+                          <div class="form-group">
+                              <label class="option">
+                                  <input type="radio" name="estado" value="en_cola" th:checked="${pedido.status?.name() == 'EN_COLA'}">
+                                  <span class="option__label">En cola</span>
+                              </label>
+                              <label class="option">
+                                  <input type="radio" name="estado" value="en_preparacion" th:checked="${pedido.status?.name() == 'EN_PREPARACION'}">
+                                  <span class="option__label">En preparación</span>
+                              </label>
+                              <label class="option">
+                                  <input type="radio" name="estado" value="en_camino" th:checked="${pedido.status?.name() == 'EN_CAMINO'}">
+                                  <span class="option__label">En camino</span>
+                              </label>
+                              <label class="option">
+                                  <input type="radio" name="estado" value="entregado" th:checked="${pedido.status?.name() == 'ENTREGADO'}">
+                                  <span class="option__label">Entregado</span>
+                              </label>
+                          </div>
+                          <div class="form-actions">
+                              <button class="btn btn--primary" type="submit">Actualizar</button>
+                          </div>
+                          <input type="hidden" name="pedido_id" th:value="${pedido.id}">
+                      </form>
+                  </div>
+              </article>
+
           </div>
-          <div>
-            <form method="post" th:action="@{/admin/pedidos}" class="card" style="padding:var(--space-4);min-width:260px;">
-              <h4 style="margin-bottom:var(--space-3);">Cambiar estado</h4>
-              <div class="form-group">
-                <label class="option"><input type="radio" name="estado" value="en_cola"> <span class="option__label">En cola</span></label>
-                <label class="option"><input type="radio" name="estado" value="en_preparacion"> <span class="option__label">En preparación</span></label>
-                <label class="option"><input type="radio" name="estado" value="en_camino" checked> <span class="option__label">En camino</span></label>
-                <label class="option"><input type="radio" name="estado" value="entregado"> <span class="option__label">Entregado</span></label>
-              </div>
-              <div class="form-actions">
-                <button class="btn btn--primary" type="submit">Actualizar</button>
-              </div>
-              <input type="hidden" name="pedido_id" value="000125">
-            </form>
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <section class="container section">
-      <div class="final-actions">
-        <a class="btn btn--secondary" th:href="@{/templates/admin}">Volver al panel</a>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer__inner">
-      <small>&copy; 2025 PizzUM &amp; BurgUM — Panel de administración</small>
-      <nav class="footer-nav">
-        <a th:href="@{#}" class="footer__link">Ayuda</a>
-        <a th:href="@{#}" class="footer__link">Términos</a>
-        <a th:href="@{#}" class="footer__link">Privacidad</a>
-      </nav>
-    </div>
-  </footer>
+      </section>
+    </main>
 </body>
 </html>

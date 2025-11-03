@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import um.edu.uy.jdftech.entitites.Pedido;
+import um.edu.uy.jdftech.enums.EstadoPedido;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,4 +21,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     @Query("SELECT p FROM Pedido p WHERE p.client.id = :clientId AND p.date BETWEEN :from AND :to ORDER BY p.date DESC")
     List<Pedido> findHistoricByClient(@Param("clientId") Long clienteId, @Param("from") LocalDateTime from, @Param("to") LocalDateTime to);
+
+    List<Pedido> findByStatusIn(List<EstadoPedido> estados);
+
+    @Query("SELECT p FROM Pedido p WHERE p.status IN :estados ORDER BY p.date ASC")
+    List<Pedido> findByStatusInOrderByDate(@Param("estados") List<EstadoPedido> estados);
 }

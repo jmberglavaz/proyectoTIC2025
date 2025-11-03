@@ -11,12 +11,14 @@ import um.edu.uy.jdftech.entitites.Acompanamiento;
 import um.edu.uy.jdftech.entitites.Bebida;
 import um.edu.uy.jdftech.entitites.Cliente;
 import um.edu.uy.jdftech.entitites.Pedido;
+import um.edu.uy.jdftech.enums.EstadoPedido;
 import um.edu.uy.jdftech.repositories.AcompanamientoRepository;
 import um.edu.uy.jdftech.repositories.BebidaRepository;
 import um.edu.uy.jdftech.repositories.ClienteRepository;
 import um.edu.uy.jdftech.repositories.PedidoRepository;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,5 +89,28 @@ public class PedidoService {
 
     public List<Pedido> findHistoricByClient(Long clienteId, LocalDateTime from, LocalDateTime to) {
         return pedidoRepository.findHistoricByClient(clienteId, from, to);
+    }
+
+    public Pedido updateStatus(Long pedidoId, EstadoPedido nuevoEstado) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));
+        pedido.setStatus(nuevoEstado);
+        return pedidoRepository.save(pedido);
+    }
+
+    public List<Pedido> findPedidosActivos() {
+        try {
+            return pedidoRepository.findByStatusIn(List.of(
+                    EstadoPedido.EN_COLA,
+                    EstadoPedido.EN_PREPARACION,
+                    EstadoPedido.EN_CAMINO
+            ));
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
+
+    public Optional<Pedido> findById(Long id) {
+        return pedidoRepository.findById(id);
     }
 }
