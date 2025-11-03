@@ -25,8 +25,8 @@ public class Hamburguesa {
     @OneToMany(mappedBy = "hamburguesa", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Aderezo> aderezos;
 
-    @OneToMany(mappedBy = "hamburguesa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Topping> toppings;
+//    @OneToMany(mappedBy = "hamburguesa", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Topping> toppings;
 
     public Hamburguesa() {}
 

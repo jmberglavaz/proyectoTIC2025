@@ -2,12 +2,14 @@ package um.edu.uy.jdftech.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import um.edu.uy.jdftech.entitites.Topping;
 import um.edu.uy.jdftech.repositories.ToppingRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class ToppingService {
 
     @Autowired

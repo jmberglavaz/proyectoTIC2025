@@ -29,8 +29,8 @@ public class Pizza {
     @Column(name = "precio")
     private double precio;
 
-    @OneToMany(mappedBy = "pizza", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Topping> toppings;
+//    @OneToMany(mappedBy = "pizza", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Topping> toppings;
 
     public Pizza() {}
 
@@ -42,12 +42,12 @@ public class Pizza {
         this.precio = precio;
     }
 
-    public double getPrecioTotal() {
-        double total = precio;
-        if (toppings != null) {
-            for (Topping t : toppings) total += t.getPrecioTopping();
-        }
-        return total;
-    }
+//    public double getPrecioTotal() {
+//        double total = precio;
+//        if (toppings != null) {
+//            for (Topping t : toppings) total += t.getPrecioTopping();
+//        }
+//        return total;
+//    }
 
 }

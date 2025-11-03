@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PizzUM & BurgUM — Admin / Historial</title>
+
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
+</head>
+<body>
+  <!-- Header admin -->
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" th:href="@{/}">
+        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+        <span class="brand__name">PizzUM &amp; BurgUM</span>
+      </a>
+      <nav class="site-nav">
+        <a class="nav__link" th:href="@{/admin}">Panel</a>
+        <a class="nav__link" th:href="@{/admin/productos}">Productos</a>
+        <a class="nav__link" th:href="@{/admin/pedidos}">Pedidos</a>
+        <a class="nav__link is-active" th:href="@{/admin/historial}">Historial</a>
+        <a class="nav__link" th:href="@{/admin/administradores}">Administradores</a>
+        <a class="nav__link" th:href="@{/login}">Cerrar sesión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Título -->
+    <section class="container section">
+      <h1>Historial de pedidos</h1>
+      <p class="form-hint">Filtrá por rango de fechas para ver pedidos anteriores.</p>
+    </section>
+
+    <!-- Filtros por fecha -->
+    <section class="container section">
+      <form class="form-section form-section--row" method="get" th:action="@{/admin/historial}">
+        <div class="form-group">
+          <label for="f_desde">Desde</label>
+          <input class="input" id="f_desde" name="desde" type="date" required>
+        </div>
+        <div class="form-group">
+          <label for="f_hasta">Hasta</label>
+          <input class="input" id="f_hasta" name="hasta" type="date" required>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn--primary" type="submit">Aplicar</button>
+          <a class="btn btn--ghost" th:href="@{/admin/historial}">Limpiar</a>
+        </div>
+      </form>
+    </section>
+
+    <!-- Resultados (placeholders) -->
+    <section class="container section">
+      <div class="card">
+        <h2 style="margin-bottom:.5rem;">Resultados</h2>
+        <p class="form-hint" style="margin-top:0;">Pedidos entregados dentro del rango seleccionado.</p>
+
+        <!-- Item historial 1 -->
+        <article class="order-item" style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);padding:var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-top:var(--space-4);">
+          <div style="display:grid;gap:.35rem;">
+            <h3 style="margin:0;">Pedido #000101</h3>
+            <small>Creado: 12/10/2025 19:42 — Entregado: 12/10/2025 20:25</small>
+            <small>Cliente: Juan Pérez — Domicilio: 18 de Julio 1234</small>
+            <div class="summary-list">
+              <div><strong>Items:</strong> Pizza mediana (Napolitana) x1 · Burger 1 carne (Pan de papa) x1</div>
+            </div>
+            <div><strong>Total:</strong> $ —</div>
+            <div><strong>Estado:</strong> <span class="badge" style="background:var(--color-accent);">Entregado</span></div>
+          </div>
+        </article>
+
+        <!-- Item historial 2 -->
+        <article class="order-item" style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);padding:var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-top:var(--space-4);">
+          <div style="display:grid;gap:.35rem;">
+            <h3 style="margin:0;">Pedido #000099</h3>
+            <small>Creado: 10/10/2025 21:10 — Entregado: 10/10/2025 21:58</small>
+            <small>Cliente: Ana López — Domicilio: Colonia 555</small>
+            <div class="summary-list">
+              <div><strong>Items:</strong> Pizza grande (Integral) x1 · Bebida: Refresco cola 1.5L</div>
+            </div>
+            <div><strong>Total:</strong> $ —</div>
+            <div><strong>Estado:</strong> <span class="badge" style="background:var(--color-accent);">Entregado</span></div>
+          </div>
+        </article>
+
+        <!-- Item historial 3 -->
+        <article class="order-item" style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);padding:var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-top:var(--space-4);">
+          <div style="display:grid;gap:.35rem;">
+            <h3 style="margin:0;">Pedido #000097</h3>
+            <small>Creado: 08/10/2025 20:05 — Entregado: 08/10/2025 20:47</small>
+            <small>Cliente: Pedro Silva — Domicilio: Bvar. Artigas 1800</small>
+            <div class="summary-list">
+              <div><strong>Items:</strong> Burger 2 carnes (Integral) x2</div>
+            </div>
+            <div><strong>Total:</strong> $ —</div>
+            <div><strong>Estado:</strong> <span class="badge" style="background:var(--color-accent);">Entregado</span></div>
+          </div>
+        </article>
+
+        <!-- Paginación mínima (placeholder) -->
+        <nav class="form-actions" aria-label="Paginación" style="justify-content:flex-end;margin-top:var(--space-4);">
+          <a class="btn btn--ghost" th:href="@{#}">Anterior</a>
+          <a class="btn btn--ghost" th:href="@{#}">Siguiente</a>
+        </nav>
+      </div>
+    </section>
+
+    <section class="container section">
+      <div class="final-actions">
+        <a class="btn btn--secondary" th:href="@{/admin}">Volver al panel</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <small>&copy; 2025 PizzUM &amp; BurgUM — Panel de administración</small>
+      <nav class="footer-nav">
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
