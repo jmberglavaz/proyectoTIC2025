@@ -23,7 +23,7 @@ public class ToppingService {
         return toppingRepository.encontrarUltimos10ToppingsAgregados();
     }
 
-    List<Topping> verToppingsDeTipo(char tipo) {
+    public List<Topping> verToppingsDeTipo(char tipo) {
         return toppingRepository.encontrarToppingsDeTipo(tipo);
     }
 

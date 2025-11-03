@@ -1,10 +1,14 @@
 package um.edu.uy.jdftech.entitites;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "aderezos")
+@Getter
+@Setter
 public class Aderezo {
 
     @Id
