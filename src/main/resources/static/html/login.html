@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PizzUM & BurgUM — Iniciar sesión</title>
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body class="theme-italian">
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html">
+        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
+        <span class="brand__name">PizzUM &amp; BurgUM</span>
+      </a>
+      <nav class="site-nav">
+        <a class="nav__link" href="crear-pizza.html">Crear pizza</a>
+        <a class="nav__link" href="crear-burger.html">Crear hamburguesa</a>
+        <a class="nav__link" href="carrito.html">Carrito</a>
+        <a class="nav__link" href="pedido.html">Pedidos</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="container section auth">
+      <div class="auth-card">
+        <div class="auth-card__media">
+          <img src="../img/login-illustration.svg" alt="Inicio de sesión" class="auth-card__img">
+        </div>
+        <div class="auth-card__content">
+          <h1>Iniciar sesión</h1>
+          <p>Accedé para continuar con tu pedido.</p>
+
+          <form class="form form--auth" method="post" action="#">
+            <div class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input class="input" id="email" name="email" type="email" required autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="password">Contraseña</label>
+              <input class="input" id="password" name="password" type="password" required autocomplete="current-password">
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn--primary" type="submit">Entrar</button>
+              <a class="btn btn--secondary" href="register.html">Crear cuenta</a>
+            </div>
+
+            <p class="auth-help">
+              <a class="link" href="#">¿Olvidaste tu contraseña?</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <small>&copy; 2025 PizzUM &amp; BurgUM</small>
+      <nav class="footer-nav">
+        <a href="#" class="footer__link">Ayuda</a>
+        <a href="#" class="footer__link">Términos</a>
+        <a href="#" class="footer__link">Privacidad</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

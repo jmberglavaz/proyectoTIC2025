@@ -1,29 +1,29 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PizzUM & BurgUM — Crea tu pedido</title>
 
   <!-- Hojas de estilo (las vamos creando en los siguientes pasos) -->
-  <link rel="stylesheet" th:href="@{/css/main.css}">
-  <link rel="stylesheet" th:href="@{/css/layout.css}">
-  <link rel="stylesheet" th:href="@{/css/components.css}">
-  <link rel="stylesheet" th:href="@{/css/pages.css}">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
 </head>
 <body class="theme-italian">
   <!-- Header global -->
   <header class="site-header">
     <div class="container header__inner">
-      <a class="brand" th:href="@{/}">
-        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+      <a class="brand" href="index.html">
+        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
         <span class="brand__name">PizzUM &amp; BurgUM</span>
       </a>
       <nav class="site-nav">
-        <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
-        <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
-        <a class="nav__link" th:href="@{/carrito}">Carrito</a>
-        <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
+        <a class="nav__link" href="crear-pizza.html">Crear pizza</a>
+        <a class="nav__link" href="crear-burger.html">Crear hamburguesa</a>
+        <a class="nav__link" href="carrito.html">Carrito</a>
+        <a class="nav__link" href="pedido.html">Pedidos</a>
       </nav>
     </div>
   </header>
@@ -32,14 +32,14 @@
     <!-- Hero con imagen cálida pizzería -->
     <section class="hero">
       <div class="hero__media">
-        <img th:src="@{/img/hero-pizzeria.png}" alt="Horno de leña y pizza recién hecha" class="hero__img">
+        <img src="../img/hero-pizzeria.png" alt="Horno de leña y pizza recién hecha" class="hero__img">
       </div>
       <div class="hero__content container">
         <h1 class="hero__title">Armá tu pizza o hamburguesa, a tu gusto</h1>
         <p class="hero__subtitle">Ingredientes frescos, combinaciones infinitas.</p>
         <div class="hero__actions">
-          <a class="btn btn--primary" th:href="@{/crear-pizza}">🍕 Crear pizza</a>
-          <a class="btn btn--secondary" th:href="@{/crear-burger}">🍔 Crear hamburguesa</a>
+          <a class="btn btn--primary" href="crear-pizza.html">🍕 Crear pizza</a>
+          <a class="btn btn--secondary" href="crear-burger.html">🍔 Crear hamburguesa</a>
         </div>
       </div>
     </section>
@@ -47,24 +47,24 @@
     <!-- Cards de entrada rápida al configurador -->
     <section class="container section section--grid">
       <article class="entry-card">
-        <img th:src="@{/img/pizza-card.png}" alt="Pizza con mozzarella y albahaca" class="entry-card__img">
+        <img src="../img/pizza-card.png" alt="Pizza con mozzarella y albahaca" class="entry-card__img">
         <div class="entry-card__body">
           <h2 class="entry-card__title">Crear tu pizza</h2>
           <p class="entry-card__text">
             Elegí tamaño, masa, salsa, queso y toppings. Mirá el total antes de agregar al pedido.
           </p>
-          <a class="btn btn--primary" th:href="@{/crear-pizza}">Empezar</a>
+          <a class="btn btn--primary" href="crear-pizza.html">Empezar</a>
         </div>
       </article>
 
       <article class="entry-card">
-        <img th:src="@{/img/burger-card.png}" alt="Hamburguesa con pan de papa y vegetales" class="entry-card__img">
+        <img src="../img/burger-card.png" alt="Hamburguesa con pan de papa y vegetales" class="entry-card__img">
         <div class="entry-card__body">
           <h2 class="entry-card__title">Crear tu hamburguesa</h2>
           <p class="entry-card__text">
             Elegí hasta 3 carnes, tipo de pan, aderezos y extras. Agregá varias iguales en un toque.
           </p>
-          <a class="btn btn--secondary" th:href="@{/crear-burger}">Empezar</a>
+          <a class="btn btn--secondary" href="crear-burger.html">Empezar</a>
         </div>
       </article>
     </section>
@@ -104,9 +104,9 @@
     <div class="container footer__inner">
       <small>&copy; 2025 PizzUM &amp; BurgUM</small>
       <nav class="footer-nav">
-        <a th:href="@{#}" class="footer__link">Ayuda</a>
-        <a th:href="@{#}" class="footer__link">Términos</a>
-        <a th:href="@{#}" class="footer__link">Privacidad</a>
+        <a href="#" class="footer__link">Ayuda</a>
+        <a href="#" class="footer__link">Términos</a>
+        <a href="#" class="footer__link">Privacidad</a>
       </nav>
     </div>
   </footer>
