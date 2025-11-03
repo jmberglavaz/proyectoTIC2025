@@ -6,10 +6,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import um.edu.uy.jdftech.entitites.*;
+import um.edu.uy.jdftech.enums.EstadoPedido;
 import um.edu.uy.jdftech.services.*;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -26,6 +29,9 @@ public class AdminPagesController {
 
     @Autowired
     private BebidaService bebidaService;
+
+    @Autowired
+    private PedidoService pedidoService;
 
     /* ======================
        Páginas (GET) - ACTUALIZADO
@@ -57,7 +63,34 @@ public class AdminPagesController {
     }
 
     @GetMapping("/pedidos")
-    public String pedidos() {
+    public String pedidos(@RequestParam(required = false) String numero,
+                          @RequestParam(required = false) String clienteId,
+                          @RequestParam(required = false) String estado,
+                          @RequestParam(required = false) String tipo,
+                          @RequestParam(required = false) String desde,
+                          @RequestParam(required = false) String hasta,
+                          Model model) {
+
+        try {
+            List<Pedido> pedidos = pedidoService.findWithFilters(numero, clienteId, estado, tipo, desde, hasta);
+            model.addAttribute("pedidos", pedidos != null ? pedidos : Collections.emptyList());
+
+        } catch (Exception e) {
+            model.addAttribute("pedidos", Collections.emptyList());
+            // Mensaje amigable en lugar del error técnico
+            model.addAttribute("error", "Los filtros aplicados no son válidos. Por favor, verifica los valores.");
+        }
+
+        // Mantener los parámetros en el modelo para que los filtros se mantengan
+        model.addAttribute("filtros", Map.of(
+                "numero", numero != null ? numero : "",
+                "clienteId", clienteId != null ? clienteId : "",
+                "estado", estado != null ? estado : "",
+                "tipo", tipo != null ? tipo : "",
+                "desde", desde != null ? desde : "",
+                "hasta", hasta != null ? hasta : ""
+        ));
+
         return "admin/pedidos-admin";
     }
 
@@ -274,15 +307,31 @@ public class AdminPagesController {
         return "redirect:/admin/productos";
     }
 
-    /* ======================
-       MÉTODOS EXISTENTES (sin cambios)
-       ====================== */
     @PostMapping("/pedidos")
-    public String actualizarPedido(@RequestParam String pedido_id,
+    public String actualizarPedido(@RequestParam Long pedido_id,
                                    @RequestParam String estado,
                                    RedirectAttributes ra) {
-        // TODO: actualizar estado del pedido en servicio/BDD
-        ra.addFlashAttribute("msg", "Pedido #" + pedido_id + " actualizado a: " + estado);
+        try {
+            // Convertir el string del formulario al enum
+            EstadoPedido nuevoEstado = switch(estado) {
+                case "en_cola" -> EstadoPedido.EN_COLA;
+                case "en_preparacion" -> EstadoPedido.EN_PREPARACION;
+                case "en_camino" -> EstadoPedido.EN_CAMINO;
+                case "entregado" -> EstadoPedido.ENTREGADO;
+                default -> throw new IllegalArgumentException("Estado inválido: " + estado);
+            };
+
+            Pedido pedidoActualizado = pedidoService.updateStatus(pedido_id, nuevoEstado);
+
+            ra.addFlashAttribute("msg",
+                    "Pedido #" + String.format("%06d", pedido_id) +
+                            " actualizado a: " + estado.replace("_", " "));
+
+        } catch (Exception e) {
+            ra.addFlashAttribute("error",
+                    "Error al actualizar el pedido: " + e.getMessage());
+        }
+
         return "redirect:/admin/pedidos";
     }
 
