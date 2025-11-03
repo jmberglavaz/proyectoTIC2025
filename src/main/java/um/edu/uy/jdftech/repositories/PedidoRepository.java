@@ -26,4 +26,30 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     @Query("SELECT p FROM Pedido p WHERE p.status IN :estados ORDER BY p.date ASC")
     List<Pedido> findByStatusInOrderByDate(@Param("estados") List<EstadoPedido> estados);
+
+    @Query("SELECT p FROM Pedido p WHERE " +
+            "(:numero IS NULL OR p.id = :numero) AND " +
+            "(:clienteId IS NULL OR p.client.id = :clienteId) AND " +
+            "(:estado IS NULL OR p.status = :estado) AND " +
+            "(:desde IS NULL OR p.date >= :desde) AND " +
+            "(:hasta IS NULL OR p.date <= :hasta) " +
+            "ORDER BY p.date DESC")
+    List<Pedido> findWithFilters(@Param("numero") Long numero,
+                                 @Param("clienteId") Long clienteId,
+                                 @Param("estado") EstadoPedido estado,
+                                 @Param("desde") LocalDateTime desde,
+                                 @Param("hasta") LocalDateTime hasta);
+
+    @Query("SELECT p FROM Pedido p WHERE " +
+            "p.status IN :estados AND " +
+            "(:numero IS NULL OR p.id = :numero) AND " +
+            "(:clienteId IS NULL OR p.client.id = :clienteId) AND " +
+            "(:desde IS NULL OR p.date >= :desde) AND " +
+            "(:hasta IS NULL OR p.date <= :hasta) " +
+            "ORDER BY p.date DESC")
+    List<Pedido> findActivosWithFilters(@Param("estados") List<EstadoPedido> estados,
+                                        @Param("numero") Long numero,
+                                        @Param("clienteId") Long clienteId,
+                                        @Param("desde") LocalDateTime desde,
+                                        @Param("hasta") LocalDateTime hasta);
 }

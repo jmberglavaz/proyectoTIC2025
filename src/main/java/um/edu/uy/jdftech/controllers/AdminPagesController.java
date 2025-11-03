@@ -12,6 +12,7 @@ import um.edu.uy.jdftech.services.*;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -62,25 +63,33 @@ public class AdminPagesController {
     }
 
     @GetMapping("/pedidos")
-    public String pedidos(@RequestParam(required = false) String numero, Model model) {
+    public String pedidos(@RequestParam(required = false) String numero,
+                          @RequestParam(required = false) String clienteId,
+                          @RequestParam(required = false) String estado,
+                          @RequestParam(required = false) String tipo,
+                          @RequestParam(required = false) String desde,
+                          @RequestParam(required = false) String hasta,
+                          Model model) {
+
         try {
-            List<Pedido> pedidos;
-
-            if (numero != null && !numero.trim().isEmpty()) {
-                // Búsqueda por número de pedido
-                Long pedidoId = Long.parseLong(numero.replace("#", "").trim());
-                Pedido pedido = pedidoService.findById(pedidoId).orElse(null);
-                pedidos = (pedido != null) ? List.of(pedido) : Collections.emptyList();
-            } else {
-                // Mostrar todos los pedidos activos (no entregados)
-                pedidos = pedidoService.findPedidosActivos();
-            }
-
+            List<Pedido> pedidos = pedidoService.findWithFilters(numero, clienteId, estado, tipo, desde, hasta);
             model.addAttribute("pedidos", pedidos != null ? pedidos : Collections.emptyList());
-        } catch (NumberFormatException e) {
-            // Si el número no es válido, mostrar lista vacía
+
+        } catch (Exception e) {
             model.addAttribute("pedidos", Collections.emptyList());
+            // Mensaje amigable en lugar del error técnico
+            model.addAttribute("error", "Los filtros aplicados no son válidos. Por favor, verifica los valores.");
         }
+
+        // Mantener los parámetros en el modelo para que los filtros se mantengan
+        model.addAttribute("filtros", Map.of(
+                "numero", numero != null ? numero : "",
+                "clienteId", clienteId != null ? clienteId : "",
+                "estado", estado != null ? estado : "",
+                "tipo", tipo != null ? tipo : "",
+                "desde", desde != null ? desde : "",
+                "hasta", hasta != null ? hasta : ""
+        ));
 
         return "admin/pedidos-admin";
     }

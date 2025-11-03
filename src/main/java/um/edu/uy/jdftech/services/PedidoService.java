@@ -113,4 +113,79 @@ public class PedidoService {
     public Optional<Pedido> findById(Long id) {
         return pedidoRepository.findById(id);
     }
+
+    public List<Pedido> findWithFilters(String numero, String clienteId, String estado,
+                                        String tipo, String desde, String hasta) {
+        try {
+            // Convertir parámetros
+            Long numeroLong = null;
+            if (numero != null && !numero.trim().isEmpty()) {
+                try {
+                    numeroLong = Long.parseLong(numero.replace("#", "").trim());
+                } catch (NumberFormatException e) {
+                    // Si el número no es válido, retornar lista vacía
+                    return Collections.emptyList();
+                }
+            }
+
+            Long clienteIdLong = null;
+            if (clienteId != null && !clienteId.trim().isEmpty()) {
+                try {
+                    clienteIdLong = Long.parseLong(clienteId.trim());
+                } catch (NumberFormatException e) {
+                    // Si el ID de cliente no es válido, retornar lista vacía
+                    return Collections.emptyList();
+                }
+            }
+
+            EstadoPedido estadoEnum = null;
+            if (estado != null && !estado.trim().isEmpty()) {
+                try {
+                    estadoEnum = EstadoPedido.valueOf(estado);
+                } catch (IllegalArgumentException e) {
+                    // Si el estado no es válido, retornar lista vacía
+                    return Collections.emptyList();
+                }
+            }
+
+            LocalDateTime desdeDate = null;
+            if (desde != null && !desde.trim().isEmpty()) {
+                try {
+                    desdeDate = LocalDateTime.parse(desde + "T00:00:00");
+                } catch (Exception e) {
+                    // Si la fecha no es válida, ignorar el filtro
+                }
+            }
+
+            LocalDateTime hastaDate = null;
+            if (hasta != null && !hasta.trim().isEmpty()) {
+                try {
+                    hastaDate = LocalDateTime.parse(hasta + "T23:59:59");
+                } catch (Exception e) {
+                    // Si la fecha no es válida, ignorar el filtro
+                }
+            }
+
+            // Aplicar filtro de tipo (activo/inactivo)
+            if (tipo != null && !tipo.trim().isEmpty()) {
+                List<EstadoPedido> estados;
+                if ("activo".equals(tipo)) {
+                    estados = List.of(EstadoPedido.EN_COLA, EstadoPedido.EN_PREPARACION, EstadoPedido.EN_CAMINO);
+                } else if ("inactivo".equals(tipo)) {
+                    estados = List.of(EstadoPedido.ENTREGADO);
+                } else {
+                    estados = List.of();
+                }
+
+                return pedidoRepository.findActivosWithFilters(estados, numeroLong, clienteIdLong, desdeDate, hastaDate);
+            } else {
+                return pedidoRepository.findWithFilters(numeroLong, clienteIdLong, estadoEnum, desdeDate, hastaDate);
+            }
+
+        } catch (Exception e) {
+            // En caso de cualquier otro error, retornar lista vacía silenciosamente
+            System.err.println("Error al aplicar filtros: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
 }
