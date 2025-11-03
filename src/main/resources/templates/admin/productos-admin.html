@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PizzUM & BurgUM — Admin / Productos</title>
+
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/pages.css}">
+</head>
+<body>
+<!-- Header admin -->
+<header class="site-header">
+    <div class="container header__inner">
+        <a class="brand" th:href="@{/}">
+            <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+            <span class="brand__name">PizzUM &amp; BurgUM</span>
+        </a>
+        <nav class="site-nav">
+            <a class="nav__link" th:href="@{/admin}">Panel</a>
+            <a class="nav__link is-active" th:href="@{/admin/productos}">Productos</a>
+            <a class="nav__link" th:href="@{/admin/pedidos}">Pedidos</a>
+            <a class="nav__link" th:href="@{/admin/historial}">Historial</a>
+            <a class="nav__link" th:href="@{/admin/administradores}">Administradores</a>
+            <a class="nav__link" th:href="@{/login}">Cerrar sesión</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section class="container section">
+        <h1>Gestión de productos</h1>
+        <p class="form-hint">Agregá o quitá opciones del catálogo. Los precios son opcionales por ahora.</p>
+    </section>
+
+    <!-- =======================
+         PIZZAS
+    ======================== -->
+    <section class="container section">
+        <h2>Pizzas</h2>
+
+        <!-- Tipos de masa -->
+        <article class="card">
+            <h3>Tipos de masa</h3>
+            <p class="form-hint">Ejemplos: napolitana, integral, sin gluten.</p>
+
+            <!-- Lista de existentes -->
+            <ul class="summary-list">
+                <li th:each="topping : ${masas}">
+                    <strong th:text="${topping.nombre}">Napolitana</strong> — $ <span th:text="${topping.precioTopping}">—</span>
+                    <form class="inline-form" method="post" th:action="@{/admin/productos/eliminar/{id}(id=${topping.idTopping})}">
+                        <button class="link link--danger" type="submit">Eliminar</button>
+                    </form>
+                </li>
+            </ul>
+
+            <!-- Agregar -->
+            <form class="form-section form-section--row" method="post" th:action="@{/admin/productos/crear}">
+                <input type="hidden" name="hamburguesaOPizza" value="P">
+                <input type="hidden" name="tipo" value="M">
+                <div class="form-group">
+                    <label for="masa_nombre">Nombre</label>
+                    <input class="input" id="masa_nombre" name="nombre" type="text" required placeholder="Ej: Napolitana">
+                </div>
+                <div class="form-group">
+                    <label for="masa_precio">Precio (opcional)</label>
+                    <input class="input" id="masa_precio" name="precio" type="number" inputmode="numeric" min="0" step="1" placeholder="$">
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--primary" type="submit">Agregar masa</button>
+                </div>
+            </form>
+        </article>
+
+        <!-- Salsas -->
+        <article class="card">
+            <h3>Salsas</h3>
+            <p class="form-hint">Ejemplos: tomate, pomodoro, blanca.</p>
+
+            <ul class="summary-list">
+                <li th:each="topping : ${salsas}">
+                    <strong th:text="${topping.nombre}">Tomate</strong> — $ <span th:text="${topping.precioTopping}">—</span>
+                    <form class="inline-form" method="post" th:action="@{/admin/productos/eliminar/{id}(id=${topping.idTopping})}">
+                        <button class="link link--danger" type="submit">Eliminar</button>
+                    </form>
+                </li>
+            </ul>
+
+            <form class="form-section form-section--row" method="post" th:action="@{/admin/productos/crear}">
+                <input type="hidden" name="hamburguesaOPizza" value="P">
+                <input type="hidden" name="tipo" value="S">
+                <div class="form-group">
+                    <label for="salsa_nombre">Nombre</label>
+                    <input class="input" id="salsa_nombre" name="nombre" type="text" required placeholder="Ej: Tomate">
+                </div>
+                <div class="form-group">
+                    <label for="salsa_precio">Precio (opcional)</label>
+                    <input class="input" id="salsa_precio" name="precio" type="number" inputmode="numeric" min="0" step="1" placeholder="$">
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--primary" type="submit">Agregar salsa</button>
+                </div>
+            </form>
+        </article>
+
+        <!-- Quesos -->
+        <article class="card">
+            <h3>Quesos</h3>
+            <p class="form-hint">Ejemplos: muzzarella, roquefort, provolone.</p>
+
+            <ul class="summary-list">
+                <li th:each="topping : ${quesos}">
+                    <strong th:text="${topping.nombre}">Muzzarella</strong> — $ <span th:text="${topping.precioTopping}">—</span>
+                    <form class="inline-form" method="post" th:action="@{/admin/productos/eliminar/{id}(id=${topping.idTopping})}">
+                        <button class="link link--danger" type="submit">Eliminar</button>
+                    </form>
+                </li>
+            </ul>
+
+            <form class="form-section form-section--row" method="post" th:action="@{/admin/productos/crear}">
+                <input type="hidden" name="hamburguesaOPizza" value="P">
+                <input type="hidden" name="tipo" value="Q">
+                <div class="form-group">
+                    <label for="queso_nombre">Nombre</label>
+                    <input class="input" id="queso_nombre" name="nombre" type="text" required placeholder="Ej: Muzzarella">
+                </div>
+                <div class="form-group">
+                    <label for="queso_precio">Precio (opcional)</label>
+                    <input class="input" id="queso_precio" name="precio" type="number" inputmode="numeric" min="0" step="1" placeholder="$">
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--primary" type="submit">Agregar queso</button>
+                </div>
+            </form>
+        </article>
+
+        <!-- Toppings -->
+        <article class="card">
+            <h3>Toppings</h3>
+            <p class="form-hint">Ejemplos: albahaca, aceitunas, jamón, champiñones.</p>
+
+            <ul class="summary-list">
+                <li th:each="topping : ${toppingsPizza}">
+                    <strong th:text="${topping.nombre}">Albahaca</strong> — $ <span th:text="${topping.precioTopping}">—</span>
+                    <form class="inline-form" method="post" th:action="@{/admin/productos/eliminar/{id}(id=${topping.idTopping})}">
+                        <button class="link link--danger" type="submit">Eliminar</button>
+                    </form>
+                </li>
+            </ul>
+
+            <form class="form-section form-section--row" method="post" th:action="@{/admin/productos/crear}">
+                <input type="hidden" name="hamburguesaOPizza" value="P">
+                <input type="hidden" name="tipo" value="X">
+                <div class="form-group">
+                    <label for="top_nombre">Nombre</label>
+                    <input class="input" id="top_nombre" name="nombre" type="text" required placeholder="Ej: Jamón">
+                </div>
+                <div class="form-group">
+                    <label for="top_precio">Precio (opcional)</label>
+                    <input class="input" id="top_precio" name="precio" type="number" inputmode="numeric" min="0" step="1" placeholder="$">
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--primary" type="submit">Agregar topping</button>
+                </div>
+            </form>
+        </article>
+    </section>
+
+    <!-- =======================
+         HAMBURGUESAS
+    ======================== -->
+    <section class="container section">
+        <h2>Hamburguesas</h2>
+
+        <!-- Tipos de pan -->
+        <article class="card">
+            <h3>Tipos de pan</h3>
+            <p class="form-hint">Ejemplos: pan de papa, integral, sin gluten.</p>
+
+            <ul class="summary-list">
+                <li th:each="topping : ${panes}">
+                    <strong th:text="${topping.nombre}">Pan de papa</strong> — $ <span th:text="${topping.precioTopping}">—</span>
+                    <form class="inline-form" method="post" th:action="@{/admin/productos/eliminar/{id}(id=${topping.idTopping})}">
+                        <button class="link link--danger" type="submit">Eliminar</button>
+                    </form>
+                </li>
+            </ul>
+
+            <form class="form-section form-section--row" method="post" th:action="@{/admin/productos/crear}">
+                <input type="hidden" name="hamburguesaOPizza" value="H">
+                <input type="hidden" name="tipo" value="P">
+                <div class="form-group">
+                    <label for="pan_nombre">Nombre</label>
+                    <input class="input" id="pan_nombre" name="nombre" type="text" required placeholder="Ej: Pan brioche">
+                </div>
+                <div class="form-group">
+                    <label for="pan_precio">Precio (opcional)</label>
+                    <input class="input" id="pan_precio" name="precio" type="number" inputmode="numeric" min="0" step="1" placeholder="$">
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--primary" type="submit">Agregar pan</button>
+                </div>
+            </form>
+        </article>
+
+        <!-- Tipos de carne -->
+        <article class="card">
+            <h3>Tipos de carne</h3>
+            <p class="form-hint">Ejemplos: vaca, pollo, cerdo, salmón, lentejas, soja.</p>
+
+            <ul class="summary-list">
+                <li th:each="topping : ${carnes}">
+                    <strong th:text="${topping.nombre}">Vaca</strong> — $ <span th:text="${topping.precioTopping}">—</span>
+                    <form class="inline-form" method="post" th:action="@{/admin/productos/eliminar/{id}(id=${topping.idTopping})}">
+                        <button class="link link--danger" type="submit">Eliminar</button>
+                    </form>
+                </li>
+            </ul>
+
+            <form class="form-section form-section--row" method="post" th:action="@{/admin/productos/crear}">
+                <input type="hidden" name="hamburguesaOPizza" value="H">
+                <input type="hidden" name="tipo" value="C">
+                <div class="form-group">
+                    <label for="carne_nombre">Nombre</label>
+                    <input class="input" id="carne_nombre" name="nombre" type="text" required placeholder="Ej: Vaca">
+                </div>
+                <div class="form-group">
+                    <label for="carne_precio">Precio (opcional)</label>
+                    <input class="input" id="carne_precio" name="precio" type="number" inputmode="numeric" min="0" step="1" placeholder="$">
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--primary" type="submit">Agregar carne</button>
+                </div>
+            </form>
+        </article>
+
+        <!-- Aderezos -->
+        <article class="card">
+            <h3>Aderezos</h3>
+            <p class="form-hint">Ejemplos: ketchup, mayonesa, mostaza, BBQ, picante.</p>
+
+            <ul class="summary-list">
+                <li th:each="aderezo : ${aderezos}">
+                    <strong th:text="${aderezo.nombre}">Ketchup</strong> — $ <span th:text="${aderezo.precio}">—</span>
+                    <form class="inline-form" method="post" th:action="@{/admin/aderezos/eliminar/{id}(id=${aderezo.idAderezo})}">
+                        <button class="link link--danger" type="submit">Eliminar</button>
+                    </form>
+                </li>
+            </ul>
+
+            <form class="form-section form-section--row" method="post" th:action="@{/admin/aderezos/crear}">
+                <div class="form-group">
+                    <label for="aderezo_nombre">Nombre</label>
+                    <input class="input" id="aderezo_nombre" name="nombre" type="text" required placeholder="Ej: Mostaza Dijon">
+                </div>
+                <div class="form-group">
+                    <label for="aderezo_precio">Precio</label>
+                    <input class="input" id="aderezo_precio" name="precio" type="number" inputmode="numeric" min="0" step="1" placeholder="$" required>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--primary" type="submit">Agregar aderezo</button>
+                </div>
+            </form>
+        </article>
+
+        <!-- Otros toppings -->
+        <article class="card">
+            <h3>Otros toppings</h3>
+            <p class="form-hint">Ejemplos: queso extra, bacon, huevo, cebolla, tomate, queso azul.</p>
+
+            <ul class="summary-list">
+                <li th:each="topping : ${extras}">
+                    <strong th:text="${topping.nombre}">Queso extra</strong> — $ <span th:text="${topping.precioTopping}">—</span>
+                    <form class="inline-form" method="post" th:action="@{/admin/productos/eliminar/{id}(id=${topping.idTopping})}">
+                        <button class="link link--danger" type="submit">Eliminar</button>
+                    </form>
+                </li>
+            </ul>
+
+            <form class="form-section form-section--row" method="post" th:action="@{/admin/productos/crear}">
+                <input type="hidden" name="hamburguesaOPizza" value="H">
+                <input type="hidden" name="tipo" value="X">
+                <div class="form-group">
+                    <label for="extra_nombre">Nombre</label>
+                    <input class="input" id="extra_nombre" name="nombre" type="text" required placeholder="Ej: Queso azul">
+                </div>
+                <div class="form-group">
+                    <label for="extra_precio">Precio (opcional)</label>
+                    <input class="input" id="extra_precio" name="precio" type="number" inputmode="numeric" min="0" step="1" placeholder="$">
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--primary" type="submit">Agregar extra</button>
+                </div>
+            </form>
+        </article>
+    </section>
+
+    <!-- =======================
+         ACOMPAÑAMIENTOS
+    ======================== -->
+    <section class="container section">
+        <h2>Acompañamientos</h2>
+
+        <article class="card">
+            <h3>Listado</h3>
+            <ul class="summary-list">
+                <li th:each="acomp : ${acompanamientos}">
+                    <strong th:text="${acomp.name}">Papas fritas</strong> - <span th:text="${acomp.size}">Medianas</span> — $ <span th:text="${acomp.price}">—</span>
+                    <form class="inline-form" method="post" th:action="@{/admin/acompanamientos/eliminar/{id}(id=${acomp.id})}">
+                        <button class="link link--danger" type="submit">Eliminar</button>
+                    </form>
+                </li>
+            </ul>
+
+            <form class="form-section form-section--row" method="post" th:action="@{/admin/acompanamientos/crear}">
+                <div class="form-group">
+                    <label for="acomp_name">Nombre</label>
+                    <input class="input" id="acomp_name" name="name" type="text" required placeholder="Ej: Papas fritas">
+                </div>
+                <div class="form-group">
+                    <label for="acomp_size">Tamaño</label>
+                    <input class="input" id="acomp_size" name="size" type="text" required placeholder="Ej: Medianas">
+                </div>
+                <div class="form-group">
+                    <label for="acomp_price">Precio</label>
+                    <input class="input" id="acomp_price" name="price" type="number" inputmode="numeric" min="0" step="1" placeholder="$" required>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--primary" type="submit">Agregar acompañamiento</button>
+                </div>
+            </form>
+        </article>
+    </section>
+
+    <!-- =======================
+         BEBIDAS
+    ======================== -->
+    <section class="container section">
+        <h2>Bebidas</h2>
+
+        <article class="card">
+            <h3>Listado</h3>
+            <ul class="summary-list">
+                <li th:each="bebida : ${bebidas}">
+                    <strong th:text="${bebida.name}">Agua</strong> - <span th:text="${bebida.size}">500ml</span> — $ <span th:text="${bebida.price}">—</span>
+                    <form class="inline-form" method="post" th:action="@{/admin/bebidas/eliminar/{id}(id=${bebida.id})}">
+                        <button class="link link--danger" type="submit">Eliminar</button>
+                    </form>
+                </li>
+            </ul>
+
+            <form class="form-section form-section--row" method="post" th:action="@{/admin/bebidas/crear}">
+                <div class="form-group">
+                    <label for="bebida_name">Nombre</label>
+                    <input class="input" id="bebida_name" name="name" type="text" required placeholder="Ej: Refresco naranja">
+                </div>
+                <div class="form-group">
+                    <label for="bebida_size">Tamaño</label>
+                    <input class="input" id="bebida_size" name="size" type="text" required placeholder="Ej: 1.5L">
+                </div>
+                <div class="form-group">
+                    <label for="bebida_price">Precio</label>
+                    <input class="input" id="bebida_price" name="price" type="number" inputmode="numeric" min="0" step="1" placeholder="$" required>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--primary" type="submit">Agregar bebida</button>
+                </div>
+            </form>
+        </article>
+    </section>
+
+    <section class="container section">
+        <div class="final-actions">
+            <a class="btn btn--secondary" th:href="@{/admin}">Volver al panel</a>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer__inner">
+        <small>&copy; 2025 PizzUM &amp; BurgUM — Panel de administración</small>
+        <nav class="footer-nav">
+            <a th:href="@{#}" class="footer__link">Ayuda</a>
+            <a th:href="@{#}" class="footer__link">Términos</a>
+            <a th:href="@{#}" class="footer__link">Privacidad</a>
+        </nav>
+    </div>
+</footer>
+</body>
+</html>

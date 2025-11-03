@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PizzUM & BurgUM — Crear pizza</title>
+
+  <!-- Hojas de estilo globales -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
+</head>
+<body class="theme-italian">
+  <!-- Header global (igual al index) -->
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" th:href="@{/static}">
+        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+        <span class="brand__name">PizzUM &amp; BurgUM</span>
+      </a>
+      <nav class="site-nav">
+        <a class="nav__link is-active" th:href="@{/crear-pizza}">Crear pizza</a>
+        <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
+        <a class="nav__link" th:href="@{/carrito}">Carrito</a>
+        <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero/encabezado visual de la página -->
+    <section class="page-hero">
+      <div class="container page-hero__inner">
+        <div class="page-hero__media">
+          <img th:src="@{/img/custom-pizza.png}" alt="Ingredientes frescos para tu pizza" class="page-hero__img">
+        </div>
+        <div class="page-hero__content">
+          <h1>Creá tu pizza 🍕</h1>
+          <p>Elegí tamaño, masa, salsa, queso y toppings. Después agregala al carrito.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formulario principal -->
+    <section class="container section">
+      <!--
+        IMPORTANTE PARA BACKEND:
+        - De momento dejamos el POST a esta misma ruta (/crear-pizza).
+        - Cuando implementemos el @PostMapping, usaremos este mismo endpoint.
+      -->
+      <form class="form form--builder" method="post" th:action="@{/crear-pizza}">
+        <!-- Tamaño -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Tamaño</legend>
+          <div class="options options--inline">
+            <label class="option">
+              <input type="radio" name="tamanio" id="tamanio-s" value="S" required>
+              <span class="option__label">Pequeña (S)</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tamanio" id="tamanio-m" value="M">
+              <span class="option__label">Mediana (M)</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tamanio" id="tamanio-l" value="L">
+              <span class="option__label">Grande (L)</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Tipo de masa -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Tipo de masa</legend>
+          <div class="options options--inline">
+            <label class="option">
+              <input type="radio" name="masa" id="masa-napolitana" value="napolitana" required>
+              <span class="option__label">Napolitana</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="masa" id="masa-integral" value="integral">
+              <span class="option__label">Integral</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="masa" id="masa-sin-gluten" value="sin_gluten">
+              <span class="option__label">Sin gluten</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Salsa -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Salsa</legend>
+          <div class="options options--inline">
+            <label class="option">
+              <input type="radio" name="salsa" id="salsa-tomate" value="tomate" required>
+              <span class="option__label">Tomate</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="salsa" id="salsa-pomodoro" value="pomodoro">
+              <span class="option__label">Pomodoro</span>
+            </label>
+            <!-- Preparado para extensiones futuras (4 quesos, blanca, etc.) -->
+            <label class="option">
+              <input type="radio" name="salsa" id="salsa-otra" value="otra">
+              <span class="option__label">Otra</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Queso -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Queso</legend>
+          <div class="options options--inline">
+            <label class="option">
+              <input type="radio" name="queso" id="queso-muzza" value="muzza" required>
+              <span class="option__label">Muzzarella</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="queso" id="queso-roquefort" value="roquefort">
+              <span class="option__label">Roquefort</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="queso" id="queso-otro" value="otro">
+              <span class="option__label">Otro</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Toppings -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Toppings</legend>
+          <p class="form-hint">Seleccioná los que quieras (opcional).</p>
+
+          <!-- Grid de toppings (checkbox múltiple) -->
+          <div class="options options--grid">
+            <label class="option option--checkbox">
+              <input type="checkbox" name="toppings[]" id="top-aceitunas" value="aceitunas">
+              <span class="option__label">Aceitunas</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="toppings[]" id="top-albahaca" value="albahaca">
+              <span class="option__label">Albahaca</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="toppings[]" id="top-morron" value="morron">
+              <span class="option__label">Morrón</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="toppings[]" id="top-cebolla" value="cebolla">
+              <span class="option__label">Cebolla</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="toppings[]" id="top-champiniones" value="champiniones">
+              <span class="option__label">Champiñones</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="toppings[]" id="top-jamon" value="jamon">
+              <span class="option__label">Jamón</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="toppings[]" id="top-bacon" value="bacon">
+              <span class="option__label">Bacon</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="toppings[]" id="top-anana" value="anana">
+              <span class="option__label">Ananá</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Cantidad + observaciones -->
+        <fieldset class="form-section form-section--row">
+          <div class="form-group">
+            <label for="cantidad">Cantidad</label>
+            <input type="number" id="cantidad" name="cantidad" min="1" step="1" value="1" inputmode="numeric" class="input input--number">
+          </div>
+          <div class="form-group form-group--grow">
+            <label for="observaciones">Observaciones (opcional)</label>
+            <textarea id="observaciones" name="observaciones" rows="2" class="input input--textarea" placeholder="Ej: sin picante, cortar en 8 porciones"></textarea>
+          </div>
+        </fieldset>
+
+        <!-- Resumen visual (estático por ahora) -->
+        <section class="summary-box" aria-live="polite">
+          <h2 class="summary-box__title">Resumen</h2>
+          <ul class="summary-list">
+            <li><strong>Tamaño:</strong> —</li>
+            <li><strong>Masa:</strong> —</li>
+            <li><strong>Salsa:</strong> —</li>
+            <li><strong>Queso:</strong> —</li>
+            <li><strong>Toppings:</strong> —</li>
+            <li><strong>Cantidad:</strong> 1</li>
+          </ul>
+          <div class="summary-total">
+            <span class="summary-total__label">Total estimado</span>
+            <span class="summary-total__value">$ —</span>
+          </div>
+        </section>
+
+        <!-- Acciones -->
+        <div class="form-actions">
+          <!-- Botón principal: el backend luego define el @PostMapping de /crear-pizza -->
+          <button type="submit" class="btn btn--primary">Agregar al carrito</button>
+          <!-- Navegación útil mientras está estático -->
+          <a class="btn btn--ghost" th:href="@{/carrito}">Ver carrito</a>
+          <a class="btn btn--link" th:href="@{/static}">Volver al inicio</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <small>&copy; 2025 PizzUM &amp; BurgUM</small>
+      <nav class="footer-nav">
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
