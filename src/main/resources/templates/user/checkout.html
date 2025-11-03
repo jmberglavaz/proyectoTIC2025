@@ -1,29 +1,29 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PizzUM & BurgUM — Checkout</title>
 
   <!-- Hojas de estilo globales -->
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body class="theme-italian">
   <!-- Header global -->
   <header class="site-header">
     <div class="container header__inner">
-      <a class="brand" href="index.html">
-        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
+      <a class="brand" th:href="@{/static}">
+        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
         <span class="brand__name">PizzUM &amp; BurgUM</span>
       </a>
       <nav class="site-nav">
-        <a class="nav__link" href="crear-pizza.html">Crear pizza</a>
-        <a class="nav__link" href="crear-burger.html">Crear hamburguesa</a>
-        <a class="nav__link" href="carrito.html">Carrito</a>
-        <a class="nav__link is-active" href="checkout.html">Checkout</a>
+        <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
+        <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
+        <a class="nav__link" th:href="@{/carrito}">Carrito</a>
+        <a class="nav__link is-active" th:href="@{/checkout}">Checkout</a>
       </nav>
     </div>
   </header>
@@ -32,7 +32,7 @@
     <!-- Stepper visual -->
     <section class="container section">
       <ol class="stepper" aria-label="Pasos de compra">
-        <li class="stepper__item"><a href="carrito.html">Carrito</a></li>
+        <li class="stepper__item"><a th:href="@{/carrito}">Carrito</a></li>
         <li class="stepper__item is-current" aria-current="step">Checkout</li>
         <li class="stepper__item">Confirmación</li>
       </ol>
@@ -40,7 +40,7 @@
 
     <section class="container section section--grid-2">
       <!-- Formulario de checkout -->
-      <form class="form form--checkout" method="post" action="#">
+      <form class="form form--checkout" method="post" th:action="@{/checkout}">
 
         <!-- Cuenta (solo lectura) -->
         <fieldset class="form-section" aria-describedby="ayuda-cuenta">
@@ -64,7 +64,6 @@
 
           <!-- Lista de direcciones guardadas (radios) -->
           <div class="select-list" role="radiogroup" aria-label="Direcciones guardadas">
-            <!-- Ejemplo: la predeterminada marcada -->
             <label class="option select-card">
               <input type="radio" name="direccion_id" value="dir_default" checked>
               <div class="select-card__body">
@@ -119,9 +118,7 @@
           <legend class="form-section__title">Pago con tarjeta</legend>
           <p class="form-hint">Seleccioná una tarjeta guardada e ingresá el CVV (3 dígitos).</p>
 
-          <!-- Lista de tarjetas guardadas (radios) -->
           <div class="select-list" role="radiogroup" aria-label="Tarjetas guardadas">
-            <!-- Predeterminada marcada -->
             <label class="option select-card">
               <input type="radio" name="tarjeta_id" value="t_default" checked>
               <div class="select-card__body">
@@ -152,28 +149,19 @@
             </label>
           </div>
 
-          <!-- CVV único para la tarjeta seleccionada -->
           <div class="form-group" style="max-width:220px; margin-top: var(--space-3);">
             <label for="cvv_seleccionada">CVV</label>
             <input class="input" id="cvv_seleccionada" name="cvv_seleccionada" type="text" inputmode="numeric" pattern="[0-9]{3}" placeholder="3 dígitos" required aria-describedby="ayuda-cvv">
             <small id="ayuda-cvv" class="form-hint">Ingresá 3 dígitos del CVV de la tarjeta seleccionada.</small>
           </div>
 
-          <!-- Agregar nueva tarjeta (acordeón inline) -->
           <details class="accordion">
             <summary>Agregar nueva tarjeta</summary>
             <div class="card" style="margin-top:var(--space-3)">
               <div class="form-grid">
                 <div class="form-group form-group--full">
                   <label for="tarjeta_numero_nueva">Número de tarjeta</label>
-                  <input
-                    class="input"
-                    id="tarjeta_numero_nueva"
-                    name="tarjeta_numero_nueva"
-                    type="text"
-                    inputmode="numeric"
-                    pattern="[0-9 ]+"
-                    placeholder="Solo números">
+                  <input class="input" id="tarjeta_numero_nueva" name="tarjeta_numero_nueva" type="text" inputmode="numeric" pattern="[0-9 ]+" placeholder="Solo números">
                 </div>
                 <div class="form-group form-group--full">
                   <label for="tarjeta_nombre_nueva">Nombre en la tarjeta</label>
@@ -194,7 +182,6 @@
               </div>
 
               <div class="form-actions" style="justify-content:flex-start">
-                <!-- Reemplazo del checkbox por botón -->
                 <button class="btn btn--secondary" type="submit" name="accion" value="guardar_tarjeta_nueva">Guardar en mi perfil</button>
               </div>
             </div>
@@ -203,7 +190,7 @@
 
         <!-- Acciones -->
         <div class="form-actions">
-          <a class="btn btn--secondary" href="carrito.html">Volver al carrito</a>
+          <a class="btn btn--secondary" th:href="@{/carrito}">Volver al carrito</a>
           <button class="btn btn--primary" type="submit" name="accion" value="confirmar_pedido">Confirmar pedido</button>
         </div>
       </form>
@@ -214,7 +201,7 @@
 
         <ul class="checkout-items">
           <li class="checkout-item">
-            <img class="checkout-item__img" src="../img/pizza-thumb.png" alt="Pizza personalizada">
+            <img class="checkout-item__img" th:src="@{/img/pizza-thumb.png}" alt="Pizza personalizada">
             <div class="checkout-item__info">
               <p class="checkout-item__name">Pizza personalizada</p>
               <p class="checkout-item__meta">Mediana • Napolitana • Tomate • Muzzarella • Albahaca</p>
@@ -223,7 +210,7 @@
             <div class="checkout-item__price">$ 0</div>
           </li>
           <li class="checkout-item">
-            <img class="checkout-item__img" src="../img/burger-thumb.png" alt="Hamburguesa personalizada">
+            <img class="checkout-item__img" th:src="@{/img/burger-thumb.png}" alt="Hamburguesa personalizada">
             <div class="checkout-item__info">
               <p class="checkout-item__name">Hamburguesa personalizada</p>
               <p class="checkout-item__meta">2 carnes • Vaca • Pan de papa • Queso extra</p>
@@ -246,7 +233,7 @@
         </dl>
 
         <div class="delivery-note">
-          <img class="delivery-note__img" src="../img/delivery-illustration.svg" alt="Reparto a domicilio">
+          <img class="delivery-note__img" th:src="@{/img/delivery-illustration.svg}" alt="Reparto a domicilio">
           <p class="delivery-note__text">Tu pedido llegará a tu domicilio. Podrás seguir el estado luego de confirmar.</p>
         </div>
       </aside>
@@ -258,9 +245,9 @@
     <div class="container footer__inner">
       <small>&copy; 2025 PizzUM &amp; BurgUM</small>
       <nav class="footer-nav">
-        <a href="#" class="footer__link">Ayuda</a>
-        <a href="#" class="footer__link">Términos</a>
-        <a href="#" class="footer__link">Privacidad</a>
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
       </nav>
     </div>
   </footer>

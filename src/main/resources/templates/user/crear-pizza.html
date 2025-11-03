@@ -1,29 +1,29 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PizzUM & BurgUM — Crear pizza</title>
 
   <!-- Hojas de estilo globales -->
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body class="theme-italian">
   <!-- Header global (igual al index) -->
   <header class="site-header">
     <div class="container header__inner">
-      <a class="brand" href="index.html">
-        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
+      <a class="brand" th:href="@{/static}">
+        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
         <span class="brand__name">PizzUM &amp; BurgUM</span>
       </a>
       <nav class="site-nav">
-        <a class="nav__link is-active" href="crear-pizza.html">Crear pizza</a>
-        <a class="nav__link" href="crear-burger.html">Crear hamburguesa</a>
-        <a class="nav__link" href="carrito.html">Carrito</a>
-        <a class="nav__link" href="pedido.html">Pedidos</a>
+        <a class="nav__link is-active" th:href="@{/crear-pizza}">Crear pizza</a>
+        <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
+        <a class="nav__link" th:href="@{/carrito}">Carrito</a>
+        <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
       </nav>
     </div>
   </header>
@@ -33,7 +33,7 @@
     <section class="page-hero">
       <div class="container page-hero__inner">
         <div class="page-hero__media">
-          <img src="../img/custom-pizza.png" alt="Ingredientes frescos para tu pizza" class="page-hero__img">
+          <img th:src="@{/img/custom-pizza.png}" alt="Ingredientes frescos para tu pizza" class="page-hero__img">
         </div>
         <div class="page-hero__content">
           <h1>Creá tu pizza 🍕</h1>
@@ -46,10 +46,10 @@
     <section class="container section">
       <!--
         IMPORTANTE PARA BACKEND:
-        - method="post" y action="#" son placeholders; luego se reemplaza action por el endpoint real.
-        - name/id pensados para mapear directo a DTO/entidades.
+        - De momento dejamos el POST a esta misma ruta (/crear-pizza).
+        - Cuando implementemos el @PostMapping, usaremos este mismo endpoint.
       -->
-      <form class="form form--builder" method="post" action="#">
+      <form class="form form--builder" method="post" th:action="@{/crear-pizza}">
         <!-- Tamaño -->
         <fieldset class="form-section">
           <legend class="form-section__title">Tamaño</legend>
@@ -200,11 +200,11 @@
 
         <!-- Acciones -->
         <div class="form-actions">
-          <!-- Botón principal: el backend luego define action/endpoint -->
+          <!-- Botón principal: el backend luego define el @PostMapping de /crear-pizza -->
           <button type="submit" class="btn btn--primary">Agregar al carrito</button>
           <!-- Navegación útil mientras está estático -->
-          <a class="btn btn--ghost" href="carrito.html">Ver carrito</a>
-          <a class="btn btn--link" href="index.html">Volver al inicio</a>
+          <a class="btn btn--ghost" th:href="@{/carrito}">Ver carrito</a>
+          <a class="btn btn--link" th:href="@{/static}">Volver al inicio</a>
         </div>
       </form>
     </section>
@@ -215,9 +215,9 @@
     <div class="container footer__inner">
       <small>&copy; 2025 PizzUM &amp; BurgUM</small>
       <nav class="footer-nav">
-        <a href="#" class="footer__link">Ayuda</a>
-        <a href="#" class="footer__link">Términos</a>
-        <a href="#" class="footer__link">Privacidad</a>
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
       </nav>
     </div>
   </footer>

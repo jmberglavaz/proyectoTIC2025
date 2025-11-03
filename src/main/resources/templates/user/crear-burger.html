@@ -1,29 +1,29 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PizzUM & BurgUM — Crear hamburguesa</title>
 
   <!-- Hojas de estilo globales -->
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body class="theme-italian">
   <!-- Header global -->
   <header class="site-header">
     <div class="container header__inner">
-      <a class="brand" href="index.html">
-        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
+      <a class="brand" th:href="@{/static}">
+        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
         <span class="brand__name">PizzUM &amp; BurgUM</span>
       </a>
       <nav class="site-nav">
-        <a class="nav__link" href="crear-pizza.html">Crear pizza</a>
-        <a class="nav__link is-active" href="crear-burger.html">Crear hamburguesa</a>
-        <a class="nav__link" href="carrito.html">Carrito</a>
-        <a class="nav__link" href="pedido.html">Pedidos</a>
+        <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
+        <a class="nav__link is-active" th:href="@{/crear-burger}">Crear hamburguesa</a>
+        <a class="nav__link" th:href="@{/carrito}">Carrito</a>
+        <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
       </nav>
     </div>
   </header>
@@ -33,7 +33,7 @@
     <section class="page-hero">
       <div class="container page-hero__inner">
         <div class="page-hero__media">
-          <img src="../img/custom-burger.png" alt="Ingredientes frescos para tu hamburguesa" class="page-hero__img">
+          <img th:src="@{/img/custom-burger.png}" alt="Ingredientes frescos para tu hamburguesa" class="page-hero__img">
         </div>
         <div class="page-hero__content">
           <h1>Creá tu hamburguesa 🍔</h1>
@@ -44,12 +44,8 @@
 
     <!-- Formulario principal -->
     <section class="container section">
-      <!--
-        IMPORTANTE PARA BACKEND:
-        - method="post" y action="#" se reemplazan luego por el endpoint real.
-        - names/ids consistentes con DTO esperado.
-      -->
-      <form class="form form--builder" method="post" action="#">
+      <!-- Preparado para backend -->
+      <form class="form form--builder" method="post" th:action="@{/crear-burger}">
         <!-- Cantidad de carnes -->
         <fieldset class="form-section">
           <legend class="form-section__title">Cantidad de carnes</legend>
@@ -119,7 +115,7 @@
           </div>
         </fieldset>
 
-        <!-- Aderezos (checkbox múltiple) -->
+        <!-- Aderezos -->
         <fieldset class="form-section">
           <legend class="form-section__title">Aderezos</legend>
           <p class="form-hint">Podés elegir varios (opcional).</p>
@@ -147,7 +143,7 @@
           </div>
         </fieldset>
 
-        <!-- Extras / add-ons (checkbox múltiple) -->
+        <!-- Extras -->
         <fieldset class="form-section">
           <legend class="form-section__title">Extras</legend>
           <p class="form-hint">Seleccioná los que quieras (opcional).</p>
@@ -191,7 +187,7 @@
           </div>
         </fieldset>
 
-        <!-- Resumen visual (estático por ahora) -->
+        <!-- Resumen -->
         <section class="summary-box" aria-live="polite">
           <h2 class="summary-box__title">Resumen</h2>
           <ul class="summary-list">
@@ -211,8 +207,8 @@
         <!-- Acciones -->
         <div class="form-actions">
           <button type="submit" class="btn btn--primary">Agregar al carrito</button>
-          <a class="btn btn--ghost" href="carrito.html">Ver carrito</a>
-          <a class="btn btn--link" href="index.html">Volver al inicio</a>
+          <a class="btn btn--ghost" th:href="@{/carrito}">Ver carrito</a>
+          <a class="btn btn--link" th:href="@{/static}">Volver al inicio</a>
         </div>
       </form>
     </section>
@@ -223,9 +219,9 @@
     <div class="container footer__inner">
       <small>&copy; 2025 PizzUM &amp; BurgUM</small>
       <nav class="footer-nav">
-        <a href="#" class="footer__link">Ayuda</a>
-        <a href="#" class="footer__link">Términos</a>
-        <a href="#" class="footer__link">Privacidad</a>
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
       </nav>
     </div>
   </footer>

@@ -1,29 +1,29 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PizzUM & BurgUM — Carrito</title>
 
   <!-- Hojas de estilo globales -->
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body class="theme-italian">
   <!-- Header global -->
   <header class="site-header">
     <div class="container header__inner">
-      <a class="brand" href="index.html">
-        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
+      <a class="brand" th:href="@{/static}">
+        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
         <span class="brand__name">PizzUM &amp; BurgUM</span>
       </a>
       <nav class="site-nav">
-        <a class="nav__link" href="crear-pizza.html">Crear pizza</a>
-        <a class="nav__link" href="crear-burger.html">Crear hamburguesa</a>
-        <a class="nav__link is-active" href="carrito.html">Carrito</a>
-        <a class="nav__link" href="pedido.html">Pedidos</a>
+        <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
+        <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
+        <a class="nav__link is-active" th:href="@{/carrito}">Carrito</a>
+        <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
       </nav>
     </div>
   </header>
@@ -34,20 +34,20 @@
 
       <!-- Estado vacío -->
       <div class="empty-state" aria-live="polite">
-        <img class="empty-state__img" src="../img/empty-cart.svg" alt="Carrito vacío">
+        <img class="empty-state__img" th:src="@{/img/empty-cart.svg}" alt="Carrito vacío">
         <p class="empty-state__text">Tu carrito está vacío.</p>
         <div class="empty-state__actions">
-          <a class="btn btn--primary" href="crear-pizza.html">Crear una pizza</a>
-          <a class="btn btn--secondary" href="crear-burger.html">Crear una hamburguesa</a>
+          <a class="btn btn--primary" th:href="@{/crear-pizza}">Crear una pizza</a>
+          <a class="btn btn--secondary" th:href="@{/crear-burger}">Crear una hamburguesa</a>
         </div>
       </div>
 
-      <!-- Lista de ítems (ejemplo de estructura; el backend la rellenará y ocultará el estado vacío) -->
+      <!-- Lista de ítems (ejemplo estático por ahora) -->
       <div class="cart" role="region" aria-label="Listado de productos en el carrito">
         <!-- Ítem de ejemplo 1: Pizza personalizada -->
         <article class="cart-item">
           <div class="cart-item__media">
-            <img src="../img/pizza-thumb.png" alt="Pizza personalizada" class="cart-item__img">
+            <img th:src="@{/img/pizza-thumb.png}" alt="Pizza personalizada" class="cart-item__img">
           </div>
           <div class="cart-item__info">
             <h2 class="cart-item__title">Pizza personalizada</h2>
@@ -55,18 +55,18 @@
               Tamaño: Mediana • Masa: Napolitana • Salsa: Tomate • Queso: Muzzarella • Toppings: Albahaca, Jamón
             </p>
             <div class="cart-item__controls">
-              <!-- Form de cantidad listo para conectar después -->
-              <form class="cart-item__qty" method="post" action="#">
+              <!-- Form de cantidad (POST al mismo carrito por ahora) -->
+              <form class="cart-item__qty" method="post" th:action="@{/carrito}">
                 <label for="qty-pizza-1" class="visually-hidden">Cantidad</label>
                 <input id="qty-pizza-1" name="cantidad" class="input input--number" type="number" min="1" step="1" value="1" inputmode="numeric">
                 <button class="btn btn--ghost" type="submit">Actualizar</button>
               </form>
               <div class="cart-item__actions">
-                <a class="link" href="crear-pizza.html">Editar</a>
-                <form method="post" action="#" class="inline-form">
+                <a class="link" th:href="@{/crear-pizza}">Editar</a>
+                <form method="post" th:action="@{/carrito}" class="inline-form">
                   <button class="link" type="submit">Duplicar</button>
                 </form>
-                <form method="post" action="#" class="inline-form">
+                <form method="post" th:action="@{/carrito}" class="inline-form">
                   <button class="link link--danger" type="submit">Eliminar</button>
                 </form>
               </div>
@@ -85,7 +85,7 @@
         <!-- Ítem de ejemplo 2: Hamburguesa personalizada -->
         <article class="cart-item">
           <div class="cart-item__media">
-            <img src="../img/burger-thumb.png" alt="Hamburguesa personalizada" class="cart-item__img">
+            <img th:src="@{/img/burger-thumb.png}" alt="Hamburguesa personalizada" class="cart-item__img">
           </div>
           <div class="cart-item__info">
             <h2 class="cart-item__title">Hamburguesa personalizada</h2>
@@ -93,17 +93,17 @@
               2 carnes • Tipo: Vaca • Pan: Papa • Aderezos: Ketchup, Mayonesa • Extras: Queso extra
             </p>
             <div class="cart-item__controls">
-              <form class="cart-item__qty" method="post" action="#">
+              <form class="cart-item__qty" method="post" th:action="@{/carrito}">
                 <label for="qty-burger-1" class="visually-hidden">Cantidad</label>
                 <input id="qty-burger-1" name="cantidad" class="input input--number" type="number" min="1" step="1" value="3" inputmode="numeric">
                 <button class="btn btn--ghost" type="submit">Actualizar</button>
               </form>
               <div class="cart-item__actions">
-                <a class="link" href="crear-burger.html">Editar</a>
-                <form method="post" action="#" class="inline-form">
+                <a class="link" th:href="@{/crear-burger}">Editar</a>
+                <form method="post" th:action="@{/carrito}" class="inline-form">
                   <button class="link" type="submit">Duplicar</button>
                 </form>
-                <form method="post" action="#" class="inline-form">
+                <form method="post" th:action="@{/carrito}" class="inline-form">
                   <button class="link link--danger" type="submit">Eliminar</button>
                 </form>
               </div>
@@ -136,8 +136,8 @@
         </dl>
 
         <div class="cart-summary__actions">
-          <a class="btn btn--primary" href="checkout.html">Ir al checkout</a>
-          <a class="btn btn--secondary" href="index.html">Seguir comprando</a>
+          <a class="btn btn--primary" th:href="@{/checkout}">Ir al checkout</a>
+          <a class="btn btn--secondary" th:href="@{/static}">Seguir comprando</a>
         </div>
       </aside>
     </section>
@@ -148,9 +148,9 @@
     <div class="container footer__inner">
       <small>&copy; 2025 PizzUM &amp; BurgUM</small>
       <nav class="footer-nav">
-        <a href="#" class="footer__link">Ayuda</a>
-        <a href="#" class="footer__link">Términos</a>
-        <a href="#" class="footer__link">Privacidad</a>
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
       </nav>
     </div>
   </footer>

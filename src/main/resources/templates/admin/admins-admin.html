@@ -14,12 +14,12 @@
   <!-- Header admin -->
   <header class="site-header">
     <div class="container header__inner">
-      <a class="brand" th:href="@{/}">
+      <a class="brand" th:href="@{/static}">
         <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
         <span class="brand__name">PizzUM &amp; BurgUM</span>
       </a>
       <nav class="site-nav">
-        <a class="nav__link" th:href="@{/admin}">Panel</a>
+        <a class="nav__link" th:href="@{/templates/admin}">Panel</a>
         <a class="nav__link" th:href="@{/admin/productos}">Productos</a>
         <a class="nav__link" th:href="@{/admin/pedidos}">Pedidos</a>
         <a class="nav__link" th:href="@{/admin/historial}">Historial</a>
@@ -71,7 +71,7 @@
 
             <div class="form-actions">
               <button class="btn btn--primary" type="submit">Crear administrador</button>
-              <a class="btn btn--ghost" th:href="@{/admin}">Cancelar</a>
+              <a class="btn btn--ghost" th:href="@{/templates/admin}">Cancelar</a>
             </div>
           </fieldset>
         </form>
@@ -145,7 +145,7 @@
 
     <section class="container section">
       <div class="final-actions">
-        <a class="btn btn--secondary" th:href="@{/admin}">Volver al panel</a>
+        <a class="btn btn--secondary" th:href="@{/templates/admin}">Volver al panel</a>
       </div>
     </section>
   </main>
