@@ -50,6 +50,17 @@
   </div>
 </header>
 
+</header>
+
+<div th:if="${msg}" class="alert alert-success" style="margin: 1rem auto; max-width: 1200px; padding: 1rem; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; color: #155724;">
+  <strong>✓</strong> <span th:text="${msg}"></span>
+</div>
+
+<div th:if="${error}" class="alert alert-error" style="margin: 1rem auto; max-width: 1200px; padding: 1rem; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24;">
+  <strong>✗</strong> <span th:text="${error}"></span>
+</div>
+
+<main>
 
   <main>
     <!-- Hero con imagen cálida pizzería -->

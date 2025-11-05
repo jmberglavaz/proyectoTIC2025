@@ -29,4 +29,8 @@ public class MedioDePago {
     @Temporal(TemporalType.DATE)
     @Column(name = "EXPIRATION_DATE", nullable = false)
     private Date expirationDate;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
 }

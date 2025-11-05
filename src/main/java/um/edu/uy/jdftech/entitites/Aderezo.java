@@ -1,10 +1,14 @@
 package um.edu.uy.jdftech.entitites;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "aderezos")
+@Getter
+@Setter
 public class Aderezo {
 
     @Id
@@ -29,13 +33,5 @@ public class Aderezo {
     public Aderezo(String nombre, double precio) {
         this.nombre = nombre;
         this.precio = precio;
-    }
-
-    public Long getIdAderezo() {
-        return id_aderezo;
-    }
-
-    public void setIdAderezo(Long id_aderezo) {
-        this.id_aderezo = id_aderezo;
     }
 }

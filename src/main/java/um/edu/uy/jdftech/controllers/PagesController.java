@@ -1,4 +1,4 @@
-package um.edu.uy.jdftech;
+package um.edu.uy.jdftech.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,16 +25,16 @@ public class PagesController {
   }
 
   // Carrito
-  @GetMapping("/carrito")
-  public String carrito() {
-    return "carrito";
-  }
+  //@GetMapping("/carrito")
+  //public String carrito() {
+  //  return "carrito";
+  //}
 
   // Pedidos
-  @GetMapping("/pedido")
-  public String pedido() {
-    return "pedido";
-  }
+  //@GetMapping("/pedido")
+  //public String pedido() {
+  //  return "pedido";
+  //}
 
   // Ayuda / Términos / Privacidad - Las dejo aca por si pinta hacerlas dsps 
   @GetMapping("/ayuda")

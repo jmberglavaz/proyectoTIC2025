@@ -1,11 +1,15 @@
 package um.edu.uy.jdftech.entitites;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import java.util.List;
 
 @Entity
 @Table(name = "pizzas")
+@Getter
+@Setter
 public class Pizza {
 
     @Id
@@ -49,5 +53,4 @@ public class Pizza {
         }
         return total;
     }
-
 }

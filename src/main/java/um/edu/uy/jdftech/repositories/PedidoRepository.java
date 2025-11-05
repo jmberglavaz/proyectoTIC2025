@@ -12,12 +12,19 @@ import java.util.List;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
-    List<Pedido> findByClientId(Long clientId);
+    
+    // Buscar todos los pedidos de un cliente ordenados por fecha DESC
+    List<Pedido> findByClientIdOrderByDateDesc(Long clientId);
+    
     List<Pedido> findByDateBetween(LocalDateTime from, LocalDateTime to);
 
     @Query("SELECT p FROM Pedido p WHERE p.client.id = :clienteId ORDER BY p.date DESC")
-    List<Pedido> getLast3OrdersByClient(@Param("clientId") Long clienteId, Pageable pageable);
+    List<Pedido> getLast3OrdersByClient(@Param("clienteId") Long clienteId, Pageable pageable);
 
     @Query("SELECT p FROM Pedido p WHERE p.client.id = :clientId AND p.date BETWEEN :from AND :to ORDER BY p.date DESC")
-    List<Pedido> findHistoricByClient(@Param("clientId") Long clienteId, @Param("from") LocalDateTime from, @Param("to") LocalDateTime to);
+    List<Pedido> findHistoricByClient(@Param("clienteId") Long clienteId, @Param("from") LocalDateTime from, @Param("to") LocalDateTime to);
+    
+    // Buscar pedidos ACTIVOS de un cliente (EN_COLA, EN_PREPARACION, EN_CAMINO)
+    @Query("SELECT p FROM Pedido p WHERE p.client.id = :clientId AND p.status IN (um.edu.uy.jdftech.enums.EstadoPedido.EN_COLA, um.edu.uy.jdftech.enums.EstadoPedido.EN_PREPARACION, um.edu.uy.jdftech.enums.EstadoPedido.EN_CAMINO) ORDER BY p.date DESC")
+    List<Pedido> findPedidosActivosByClientId(@Param("clientId") Long clientId);
 }

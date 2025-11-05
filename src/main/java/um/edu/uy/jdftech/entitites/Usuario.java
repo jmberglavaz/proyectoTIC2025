@@ -30,4 +30,12 @@ public class Usuario {
     @Column(name = "BIRTH_DATE", nullable = false)
     private Date birthDate;
 
+    @Column(name = "EMAIL", nullable = false)
+    private String email;
+
+    @Column(name = "PASSWORD", nullable = false)
+    private String password;
+
+    @Column(name = "PHONE_NUMBER", nullable = false)
+    private String phoneNumber;
 }

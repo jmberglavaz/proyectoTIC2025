@@ -11,6 +11,7 @@ import um.edu.uy.jdftech.entitites.Acompanamiento;
 import um.edu.uy.jdftech.entitites.Bebida;
 import um.edu.uy.jdftech.entitites.Cliente;
 import um.edu.uy.jdftech.entitites.Pedido;
+import um.edu.uy.jdftech.enums.EstadoPedido;
 import um.edu.uy.jdftech.repositories.AcompanamientoRepository;
 import um.edu.uy.jdftech.repositories.BebidaRepository;
 import um.edu.uy.jdftech.repositories.ClienteRepository;
@@ -76,10 +77,6 @@ public class PedidoService {
         return pedidoRepository.save(pedido);
     }
 
-    public List<Pedido> findByClienteId(Long clientId) {
-        return pedidoRepository.findByClientId(clientId);
-    }
-
     public List<Pedido> getLast3OrdersByClient(Long clienteId) {
         Pageable pageable = PageRequest.of(0, 3);
         return pedidoRepository.getLast3OrdersByClient(clienteId, pageable);
@@ -87,5 +84,40 @@ public class PedidoService {
 
     public List<Pedido> findHistoricByClient(Long clienteId, LocalDateTime from, LocalDateTime to) {
         return pedidoRepository.findHistoricByClient(clienteId, from, to);
+    }
+
+    // Obtener pedido por ID
+    public Pedido obtenerPedidoPorId(Long pedidoId) {
+        return pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));
+    }
+
+    // Cambiar estado del pedido
+    public Pedido cambiarEstado(Long pedidoId, EstadoPedido nuevoEstado) {
+        Pedido pedido = obtenerPedidoPorId(pedidoId);
+        pedido.setStatus(nuevoEstado);
+        return pedidoRepository.save(pedido);
+    }
+
+    // Cancelar pedido (solo si está EN_COLA)
+    public void cancelarPedido(Long pedidoId) {
+        Pedido pedido = obtenerPedidoPorId(pedidoId);
+        
+        if (pedido.getStatus() != EstadoPedido.EN_COLA) {
+            throw new RuntimeException("Solo se pueden cancelar pedidos en estado EN_COLA");
+        }
+        
+        // Eliminar el pedido
+        pedidoRepository.delete(pedido);
+    }
+
+    // Obtener todos los pedidos de un cliente
+    public List<Pedido> obtenerPedidosCliente(Cliente cliente) {
+        return pedidoRepository.findByClientIdOrderByDateDesc(cliente.getId());
+    }
+    // Obtener el pedido activo más reciente de un cliente
+    public Optional<Pedido> obtenerPedidoActivo(Cliente cliente) {
+        List<Pedido> pedidosActivos = pedidoRepository.findPedidosActivosByClientId(cliente.getId());
+        return pedidosActivos.isEmpty() ? Optional.empty() : Optional.of(pedidosActivos.get(0));
     }
 }
