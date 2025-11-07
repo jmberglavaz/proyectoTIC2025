@@ -49,5 +49,13 @@ public class ClienteService {
         return clienteRepository.findByFullNameContaining(firstName + " " + lastName);
     }
 
+    public boolean validarLogin(Long cedula, String password) {
+        try {
+            Cliente cliente = findById(cedula);
+            return cliente.getPassword().equals(password);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 }
