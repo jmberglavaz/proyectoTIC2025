@@ -117,43 +117,4 @@ public class CarritoService {
             throw new IllegalArgumentException("Tipo de producto no válido: " + tipoProducto);
         }
     }
-
-    public Carrito agregarPizza(Long carritoId, Long pizzaId, int cantidad) {
-        Carrito carrito = carritoRepository.findById(carritoId)
-                .orElseThrow(() -> new RuntimeException("Carrito no encontrado"));
-
-        Pizza pizza = pizzaRepository.findById(pizzaId)
-                .orElseThrow(() -> new RuntimeException("Pizza no encontrada"));
-
-        CarritoItem item = CarritoItem.builder()
-                .carrito(carrito)
-                .productoId(pizzaId)
-                .tipoProducto("PIZZA")
-                .cantidad(cantidad)
-                .precioUnitario(BigDecimal.valueOf(pizza.getPrecioTotal()))
-                .build();
-
-        carrito.agregarItem(item);
-        return carritoRepository.save(carrito);
-    }
-
-    public Carrito agregarHamburguesa(Long carritoId, Long hamburguesaId, int cantidad) {
-        Carrito carrito = carritoRepository.findById(carritoId)
-                .orElseThrow(() -> new RuntimeException("Carrito no encontrado"));
-
-        Hamburguesa hamburguesa = hamburguesaRepository.findById(hamburguesaId)
-                .orElseThrow(() -> new RuntimeException("Hamburguesa no encontrada"));
-
-        CarritoItem item = CarritoItem.builder()
-                .carrito(carrito)
-                .productoId(hamburguesaId)
-                .tipoProducto("HAMBURGUESA")
-                .cantidad(cantidad)
-                .precioUnitario(BigDecimal.valueOf(hamburguesa  .getPrecioTotal()))
-                .build();
-
-        carrito.agregarItem(item);
-        return carritoRepository.save(carrito);
-    }
-
 }
