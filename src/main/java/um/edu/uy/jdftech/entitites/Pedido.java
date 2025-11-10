@@ -30,15 +30,16 @@ public class Pedido {
     @JoinColumn(name = "card_number", nullable = false)
     private MedioDePago medioDePago;
 
-    @Column(name = "ADDRESS")
-    private String address;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "direccion_id", nullable = false)
+    private Direccion direccion;
 
     @Column(name = "DATE", nullable = false)
     private LocalDateTime date;
 
     @Column(name = "STATUS")
-    private EstadoPedido status;
-    // por defecto en cola
+    @Builder.Default
+    private EstadoPedido status = EstadoPedido.EN_COLA;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -61,7 +62,6 @@ public class Pedido {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Hamburguesa> hamburguesas = new HashSet<>();
-
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -88,10 +88,10 @@ public class Pedido {
     @Column(name = "TOTAL_COST")
     private Double totalCost;
 
-    public Pedido(Cliente cliente) { // no le paso dirección xq las tendría que buscar entre las que el cliente ya tiene, o darle la opción de agregar otra
+    public Pedido(Cliente cliente) {
         this.client = cliente;
         this.date = LocalDateTime.now();
-        // Falta agregar medio de pago
+        this.status = EstadoPedido.EN_COLA;
         this.totalCost = 0.0;
         this.pizzas = new HashSet<>();
         this.hamburguesas = new HashSet<>();
@@ -100,6 +100,34 @@ public class Pedido {
     }
 
     public void calculateTotal() {
-        this.totalCost = bebidas.stream().mapToDouble(Bebida::getPrice).sum() + acompanamientos.stream().mapToDouble(Acompanamiento::getPrice).sum(); // agregar pizza y hamburguesa
+        this.totalCost = 0.0;
+
+        // Sumar pizzas
+        if (pizzas != null) {
+            this.totalCost += pizzas.stream()
+                .mapToDouble(Pizza::getPrecio)
+                .sum();
+        }
+
+        // Sumar hamburguesas
+        if (hamburguesas != null) {
+            this.totalCost += hamburguesas.stream()
+                .mapToDouble(Hamburguesa::getPrecio_base)
+                .sum();
+        }
+
+        // Sumar bebidas
+        if (bebidas != null) {
+            this.totalCost += bebidas.stream()
+                .mapToDouble(Bebida::getPrice)
+                .sum();
+        }
+
+        // Sumar acompañamientos
+        if (acompanamientos != null) {
+            this.totalCost += acompanamientos.stream()
+                .mapToDouble(Acompanamiento::getPrice)
+                .sum();
+        }
     }
 }

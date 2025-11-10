@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PizzUM & BurgUM — Admin</title>
 
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body>
   <!-- Header admin -->
   <header class="site-header">
     <div class="container header__inner">
-      <a class="brand" href="../html/index.html">
-        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
+      <a class="brand" th:href="@{/}">
+        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
         <span class="brand__name">PizzUM &amp; BurgUM</span>
       </a>
       <nav class="site-nav">
-        <a class="nav__link is-active" href="../html/index-admin.html">Panel</a>
-        <a class="nav__link" href="../html/productos-admin.html">Productos</a>
-        <a class="nav__link" href="../html/pedidos-admin.html">Pedidos</a>
-        <a class="nav__link" href="../html/historial-admin.html">Historial</a>
-        <a class="nav__link" href="../html/admins-admin.html">Administradores</a>
-        <a class="nav__link" href="../html/login.html">Cerrar sesión</a>
+        <a class="nav__link is-active" th:href="@{/admin}">Panel</a>
+        <a class="nav__link" th:href="@{/admin/productos}">Productos</a>
+        <a class="nav__link" th:href="@{/admin/pedidos}">Pedidos</a>
+        <a class="nav__link" th:href="@{/admin/historial}">Historial</a>
+        <a class="nav__link" th:href="@{/admin/administradores}">Administradores</a>
+        <a class="nav__link" th:href="@{/login}">Cerrar sesión</a>
       </nav>
     </div>
   </header>
@@ -45,29 +45,29 @@
           Agregar o quitar tipos de masa, salsas, quesos, toppings, hamburguesas base, bebidas, etc.
         </p>
         <div class="form-actions">
-          <a class="btn btn--primary" href="../html/productos-admin.html">Gestionar productos</a>
+          <a class="btn btn--primary" th:href="@{/admin/productos}">Gestionar productos</a>
         </div>
       </article>
 
-      <!-- Pedidos (cambiar estado) -->
+      <!-- Pedidos -->
       <article class="card">
         <h2>Pedidos</h2>
         <p class="form-hint">
           Ver pedidos en curso y cambiar estado: en cola → en preparación → en camino → entregado.
         </p>
         <div class="form-actions">
-          <a class="btn btn--primary" href="../html/pedidos-admin.html">Abrir pedidos</a>
+          <a class="btn btn--primary" th:href="@{/admin/pedidos}">Abrir pedidos</a>
         </div>
       </article>
 
-      <!-- Historial con filtros -->
+      <!-- Historial -->
       <article class="card">
         <h2>Historial</h2>
         <p class="form-hint">
           Listado de pedidos históricos. Filtrar por rango de fechas y estado.
         </p>
         <div class="form-actions">
-          <a class="btn btn--primary" href="../html/historial-admin.html">Ver historial</a>
+          <a class="btn btn--primary" th:href="@{/admin/historial}">Ver historial</a>
         </div>
       </article>
 
@@ -78,7 +78,7 @@
           Crear nuevos administradores y gestionar accesos.
         </p>
         <div class="form-actions">
-          <a class="btn btn--primary" href="../html/admins-admin.html">Gestionar administradores</a>
+          <a class="btn btn--primary" th:href="@{/admin/administradores}">Gestionar administradores</a>
         </div>
       </article>
     </section>
@@ -86,7 +86,7 @@
     <!-- Cerrar sesión -->
     <section class="container section">
       <div class="final-actions">
-        <a class="btn btn--danger" href="../html/login.html">Cerrar sesión</a>
+        <a class="btn btn--danger" th:href="@{/login}">Cerrar sesión</a>
       </div>
     </section>
   </main>
@@ -96,9 +96,9 @@
     <div class="container footer__inner">
       <small>&copy; 2025 PizzUM &amp; BurgUM — Panel de administración</small>
       <nav class="footer-nav">
-        <a href="#" class="footer__link">Ayuda</a>
-        <a href="#" class="footer__link">Términos</a>
-        <a href="#" class="footer__link">Privacidad</a>
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
       </nav>
     </div>
   </footer>

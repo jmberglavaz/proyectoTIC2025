@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PizzUM & BurgUM — Admin / Historial</title>
 
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body>
   <!-- Header admin -->
   <header class="site-header">
     <div class="container header__inner">
-      <a class="brand" href="../html/index.html">
-        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
+      <a class="brand" th:href="@{/}">
+        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
         <span class="brand__name">PizzUM &amp; BurgUM</span>
       </a>
       <nav class="site-nav">
-        <a class="nav__link" href="../html/index-admin.html">Panel</a>
-        <a class="nav__link" href="../html/productos-admin.html">Productos</a>
-        <a class="nav__link" href="../html/pedidos-admin.html">Pedidos</a>
-        <a class="nav__link is-active" href="../html/historial-admin.html">Historial</a>
-        <a class="nav__link" href="../html/admins-admin.html">Administradores</a>
-        <a class="nav__link" href="../html/login.html">Cerrar sesión</a>
+        <a class="nav__link" th:href="@{/admin}">Panel</a>
+        <a class="nav__link" th:href="@{/admin/productos}">Productos</a>
+        <a class="nav__link" th:href="@{/admin/pedidos}">Pedidos</a>
+        <a class="nav__link is-active" th:href="@{/admin/historial}">Historial</a>
+        <a class="nav__link" th:href="@{/admin/administradores}">Administradores</a>
+        <a class="nav__link" th:href="@{/login}">Cerrar sesión</a>
       </nav>
     </div>
   </header>
@@ -38,7 +38,7 @@
 
     <!-- Filtros por fecha -->
     <section class="container section">
-      <form class="form-section form-section--row" method="get" action="#">
+      <form class="form-section form-section--row" method="get" th:action="@{/admin/historial}">
         <div class="form-group">
           <label for="f_desde">Desde</label>
           <input class="input" id="f_desde" name="desde" type="date" required>
@@ -49,7 +49,7 @@
         </div>
         <div class="form-actions">
           <button class="btn btn--primary" type="submit">Aplicar</button>
-          <a class="btn btn--ghost" href="../html/historial-admin.html">Limpiar</a>
+          <a class="btn btn--ghost" th:href="@{/admin/historial}">Limpiar</a>
         </div>
       </form>
     </section>
@@ -104,15 +104,15 @@
 
         <!-- Paginación mínima (placeholder) -->
         <nav class="form-actions" aria-label="Paginación" style="justify-content:flex-end;margin-top:var(--space-4);">
-          <a class="btn btn--ghost" href="#">Anterior</a>
-          <a class="btn btn--ghost" href="#">Siguiente</a>
+          <a class="btn btn--ghost" th:href="@{#}">Anterior</a>
+          <a class="btn btn--ghost" th:href="@{#}">Siguiente</a>
         </nav>
       </div>
     </section>
 
     <section class="container section">
       <div class="final-actions">
-        <a class="btn btn--secondary" href="../html/index-admin.html">Volver al panel</a>
+        <a class="btn btn--secondary" th:href="@{/admin}">Volver al panel</a>
       </div>
     </section>
   </main>
@@ -121,9 +121,9 @@
     <div class="container footer__inner">
       <small>&copy; 2025 PizzUM &amp; BurgUM — Panel de administración</small>
       <nav class="footer-nav">
-        <a href="#" class="footer__link">Ayuda</a>
-        <a href="#" class="footer__link">Términos</a>
-        <a href="#" class="footer__link">Privacidad</a>
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
       </nav>
     </div>
   </footer>

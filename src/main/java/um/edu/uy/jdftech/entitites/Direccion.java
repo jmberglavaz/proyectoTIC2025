@@ -28,6 +28,6 @@ public class Direccion {
     private boolean isDefect;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USUARIO_ID")
-    private Usuario usuario;
+    @JoinColumn(name = "CLIENTE_ID")
+    private Cliente Cliente;
 }

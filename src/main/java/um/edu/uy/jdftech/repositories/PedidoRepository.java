@@ -14,6 +14,10 @@ import java.util.List;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByClientId(Long clientId);
+
+    // Buscar todos los pedidos de un cliente ordenados por fecha DESC
+    List<Pedido> findByClientIdOrderByDateDesc(Long clientId);
+
     List<Pedido> findByDateBetween(LocalDateTime from, LocalDateTime to);
 
     @Query("SELECT p FROM Pedido p WHERE p.client.id = :clienteId ORDER BY p.date DESC")
@@ -55,4 +59,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     @Query("SELECT p FROM Pedido p ORDER BY p.date DESC")
     List<Pedido> findLast10Orders(Pageable pageable);
+
+    // Buscar pedidos ACTIVOS de un cliente (EN_COLA, EN_PREPARACION, EN_CAMINO)
+    @Query("SELECT p FROM Pedido p WHERE p.client.id = :clientId AND p.status IN (um.edu.uy.jdftech.enums.EstadoPedido.EN_COLA, um.edu.uy.jdftech.enums.EstadoPedido.EN_PREPARACION, um.edu.uy.jdftech.enums.EstadoPedido.EN_CAMINO) ORDER BY p.date DESC")
+    List<Pedido> findPedidosActivosByClientId(@Param("clientId") Long clientId);
 }

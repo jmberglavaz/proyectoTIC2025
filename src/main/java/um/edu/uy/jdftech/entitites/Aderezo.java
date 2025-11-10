@@ -34,12 +34,4 @@ public class Aderezo {
         this.nombre = nombre;
         this.precio = precio;
     }
-
-    public Long getIdAderezo() {
-        return id_aderezo;
-    }
-
-    public void setIdAderezo(Long id_aderezo) {
-        this.id_aderezo = id_aderezo;
-    }
 }
