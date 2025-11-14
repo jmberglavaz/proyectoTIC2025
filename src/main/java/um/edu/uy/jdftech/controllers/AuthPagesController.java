@@ -1,4 +1,4 @@
-package um.edu.uy.jdftech;
+package um.edu.uy.jdftech.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,7 @@
-package um.edu.uy.jdftech;
+package um.edu.uy.jdftech.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -8,31 +9,15 @@ public class PagesController {
 
   // Home
   @GetMapping("/")
-  public String index() {
+  public String index(Model model) {
+    model.addAttribute("page", "home");
     return "index";
-  }
-
-  // Crear pizza
-  @GetMapping("/crear-pizza")
-  public String crearPizza() {
-    return "crear-pizza";
-  }
-
-  // Crear hamburguesa
-  @GetMapping("/crear-burger")
-  public String crearBurger() {
-    return "crear-burger";
-  }
-
-  // Carrito
-  @GetMapping("/carrito")
-  public String carrito() {
-    return "carrito";
   }
 
   // Pedidos
   @GetMapping("/pedido")
-  public String pedido() {
+  public String pedido(Model model) {
+    model.addAttribute("page", "pedido");
     return "pedido";
   }
 
