@@ -3,7 +3,6 @@ package um.edu.uy.jdftech.entitites;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "administradores")
@@ -12,5 +11,8 @@ import org.hibernate.annotations.GenericGenerator;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Administrador extends Usuario {
+    @Column(name = "ADMIN_ID")
+    private Long adminId;
 }

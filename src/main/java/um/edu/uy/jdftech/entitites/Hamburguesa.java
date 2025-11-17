@@ -20,13 +20,12 @@ public class Hamburguesa {
     private int cant_de_carnes;
 
     @Column(name = "precio_base")
-    private double precio_base;
-
+    private double precio_base
     @OneToMany(mappedBy = "hamburguesa", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Aderezo> aderezos;
 
-//    @OneToMany(mappedBy = "hamburguesa", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Topping> toppings;
+    @OneToMany(mappedBy = "hamburguesa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Topping> toppings;
 
     public Hamburguesa() {}
 

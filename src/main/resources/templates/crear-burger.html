@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PizzUM & BurgUM — Crear hamburguesa</title>
+
+  <!-- Hojas de estilo globales -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
+</head>
+<body class="theme-italian">
+  
+  <!-- Header global (actualizado con sección de Favoritos) -->
+<header class="site-header">
+  <div class="container header__inner">
+    <a class="brand" th:href="@{/}">
+      <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+      <span class="brand__name">PizzUM &amp; BurgUM</span>
+    </a>
+    <nav class="site-nav">
+      <a class="nav__link"
+         th:classappend="${page == 'pizza'} ? ' is-active'"
+         th:href="@{/crear-pizza}">
+         Crear pizza
+      </a>
+      <a class="nav__link"
+         th:classappend="${page == 'burger'} ? ' is-active'"
+         th:href="@{/crear-burger}">
+         Crear hamburguesa
+      </a>
+      <a class="nav__link"
+         th:classappend="${page == 'favoritos'} ? ' is-active'"
+         th:href="@{/favoritos}">
+         ❤️ Favoritos
+      </a>
+      <a class="nav__link"
+         th:classappend="${page == 'carrito'} ? ' is-active'"
+         th:href="@{/carrito}">
+         Carrito
+      </a>
+      <a class="nav__link"
+         th:classappend="${page == 'pedido'} ? ' is-active'"
+         th:href="@{/pedido}">
+         Pedidos
+      </a>
+    </nav>
+  </div>
+</header>
+
+
+  <main>
+    <!-- Hero/encabezado -->
+    <section class="page-hero">
+      <div class="container page-hero__inner">
+        <div class="page-hero__media">
+          <img th:src="@{/img/custom-burger.png}" alt="Ingredientes frescos para tu hamburguesa" class="page-hero__img">
+        </div>
+        <div class="page-hero__content">
+          <h1>Creá tu hamburguesa 🍔</h1>
+          <p>Elegí la cantidad de carnes (1 a 3), tipo de carne, pan, aderezos y extras. Agregala al carrito.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formulario principal -->
+    <section class="container section">
+      <form id="favBurgerForm" th:action="@{/favoritos/agregar}" method="post" style="display:none;">
+        <input type="hidden" name="tipo" value="burger">
+      </form>
+      <!-- Preparado para backend -->
+      <form class="form form--builder" method="post" th:action="@{/crear-burger}" data-builder="burger">
+        <!-- Cantidad de carnes -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Cantidad de carnes</legend>
+          <div class="options options--inline">
+            <label class="option">
+              <input type="radio" name="cantidad_carnes" id="carnes-1" value="1" required data-label="1 carne" data-price="310">
+              <span class="option__label">1 carne <small class="option__price">$ 310</small></span>
+            </label>
+            <label class="option">
+              <input type="radio" name="cantidad_carnes" id="carnes-2" value="2" data-label="2 carnes" data-price="420">
+              <span class="option__label">2 carnes <small class="option__price">$ 420</small></span>
+            </label>
+            <label class="option">
+              <input type="radio" name="cantidad_carnes" id="carnes-3" value="3" data-label="3 carnes" data-price="520">
+              <span class="option__label">3 carnes <small class="option__price">$ 520</small></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Tipo de carne -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Tipo de carne</legend>
+          <div class="options options--inline">
+            <label class="option">
+              <input type="radio" name="tipo_carne" id="carne-vaca" value="vaca" required data-label="Vaca" data-price="0">
+              <span class="option__label">Vaca <small class="option__price">incluido</small></span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_carne" id="carne-pollo" value="pollo" data-label="Pollo" data-price="25">
+              <span class="option__label">Pollo <small class="option__price">$ 25</small></span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_carne" id="carne-cerdo" value="cerdo" data-label="Cerdo" data-price="30">
+              <span class="option__label">Cerdo <small class="option__price">$ 30</small></span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_carne" id="carne-salmon" value="salmon" data-label="Salmón" data-price="45">
+              <span class="option__label">Salmón <small class="option__price">$ 45</small></span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_carne" id="carne-lentejas" value="lentejas" data-label="Lentejas" data-price="15">
+              <span class="option__label">Lentejas <small class="option__price">$ 15</small></span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_carne" id="carne-soja" value="soja" data-label="Soja" data-price="18">
+              <span class="option__label">Soja <small class="option__price">$ 18</small></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Tipo de pan -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Tipo de pan</legend>
+          <div class="options options--inline">
+            <label class="option">
+              <input type="radio" name="tipo_pan" id="pan-papa" value="papa" required data-label="Pan de papa" data-price="0">
+              <span class="option__label">Pan de papa <small class="option__price">incluido</small></span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_pan" id="pan-integral" value="integral" data-label="Integral" data-price="25">
+              <span class="option__label">Integral <small class="option__price">$ 25</small></span>
+            </label>
+            <label class="option">
+              <input type="radio" name="tipo_pan" id="pan-sin-gluten" value="sin_gluten" data-label="Sin gluten" data-price="45">
+              <span class="option__label">Sin gluten <small class="option__price">$ 45</small></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Aderezos -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Aderezos</legend>
+          <p class="form-hint">Podés elegir varios (opcional).</p>
+          <p class="form-hint form-hint--total" data-section-total="aderezos">Sin aderezos · $ 0</p>
+          <div class="options options--grid">
+            <label class="option option--checkbox">
+              <input type="checkbox" name="aderezos" id="adz-ketchup" value="ketchup">
+              <span class="option__label">Ketchup</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="aderezos" id="adz-mostaza" value="mostaza">
+              <span class="option__label">Mostaza</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="aderezos" id="adz-mayonesa" value="mayonesa">
+              <span class="option__label">Mayonesa</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="aderezos" id="adz-bbq" value="bbq">
+              <span class="option__label">BBQ</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="aderezos" id="adz-picante" value="picante">
+              <span class="option__label">Picante</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Extras -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">Extras</legend>
+          <p class="form-hint">Seleccioná los que quieras (opcional).</p>
+          <p class="form-hint form-hint--total" data-section-total="extras">Sin extras · $ 0</p>
+          <div class="options options--grid">
+            <label class="option option--checkbox">
+              <input type="checkbox" name="extras" id="ex-queso" value="extra_queso">
+              <span class="option__label">Queso extra</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="extras" id="ex-bacon" value="bacon">
+              <span class="option__label">Bacon</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="extras" id="ex-huevo" value="huevo">
+              <span class="option__label">Huevo</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="extras" id="ex-queso-azul" value="queso_azul">
+              <span class="option__label">Queso azul</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="extras" id="ex-cebolla" value="cebolla">
+              <span class="option__label">Cebolla</span>
+            </label>
+            <label class="option option--checkbox">
+              <input type="checkbox" name="extras" id="ex-tomate" value="tomate">
+              <span class="option__label">Tomate</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Cantidad + observaciones -->
+        <fieldset class="form-section form-section--row">
+          <div class="form-group">
+            <label for="cantidad">Cantidad</label>
+            <input type="number" id="cantidad" name="cantidad" min="1" step="1" value="1" inputmode="numeric" class="input input--number">
+          </div>
+          <div class="form-group form-group--grow">
+            <label for="observaciones">Observaciones (opcional)</label>
+            <textarea id="observaciones" name="observaciones" rows="2" class="input input--textarea" placeholder="Ej: sin pepinillos, con mucho ketchup"></textarea>
+          </div>
+        </fieldset>
+
+        <!-- Botón de favoritos (Thymeleafizado) -->
+        <div class="favorites-box" style="text-align: right; margin-bottom: 1rem;">
+          <button
+            type="submit"
+            class="btn btn--secondary"
+            form="favBurgerForm"
+            formaction="/favoritos/agregar"
+            formmethod="post">
+            ❤️ Agregar a favoritos
+          </button>
+        </div>
+
+        <!-- Resumen -->
+        <section class="summary-box" aria-live="polite">
+          <h2 class="summary-box__title">Resumen</h2>
+          <ul class="summary-list">
+            <li><strong>Cant. carnes:</strong> <span data-summary="cantidad_carnes">—</span></li>
+            <li><strong>Tipo de carne:</strong> <span data-summary="tipo_carne">—</span></li>
+            <li><strong>Pan:</strong> <span data-summary="tipo_pan">—</span></li>
+            <li><strong>Aderezos:</strong> <span data-summary="aderezos">—</span></li>
+            <li><strong>Extras:</strong> <span data-summary="extras">—</span></li>
+            <li><strong>Cantidad:</strong> <span data-summary="cantidad">1</span></li>
+          </ul>
+          <div class="summary-total">
+            <span class="summary-total__label">Total estimado</span>
+            <span class="summary-total__value" data-summary="total">$ —</span>
+          </div>
+        </section>
+
+        <!-- Acciones -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary">Agregar al carrito</button>
+          <a class="btn btn--ghost" th:href="@{/carrito}">Ver carrito</a>
+          <a class="btn btn--link" th:href="@{/}">Volver al inicio</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <small>&copy; 2025 PizzUM &amp; BurgUM</small>
+      <nav class="footer-nav">
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
+      </nav>
+    </div>
+  </footer>
+  <script>
+    (() => {
+      const form = document.querySelector('[data-builder="burger"]');
+      if (!form) {
+        return;
+      }
+
+      const summaryEls = {
+        cantidad_carnes: document.querySelector('[data-summary="cantidad_carnes"]'),
+        tipo_carne: document.querySelector('[data-summary="tipo_carne"]'),
+        tipo_pan: document.querySelector('[data-summary="tipo_pan"]'),
+        aderezos: document.querySelector('[data-summary="aderezos"]'),
+        extras: document.querySelector('[data-summary="extras"]'),
+        cantidad: document.querySelector('[data-summary="cantidad"]'),
+        total: document.querySelector('[data-summary="total"]')
+      };
+
+      const currencyFormatter = new Intl.NumberFormat('es-UY', {
+        style: 'currency',
+        currency: 'UYU',
+        maximumFractionDigits: 0
+      });
+
+      const formatPrice = (value) => {
+        if (!value) {
+          return 'incluido';
+        }
+        return currencyFormatter.format(value);
+      };
+
+      const describeRadio = (name) => {
+        const input = form.querySelector(`input[name="${name}"]:checked`);
+        if (!input) {
+          return { text: '—', price: 0 };
+        }
+        const price = Number(input.dataset.price || 0);
+        const label = input.dataset.label || input.value;
+        return { text: `${label} · ${formatPrice(price)}`, price };
+      };
+
+      const describeMultiple = (name) => {
+        const selected = Array.from(form.querySelectorAll(`input[name="${name}"]:checked`));
+        if (!selected.length) {
+          return { text: '—', price: 0 };
+        }
+        let subtotal = 0;
+        const details = selected.map((input) => {
+          const price = Number(input.dataset.price || 0);
+          subtotal += price;
+          const label = input.dataset.label || input.value;
+          return `${label} (${formatPrice(price)})`;
+        });
+        return { text: details.join(', '), price: subtotal };
+      };
+
+      const updateSummary = () => {
+        let perUnitTotal = 0;
+
+        ['cantidad_carnes', 'tipo_carne', 'tipo_pan'].forEach((name) => {
+          const { text, price } = describeRadio(name);
+          if (summaryEls[name]) {
+            summaryEls[name].textContent = text;
+          }
+          perUnitTotal += price;
+        });
+
+        const aderezosInfo = describeMultiple('aderezos');
+        summaryEls.aderezos.textContent = aderezosInfo.text;
+        perUnitTotal += aderezosInfo.price;
+
+        const extrasInfo = describeMultiple('extras');
+        summaryEls.extras.textContent = extrasInfo.text;
+        perUnitTotal += extrasInfo.price;
+
+        const quantityInput = form.querySelector('input[name="cantidad"]');
+        const quantity = Math.max(1, Number(quantityInput?.value) || 1);
+        if (quantityInput) {
+          quantityInput.value = quantity;
+        }
+        summaryEls.cantidad.textContent = quantity;
+
+        const estimatedTotal = perUnitTotal * quantity;
+        summaryEls.total.textContent = estimatedTotal ? currencyFormatter.format(estimatedTotal) : '$ —';
+      };
+
+      form.addEventListener('input', updateSummary);
+      updateSummary();
+    })();
+  </script>
+</body>
+</html>

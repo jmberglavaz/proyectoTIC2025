@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PizzUM & BurgUM — Carrito</title>
+
+  <!-- Hojas de estilo globales -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
+</head>
+<body class="theme-italian">
+  
+  <!-- Header global (actualizado con sección de Favoritos) -->
+<header class="site-header">
+  <div class="container header__inner">
+    <a class="brand" th:href="@{/}">
+      <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+      <span class="brand__name">PizzUM &amp; BurgUM</span>
+    </a>
+    <nav class="site-nav">
+      <a class="nav__link"
+         th:classappend="${page == 'pizza'} ? ' is-active'"
+         th:href="@{/crear-pizza}">
+         Crear pizza
+      </a>
+      <a class="nav__link"
+         th:classappend="${page == 'burger'} ? ' is-active'"
+         th:href="@{/crear-burger}">
+         Crear hamburguesa
+      </a>
+      <a class="nav__link"
+         th:classappend="${page == 'favoritos'} ? ' is-active'"
+         th:href="@{/favoritos}">
+         ❤️ Favoritos
+      </a>
+      <a class="nav__link"
+         th:classappend="${page == 'carrito'} ? ' is-active'"
+         th:href="@{/carrito}">
+         Carrito
+      </a>
+      <a class="nav__link"
+         th:classappend="${page == 'pedido'} ? ' is-active'"
+         th:href="@{/pedido}">
+         Pedidos
+      </a>
+    </nav>
+  </div>
+</header>
+
+
+  <main>
+    <section class="container section">
+      <h1>Tu carrito 🛒</h1>
+
+      <div class="alert alert--success" th:if="${mensaje}" th:text="${mensaje}"></div>
+
+      <!-- Estado vacío -->
+      <div class="empty-state" aria-live="polite" th:if="${#lists.isEmpty(items)}">
+        <img class="empty-state__img" th:src="@{/img/empty-cart.svg}" alt="Carrito vacío">
+        <p class="empty-state__text">Tu carrito está vacío.</p>
+        <div class="empty-state__actions">
+          <a class="btn btn--primary" th:href="@{/crear-pizza}">Crear una pizza</a>
+          <a class="btn btn--secondary" th:href="@{/crear-burger}">Crear una hamburguesa</a>
+        </div>
+      </div>
+
+      <!-- Lista dinámica -->
+      <div class="cart" role="region" aria-label="Listado de productos en el carrito" th:if="${!#lists.isEmpty(items)}">
+        <article class="cart-item" th:each="item : ${items}">
+          <div class="cart-item__media">
+            <img th:src="${item.tipo == 'pizza'} ? @{/img/pizza-thumb.png} : @{/img/burger-thumb.png}"
+                 th:alt="${item.titulo}" class="cart-item__img">
+          </div>
+          <div class="cart-item__info">
+            <h2 class="cart-item__title" th:text="${item.titulo}">Producto personalizado</h2>
+            <p class="cart-item__desc" th:text="${item.descripcion}"></p>
+            <div class="cart-item__controls">
+              <form class="cart-item__qty" method="post" th:action="@{/carrito/actualizar}">
+                <label th:for="${'qty-' + item.id}" class="visually-hidden">Cantidad</label>
+                <input th:id="${'qty-' + item.id}" name="cantidad" class="input input--number" type="number"
+                       min="1" step="1" inputmode="numeric" th:value="${item.cantidad}">
+                <input type="hidden" name="id" th:value="${item.id}">
+                <button class="btn btn--ghost" type="submit">Actualizar</button>
+              </form>
+              <div class="cart-item__actions">
+                <a class="link" th:href="${item.tipo == 'pizza'} ? @{/crear-pizza} : @{/crear-burger}">Editar</a>
+                <form method="post" th:action="@{/carrito/eliminar}" class="inline-form">
+                  <input type="hidden" name="id" th:value="${item.id}">
+                  <button class="link link--danger" type="submit">Eliminar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="cart-item__price">
+            <span class="price__unit"
+                  th:text="${'$ ' + T(java.lang.String).format('%.2f', item.precioUnitario)}">$ 0</span>
+            <small class="price__note">c/u</small>
+          </div>
+          <div class="cart-item__subtotal">
+            <span class="price__total"
+                  th:text="${'$ ' + T(java.lang.String).format('%.2f', item.subtotal)}">$ 0</span>
+            <small class="price__note">Subtotal</small>
+          </div>
+        </article>
+      </div>
+
+      <!-- Resumen de totales -->
+      <aside class="cart-summary" aria-label="Resumen de compra" th:if="${!#lists.isEmpty(items)}">
+        <h2 class="cart-summary__title">Resumen</h2>
+        <dl class="totals">
+          <div class="totals__row">
+            <dt>Subtotal</dt><dd th:text="${'$ ' + T(java.lang.String).format('%.2f', subtotal)}">$ 0</dd>
+          </div>
+          <div class="totals__row">
+            <dt>Envío</dt><dd th:text="${'$ ' + T(java.lang.String).format('%.2f', envio)}">$ 0</dd>
+          </div>
+          <div class="totals__row totals__row--total">
+            <dt>Total</dt><dd th:text="${'$ ' + T(java.lang.String).format('%.2f', total)}">$ 0</dd>
+          </div>
+        </dl>
+
+        <div class="cart-summary__actions">
+          <a class="btn btn--primary" th:href="@{/checkout}">Ir al checkout</a>
+          <a class="btn btn--secondary" th:href="@{/}">Seguir comprando</a>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <small>&copy; 2025 PizzUM &amp; BurgUM</small>
+      <nav class="footer-nav">
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
