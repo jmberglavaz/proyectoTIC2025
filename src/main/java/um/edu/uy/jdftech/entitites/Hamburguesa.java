@@ -28,7 +28,8 @@ public class Hamburguesa {
     @OneToMany(mappedBy = "hamburguesa", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Topping> toppings;
 
-    public Hamburguesa() {}
+    public Hamburguesa() {
+    }
 
     public Hamburguesa(int cant_de_carnes, double precio_base) {
         this.cant_de_carnes = cant_de_carnes;
@@ -48,3 +49,4 @@ public class Hamburguesa {
         }
         return total;
     }
+}

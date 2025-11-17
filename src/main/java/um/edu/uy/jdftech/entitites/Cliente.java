@@ -17,32 +17,30 @@ import um.edu.uy.jdftech.entitites.*;
 @Setter
 @SuperBuilder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Cliente extends Usuario {
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Pedido> pedidos = new HashSet<>();
 
-
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
     private Set<Direccion> direcciones = new HashSet<>();
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<MedioDePago> mediosDePago = new ArrayList<>();
 
+    // Métodos helper
     public void agregarDireccion(Direccion direccion) {
         direcciones.add(direccion);
-        direccion.setUsuario(this);
+        direccion.setCliente(this);
     }
-
-    public Cliente() {
-        this.pedidos = new HashSet<>();
-        this.direcciones = new HashSet<>();
-        this.mediosDePago = new ArrayList<>();
 
     public void eliminarDireccion(Direccion direccion) {
         direcciones.remove(direccion);
-        direccion.setUsuario(null);
+        direccion.setCliente(null);
     }
 
     public void agregarPedido(Pedido pedido) {
@@ -54,9 +52,7 @@ public class Cliente extends Usuario {
         pedidos.remove(pedido);
         pedido.setClient(null);
     }
-}
 
-    // Métodos helper para medios de pago
     public void agregarMedioDePago(MedioDePago medioDePago) {
         mediosDePago.add(medioDePago);
         medioDePago.setCliente(this);

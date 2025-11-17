@@ -108,11 +108,11 @@ public class CarritoService {
         if ("PIZZA".equals(tipoProducto)) {
             Pizza pizza = pizzaRepository.findByIdPizza(productoId)
                     .orElseThrow(() -> new RuntimeException("Pizza no encontrada"));
-            return BigDecimal.valueOf(pizza.getPrecio());
+            return BigDecimal.valueOf(pizza.getPrecioTotal());
         } else if ("HAMBURGUESA".equals(tipoProducto)) {
             Hamburguesa hamburguesa = hamburguesaRepository.findByIdHamburguesa(productoId)
                     .orElseThrow(() -> new RuntimeException("Hamburguesa no encontrada"));
-            return BigDecimal.valueOf(hamburguesa.getPrecio_base());
+            return BigDecimal.valueOf(hamburguesa.getPrecioTotal());
         } else {
             throw new IllegalArgumentException("Tipo de producto no válido: " + tipoProducto);
         }

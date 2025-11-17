@@ -15,7 +15,7 @@ public class Aderezo {
     @GeneratedValue(generator = "aderezos_ids")
     @GenericGenerator(name = "aderezos_ids", strategy = "increment")
     @Column(name = "id_aderezo")
-    private Long id_aderezo;
+    private Long idAderezo;
 
     @Column(name = "nombre")
     private String nombre;

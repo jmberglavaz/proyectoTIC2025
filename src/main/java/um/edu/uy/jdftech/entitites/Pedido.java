@@ -105,14 +105,14 @@ public class Pedido {
         // Sumar pizzas
         if (pizzas != null) {
             this.totalCost += pizzas.stream()
-                .mapToDouble(Pizza::getPrecio)
+                .mapToDouble(Pizza::getPrecioTotal)
                 .sum();
         }
 
         // Sumar hamburguesas
         if (hamburguesas != null) {
             this.totalCost += hamburguesas.stream()
-                .mapToDouble(Hamburguesa::getPrecio_base)
+                .mapToDouble(Hamburguesa::getPrecioTotal)
                 .sum();
         }
 

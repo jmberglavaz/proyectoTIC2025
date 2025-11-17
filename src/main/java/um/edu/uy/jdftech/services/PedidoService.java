@@ -226,4 +226,10 @@ public class PedidoService {
     public List<Cliente> findByFullName(String firstName, String lastName) {
         return clienteRepository.findByFullNameContaining(firstName + " " + lastName);
     }
+
+    // Obtener el pedido activo más reciente de un cliente
+    public Optional<Pedido> obtenerPedidoActivo(Cliente cliente) {
+        List<Pedido> pedidosActivos = pedidoRepository.findPedidosActivosByClientId(cliente.getId());
+        return pedidosActivos.isEmpty() ? Optional.empty() : Optional.of(pedidosActivos.get(0));
+    }
 }

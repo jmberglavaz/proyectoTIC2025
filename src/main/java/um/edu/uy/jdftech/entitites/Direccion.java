@@ -18,7 +18,7 @@ public class Direccion {
     @Column(name = "ADDRESS", nullable = false)
     private String address;
 
-    @Column(name = "INDICATIONS")
+    @Column(name = "INDICACIONES")
     private String indications;
 
     @Column(name = "ALIAS")
@@ -29,5 +29,5 @@ public class Direccion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CLIENTE_ID")
-    private Cliente Cliente;
+    private Cliente cliente;
 }

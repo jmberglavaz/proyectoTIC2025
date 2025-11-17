@@ -53,9 +53,6 @@ public class Topping {
         this.tipo = tipo;
         this.precioTopping = precio_topping;
         this.fechaAgregado = fecha_agregado;
-
-//    public double getPrecioTopping() {
-//        return precio_topping * cantidad;
-//    }
+    }
 
 }
