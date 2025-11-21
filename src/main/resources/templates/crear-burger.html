@@ -171,37 +171,55 @@
         </fieldset>
 
         <!-- Extras -->
-        <fieldset class="form-section">
+      <fieldset class="form-section">
           <legend class="form-section__title">Extras</legend>
           <p class="form-hint">Seleccioná los que quieras (opcional).</p>
           <p class="form-hint form-hint--total" data-section-total="extras">Sin extras · $ 0</p>
           <div class="options options--grid">
             <label class="option option--checkbox">
-              <input type="checkbox" name="extras" id="ex-queso" value="extra_queso">
-              <span class="option__label">Queso extra</span>
+              <input type="checkbox" name="extras" id="ex-queso" value="extra_queso"
+                     data-label="Queso extra" data-price="35">
+              <span class="option__label">
+          Queso extra <small class="option__price">$ 35</small>
+        </span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="extras" id="ex-bacon" value="bacon">
-              <span class="option__label">Bacon</span>
+              <input type="checkbox" name="extras" id="ex-bacon" value="bacon"
+                     data-label="Bacon" data-price="45">
+              <span class="option__label">
+          Bacon <small class="option__price">$ 45</small>
+        </span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="extras" id="ex-huevo" value="huevo">
-              <span class="option__label">Huevo</span>
+              <input type="checkbox" name="extras" id="ex-huevo" value="huevo"
+                     data-label="Huevo" data-price="30">
+              <span class="option__label">
+          Huevo <small class="option__price">$ 30</small>
+        </span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="extras" id="ex-queso-azul" value="queso_azul">
-              <span class="option__label">Queso azul</span>
+              <input type="checkbox" name="extras" id="ex-queso-azul" value="queso_azul"
+                     data-label="Queso azul" data-price="40">
+              <span class="option__label">
+          Queso azul <small class="option__price">$ 40</small>
+        </span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="extras" id="ex-cebolla" value="cebolla">
-              <span class="option__label">Cebolla</span>
+              <input type="checkbox" name="extras" id="ex-cebolla" value="cebolla"
+                     data-label="Cebolla" data-price="20">
+              <span class="option__label">
+          Cebolla <small class="option__price">$ 20</small>
+        </span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="extras" id="ex-tomate" value="tomate">
-              <span class="option__label">Tomate</span>
+              <input type="checkbox" name="extras" id="ex-tomate" value="tomate"
+                     data-label="Tomate" data-price="20">
+              <span class="option__label">
+          Tomate <small class="option__price">$ 20</small>
+        </span>
             </label>
           </div>
-        </fieldset>
+      </fieldset>
 
         <!-- Cantidad + observaciones -->
         <fieldset class="form-section form-section--row">
@@ -282,6 +300,11 @@
         total: document.querySelector('[data-summary="total"]')
       };
 
+      const sectionTotals = {
+        aderezos: document.querySelector('[data-section-total="aderezos"]'),
+        extras: document.querySelector('[data-section-total="extras"]')
+      };
+
       const currencyFormatter = new Intl.NumberFormat('es-UY', {
         style: 'currency',
         currency: 'UYU',
@@ -308,16 +331,18 @@
       const describeMultiple = (name) => {
         const selected = Array.from(form.querySelectorAll(`input[name="${name}"]:checked`));
         if (!selected.length) {
-          return { text: '—', price: 0 };
+          return { text: '—', price: 0, count: 0 };
         }
         let subtotal = 0;
+        let count = 0;
         const details = selected.map((input) => {
           const price = Number(input.dataset.price || 0);
           subtotal += price;
+          count++;
           const label = input.dataset.label || input.value;
           return `${label} (${formatPrice(price)})`;
         });
-        return { text: details.join(', '), price: subtotal };
+        return { text: details.join(', '), price: subtotal, count };
       };
 
       const updateSummary = () => {
@@ -335,9 +360,33 @@
         summaryEls.aderezos.textContent = aderezosInfo.text;
         perUnitTotal += aderezosInfo.price;
 
+        if (sectionTotals.aderezos) {
+          if (aderezosInfo.count === 0) {
+            sectionTotals.aderezos.textContent = 'Sin aderezos · $ 0';
+          } else if (aderezosInfo.count === 1) {
+            sectionTotals.aderezos.textContent =
+                    `1 aderezo · ${currencyFormatter.format(aderezosInfo.price)}`;
+          } else {
+            sectionTotals.aderezos.textContent =
+                    `${aderezosInfo.count} aderezos · ${currencyFormatter.format(aderezosInfo.price)}`;
+          }
+        }
+
         const extrasInfo = describeMultiple('extras');
         summaryEls.extras.textContent = extrasInfo.text;
         perUnitTotal += extrasInfo.price;
+
+        if (sectionTotals.extras) {
+          if (extrasInfo.count === 0) {
+            sectionTotals.extras.textContent = 'Sin extras · $ 0';
+          } else if (extrasInfo.count === 1) {
+            sectionTotals.extras.textContent =
+                    `1 extra · ${currencyFormatter.format(extrasInfo.price)}`;
+          } else {
+            sectionTotals.extras.textContent =
+                    `${extrasInfo.count} extras · ${currencyFormatter.format(extrasInfo.price)}`;
+          }
+        }
 
         const quantityInput = form.querySelector('input[name="cantidad"]');
         const quantity = Math.max(1, Number(quantityInput?.value) || 1);
@@ -347,7 +396,8 @@
         summaryEls.cantidad.textContent = quantity;
 
         const estimatedTotal = perUnitTotal * quantity;
-        summaryEls.total.textContent = estimatedTotal ? currencyFormatter.format(estimatedTotal) : '$ —';
+        summaryEls.total.textContent =
+                estimatedTotal ? currencyFormatter.format(estimatedTotal) : '$ —';
       };
 
       form.addEventListener('input', updateSummary);

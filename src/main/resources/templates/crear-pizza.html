@@ -160,41 +160,106 @@
         <fieldset class="form-section">
           <legend class="form-section__title">Toppings</legend>
           <p class="form-hint">Seleccioná los que quieras (opcional).</p>
-          <p class="form-hint form-hint--total" data-section-total="toppings">Sin toppings extras · $ 0</p>
+          <p class="form-hint form-hint--total" data-section-total="toppings">
+            Sin toppings extras · $ 0
+          </p>
 
           <!-- Grid de toppings (checkbox múltiple) -->
           <div class="options options--grid">
             <label class="option option--checkbox">
-              <input type="checkbox" name="toppings" id="top-aceitunas" value="aceitunas">
-              <span class="option__label">Aceitunas</span>
+              <input type="checkbox"
+                     name="toppings"
+                     id="top-aceitunas"
+                     value="aceitunas"
+                     data-label="Aceitunas"
+                     data-price="30">
+              <span class="option__label">
+                Aceitunas <small class="option__price">$ 30</small>
+              </span>
             </label>
+
             <label class="option option--checkbox">
-              <input type="checkbox" name="toppings" id="top-albahaca" value="albahaca">
-              <span class="option__label">Albahaca</span>
+              <input type="checkbox"
+                     name="toppings"
+                     id="top-albahaca"
+                     value="albahaca"
+                     data-label="Albahaca"
+                     data-price="25">
+              <span class="option__label">
+                Albahaca <small class="option__price">$ 25</small>
+              </span>
             </label>
+
             <label class="option option--checkbox">
-              <input type="checkbox" name="toppings" id="top-morron" value="morron">
-              <span class="option__label">Morrón</span>
+              <input type="checkbox"
+                     name="toppings"
+                     id="top-morron"
+                     value="morron"
+                     data-label="Morrón"
+                     data-price="25">
+              <span class="option__label">
+                Morrón <small class="option__price">$ 25</small>
+              </span>
             </label>
+
             <label class="option option--checkbox">
-              <input type="checkbox" name="toppings" id="top-cebolla" value="cebolla">
-              <span class="option__label">Cebolla</span>
+              <input type="checkbox"
+                     name="toppings"
+                     id="top-cebolla"
+                     value="cebolla"
+                     data-label="Cebolla"
+                     data-price="20">
+              <span class="option__label">
+                Cebolla <small class="option__price">$ 20</small>
+              </span>
             </label>
+
             <label class="option option--checkbox">
-              <input type="checkbox" name="toppings" id="top-champiniones" value="champiniones">
-              <span class="option__label">Champiñones</span>
+              <input type="checkbox"
+                     name="toppings"
+                     id="top-champiniones"
+                     value="champiniones"
+                     data-label="Champiñones"
+                     data-price="35">
+              <span class="option__label">
+                Champiñones <small class="option__price">$ 35</small>
+              </span>
             </label>
+
             <label class="option option--checkbox">
-              <input type="checkbox" name="toppings" id="top-jamon" value="jamon">
-              <span class="option__label">Jamón</span>
+              <input type="checkbox"
+                     name="toppings"
+                     id="top-jamon"
+                     value="jamon"
+                     data-label="Jamón"
+                     data-price="40">
+              <span class="option__label">
+                Jamón <small class="option__price">$ 40</small>
+              </span>
             </label>
+
             <label class="option option--checkbox">
-              <input type="checkbox" name="toppings" id="top-bacon" value="bacon">
-              <span class="option__label">Bacon</span>
+              <input type="checkbox"
+                     name="toppings"
+                     id="top-bacon"
+                     value="bacon"
+                     data-label="Bacon"
+                     data-price="40">
+              <span class="option__label">
+                Bacon <small class="option__price">$ 40</small>
+              </span>
             </label>
+
             <label class="option option--checkbox">
-              <input type="checkbox" name="toppings" id="top-anana" value="anana">
-              <span class="option__label">Ananá</span>
+              <input type="checkbox"
+                     name="toppings"
+                     id="top-anana"
+                     value="anana"
+                     data-label="Ananá"
+                     data-price="30">
+              <span class="option__label">
+                Ananá <small class="option__price">$ 30</small>
+              </span>
             </label>
           </div>
         </fieldset>
@@ -263,84 +328,113 @@
       </nav>
     </div>
   </footer>
-  <script>
-    (() => {
-      const form = document.querySelector('[data-builder="pizza"]');
-      if (!form) {
-        return;
-      }
+ <script>
+   (() => {
+     const form = document.querySelector('[data-builder="pizza"]');
+     if (!form) {
+       return;
+     }
 
-      const summaryEls = {
-        tamanio: document.querySelector('[data-summary="tamanio"]'),
-        masa: document.querySelector('[data-summary="masa"]'),
-        salsa: document.querySelector('[data-summary="salsa"]'),
-        queso: document.querySelector('[data-summary="queso"]'),
-        toppings: document.querySelector('[data-summary="toppings"]'),
-        cantidad: document.querySelector('[data-summary="cantidad"]'),
-        total: document.querySelector('[data-summary="total"]')
-      };
+     const summaryEls = {
+       tamanio: document.querySelector('[data-summary="tamanio"]'),
+       masa: document.querySelector('[data-summary="masa"]'),
+       salsa: document.querySelector('[data-summary="salsa"]'),
+       queso: document.querySelector('[data-summary="queso"]'),
+       toppings: document.querySelector('[data-summary="toppings"]'),
+       cantidad: document.querySelector('[data-summary="cantidad"]'),
+       total: document.querySelector('[data-summary="total"]')
+     };
 
-      const currencyFormatter = new Intl.NumberFormat('es-UY', {
-        style: 'currency',
-        currency: 'UYU',
-        maximumFractionDigits: 0
-      });
+     // Línea "Sin toppings extras · $ 0"
+     const sectionTotals = {
+       toppings: document.querySelector('[data-section-total="toppings"]')
+     };
 
-      const formatPrice = (value) => {
-        if (!value) {
-          return 'incluido';
-        }
-        return currencyFormatter.format(value);
-      };
+     const currencyFormatter = new Intl.NumberFormat('es-UY', {
+       style: 'currency',
+       currency: 'UYU',
+       maximumFractionDigits: 0
+     });
 
-      const describeRadio = (name) => {
-        const input = form.querySelector(`input[name="${name}"]:checked`);
-        if (!input) {
-          return { text: '—', price: 0 };
-        }
-        const price = Number(input.dataset.price || 0);
-        const label = input.dataset.label || input.value;
-        return { text: `${label} · ${formatPrice(price)}`, price };
-      };
+     const formatPrice = (value) => {
+       if (!value) {
+         return 'incluido';
+       }
+       return currencyFormatter.format(value);
+     };
 
-      const updateSummary = () => {
-        let perUnitTotal = 0;
+     const describeRadio = (name) => {
+       const input = form.querySelector(`input[name="${name}"]:checked`);
+       if (!input) {
+         return { text: '—', price: 0 };
+       }
+       const price = Number(input.dataset.price || 0);
+       const label = input.dataset.label || input.value;
+       return { text: `${label} · ${formatPrice(price)}`, price };
+     };
 
-        ['tamanio', 'masa', 'salsa', 'queso'].forEach((name) => {
-          const { text, price } = describeRadio(name);
-          if (summaryEls[name]) {
-            summaryEls[name].textContent = text;
-          }
-          perUnitTotal += price;
-        });
+     const updateSummary = () => {
+       let perUnitTotal = 0;
 
-        const toppings = Array.from(form.querySelectorAll('input[name="toppings"]:checked'));
-        if (toppings.length) {
-          const descriptions = toppings.map((input) => {
-            const price = Number(input.dataset.price || 0);
-            perUnitTotal += price;
-            const label = input.dataset.label || input.value;
-            return `${label} (${formatPrice(price)})`;
-          });
-          summaryEls.toppings.textContent = descriptions.join(', ');
-        } else {
-          summaryEls.toppings.textContent = '—';
-        }
+       // Tamaño, masa, salsa, queso
+       ['tamanio', 'masa', 'salsa', 'queso'].forEach((name) => {
+         const { text, price } = describeRadio(name);
+         if (summaryEls[name]) {
+           summaryEls[name].textContent = text;
+         }
+         perUnitTotal += price;
+       });
 
-        const quantityInput = form.querySelector('input[name="cantidad"]');
-        const quantity = Math.max(1, Number(quantityInput?.value) || 1);
-        if (quantityInput) {
-          quantityInput.value = quantity;
-        }
-        summaryEls.cantidad.textContent = quantity;
+       // Toppings
+       const toppingsInputs = Array.from(form.querySelectorAll('input[name="toppings"]:checked'));
+       let toppingsCount = 0;
+       let toppingsTotal = 0;
 
-        const estimatedTotal = perUnitTotal * quantity;
-        summaryEls.total.textContent = estimatedTotal ? currencyFormatter.format(estimatedTotal) : '$ —';
-      };
+       if (toppingsInputs.length) {
+         const descriptions = toppingsInputs.map((input) => {
+           const price = Number(input.dataset.price || 0);
+           toppingsTotal += price;
+           perUnitTotal += price;
+           toppingsCount++;
+           const label = input.dataset.label || input.value;
+           return `${label} (${formatPrice(price)})`;
+         });
+         summaryEls.toppings.textContent = descriptions.join(', ');
+       } else {
+         summaryEls.toppings.textContent = '—';
+       }
 
-      form.addEventListener('input', updateSummary);
-      updateSummary();
-    })();
-  </script>
+       // Actualizar línea "Sin toppings extras..."
+       if (sectionTotals.toppings) {
+         if (toppingsCount === 0) {
+           sectionTotals.toppings.textContent = 'Sin toppings extras · $ 0';
+         } else if (toppingsCount === 1) {
+           sectionTotals.toppings.textContent =
+                   `1 topping extra · ${currencyFormatter.format(toppingsTotal)}`;
+         } else {
+           sectionTotals.toppings.textContent =
+                   `${toppingsCount} toppings extra · ${currencyFormatter.format(toppingsTotal)}`;
+         }
+       }
+
+       // Cantidad
+       const quantityInput = form.querySelector('input[name="cantidad"]');
+       const quantity = Math.max(1, Number(quantityInput?.value) || 1);
+       if (quantityInput) {
+         quantityInput.value = quantity;
+       }
+       summaryEls.cantidad.textContent = quantity;
+
+       // Total estimado
+       const estimatedTotal = perUnitTotal * quantity;
+       summaryEls.total.textContent =
+               estimatedTotal ? currencyFormatter.format(estimatedTotal) : '$ —';
+     };
+
+     form.addEventListener('input', updateSummary);
+     updateSummary();
+   })();
+ </script>
+
 </body>
 </html>
