@@ -67,8 +67,11 @@
 
     <!-- Formulario principal -->
     <section class="container section">
+      <form id="favBurgerForm" th:action="@{/favoritos/agregar}" method="post" style="display:none;">
+        <input type="hidden" name="tipo" value="burger">
+      </form>
       <!-- Preparado para backend -->
-      <form class="form form--builder" method="post" th:action="@{/crear-burger}">
+      <form class="form form--builder" method="post" th:action="@{/crear-burger}" data-builder="burger">
         <!-- Cantidad de carnes -->
         <fieldset class="form-section">
           <legend class="form-section__title">Cantidad de carnes</legend>
@@ -142,25 +145,26 @@
         <fieldset class="form-section">
           <legend class="form-section__title">Aderezos</legend>
           <p class="form-hint">Podés elegir varios (opcional).</p>
+          <p class="form-hint form-hint--total" data-section-total="aderezos">Sin aderezos · $ 0</p>
           <div class="options options--grid">
             <label class="option option--checkbox">
-              <input type="checkbox" name="aderezos[]" id="adz-ketchup" value="ketchup">
+              <input type="checkbox" name="aderezos" id="adz-ketchup" value="ketchup">
               <span class="option__label">Ketchup</span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="aderezos[]" id="adz-mostaza" value="mostaza">
+              <input type="checkbox" name="aderezos" id="adz-mostaza" value="mostaza">
               <span class="option__label">Mostaza</span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="aderezos[]" id="adz-mayonesa" value="mayonesa">
+              <input type="checkbox" name="aderezos" id="adz-mayonesa" value="mayonesa">
               <span class="option__label">Mayonesa</span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="aderezos[]" id="adz-bbq" value="bbq">
+              <input type="checkbox" name="aderezos" id="adz-bbq" value="bbq">
               <span class="option__label">BBQ</span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="aderezos[]" id="adz-picante" value="picante">
+              <input type="checkbox" name="aderezos" id="adz-picante" value="picante">
               <span class="option__label">Picante</span>
             </label>
           </div>
@@ -170,29 +174,30 @@
         <fieldset class="form-section">
           <legend class="form-section__title">Extras</legend>
           <p class="form-hint">Seleccioná los que quieras (opcional).</p>
+          <p class="form-hint form-hint--total" data-section-total="extras">Sin extras · $ 0</p>
           <div class="options options--grid">
             <label class="option option--checkbox">
-              <input type="checkbox" name="extras[]" id="ex-queso" value="extra_queso">
+              <input type="checkbox" name="extras" id="ex-queso" value="extra_queso">
               <span class="option__label">Queso extra</span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="extras[]" id="ex-bacon" value="bacon">
+              <input type="checkbox" name="extras" id="ex-bacon" value="bacon">
               <span class="option__label">Bacon</span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="extras[]" id="ex-huevo" value="huevo">
+              <input type="checkbox" name="extras" id="ex-huevo" value="huevo">
               <span class="option__label">Huevo</span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="extras[]" id="ex-queso-azul" value="queso_azul">
+              <input type="checkbox" name="extras" id="ex-queso-azul" value="queso_azul">
               <span class="option__label">Queso azul</span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="extras[]" id="ex-cebolla" value="cebolla">
+              <input type="checkbox" name="extras" id="ex-cebolla" value="cebolla">
               <span class="option__label">Cebolla</span>
             </label>
             <label class="option option--checkbox">
-              <input type="checkbox" name="extras[]" id="ex-tomate" value="tomate">
+              <input type="checkbox" name="extras" id="ex-tomate" value="tomate">
               <span class="option__label">Tomate</span>
             </label>
           </div>
@@ -211,27 +216,31 @@
         </fieldset>
 
         <!-- Botón de favoritos (Thymeleafizado) -->
-        <form th:action="@{/favoritos/agregar}" method="post" class="favorites-box" style="text-align: right; margin-bottom: 1rem;">
-          <input type="hidden" name="tipo" value="burger">
-          <button type="submit" class="btn btn--secondary">
+        <div class="favorites-box" style="text-align: right; margin-bottom: 1rem;">
+          <button
+            type="submit"
+            class="btn btn--secondary"
+            form="favBurgerForm"
+            formaction="/favoritos/agregar"
+            formmethod="post">
             ❤️ Agregar a favoritos
           </button>
-        </form>
+        </div>
 
         <!-- Resumen -->
         <section class="summary-box" aria-live="polite">
           <h2 class="summary-box__title">Resumen</h2>
           <ul class="summary-list">
-            <li><strong>Cant. carnes:</strong> —</li>
-            <li><strong>Tipo de carne:</strong> —</li>
-            <li><strong>Pan:</strong> —</li>
-            <li><strong>Aderezos:</strong> —</li>
-            <li><strong>Extras:</strong> —</li>
-            <li><strong>Cantidad:</strong> 1</li>
+            <li><strong>Cant. carnes:</strong> <span data-summary="cantidad_carnes">—</span></li>
+            <li><strong>Tipo de carne:</strong> <span data-summary="tipo_carne">—</span></li>
+            <li><strong>Pan:</strong> <span data-summary="tipo_pan">—</span></li>
+            <li><strong>Aderezos:</strong> <span data-summary="aderezos">—</span></li>
+            <li><strong>Extras:</strong> <span data-summary="extras">—</span></li>
+            <li><strong>Cantidad:</strong> <span data-summary="cantidad">1</span></li>
           </ul>
           <div class="summary-total">
             <span class="summary-total__label">Total estimado</span>
-            <span class="summary-total__value">$ —</span>
+            <span class="summary-total__value" data-summary="total">$ —</span>
           </div>
         </section>
 
@@ -256,5 +265,94 @@
       </nav>
     </div>
   </footer>
+  <script>
+    (() => {
+      const form = document.querySelector('[data-builder="burger"]');
+      if (!form) {
+        return;
+      }
+
+      const summaryEls = {
+        cantidad_carnes: document.querySelector('[data-summary="cantidad_carnes"]'),
+        tipo_carne: document.querySelector('[data-summary="tipo_carne"]'),
+        tipo_pan: document.querySelector('[data-summary="tipo_pan"]'),
+        aderezos: document.querySelector('[data-summary="aderezos"]'),
+        extras: document.querySelector('[data-summary="extras"]'),
+        cantidad: document.querySelector('[data-summary="cantidad"]'),
+        total: document.querySelector('[data-summary="total"]')
+      };
+
+      const currencyFormatter = new Intl.NumberFormat('es-UY', {
+        style: 'currency',
+        currency: 'UYU',
+        maximumFractionDigits: 0
+      });
+
+      const formatPrice = (value) => {
+        if (!value) {
+          return 'incluido';
+        }
+        return currencyFormatter.format(value);
+      };
+
+      const describeRadio = (name) => {
+        const input = form.querySelector(`input[name="${name}"]:checked`);
+        if (!input) {
+          return { text: '—', price: 0 };
+        }
+        const price = Number(input.dataset.price || 0);
+        const label = input.dataset.label || input.value;
+        return { text: `${label} · ${formatPrice(price)}`, price };
+      };
+
+      const describeMultiple = (name) => {
+        const selected = Array.from(form.querySelectorAll(`input[name="${name}"]:checked`));
+        if (!selected.length) {
+          return { text: '—', price: 0 };
+        }
+        let subtotal = 0;
+        const details = selected.map((input) => {
+          const price = Number(input.dataset.price || 0);
+          subtotal += price;
+          const label = input.dataset.label || input.value;
+          return `${label} (${formatPrice(price)})`;
+        });
+        return { text: details.join(', '), price: subtotal };
+      };
+
+      const updateSummary = () => {
+        let perUnitTotal = 0;
+
+        ['cantidad_carnes', 'tipo_carne', 'tipo_pan'].forEach((name) => {
+          const { text, price } = describeRadio(name);
+          if (summaryEls[name]) {
+            summaryEls[name].textContent = text;
+          }
+          perUnitTotal += price;
+        });
+
+        const aderezosInfo = describeMultiple('aderezos');
+        summaryEls.aderezos.textContent = aderezosInfo.text;
+        perUnitTotal += aderezosInfo.price;
+
+        const extrasInfo = describeMultiple('extras');
+        summaryEls.extras.textContent = extrasInfo.text;
+        perUnitTotal += extrasInfo.price;
+
+        const quantityInput = form.querySelector('input[name="cantidad"]');
+        const quantity = Math.max(1, Number(quantityInput?.value) || 1);
+        if (quantityInput) {
+          quantityInput.value = quantity;
+        }
+        summaryEls.cantidad.textContent = quantity;
+
+        const estimatedTotal = perUnitTotal * quantity;
+        summaryEls.total.textContent = estimatedTotal ? currencyFormatter.format(estimatedTotal) : '$ —';
+      };
+
+      form.addEventListener('input', updateSummary);
+      updateSummary();
+    })();
+  </script>
 </body>
 </html>
