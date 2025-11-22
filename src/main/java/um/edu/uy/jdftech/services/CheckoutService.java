@@ -48,8 +48,8 @@ public class CheckoutService {
     @Transactional
     public Direccion agregarDireccion(Cliente cliente, String direccion, String indicaciones) {
         Direccion nuevaDireccion = Direccion.builder()
-                .direccion(direccion)
-                .indicaciones(indicaciones)
+                .address(direccion)
+                .indications(indicaciones)
                 .cliente(cliente)
                 .build();
         return direccionRepository.save(nuevaDireccion);

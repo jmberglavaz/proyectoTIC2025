@@ -25,15 +25,15 @@ public class PagesController {
         return "user/crear-burger";
     }
 
-    @GetMapping("/carrito")
-    public String carrito() {
-        return "user/carrito";
-    }
+//    @GetMapping("/carrito")
+//    public String carrito() {
+//        return "user/carrito";
+//    }
 
-    @GetMapping("/pedido")
-    public String pedido() {
-        return "user/pedido";
-    }
+//    @GetMapping("/pedido")
+//    public String pedido() {
+//        return "user/pedido";
+//    }
 
     @GetMapping("/ayuda")
     public String ayuda() { return "user/ayuda"; }

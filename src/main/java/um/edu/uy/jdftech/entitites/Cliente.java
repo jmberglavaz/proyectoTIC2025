@@ -20,7 +20,7 @@ import um.edu.uy.jdftech.entitites.*;
 @NoArgsConstructor
 public class Cliente extends Usuario {
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Pedido> pedidos = new HashSet<>();
 

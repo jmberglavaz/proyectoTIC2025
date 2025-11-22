@@ -64,7 +64,7 @@ public class PedidoController {
         model.addAttribute("enCamino", pedido.getStatus() == EstadoPedido.EN_CAMINO);
         model.addAttribute("entregado", pedido.getStatus() == EstadoPedido.ENTREGADO);
         
-        return "pedido";
+        return "user/pedido";
     }
 
     // POST: Cancelar pedido (lo borra de la BD)

@@ -62,7 +62,7 @@ public class CheckoutController {
         model.addAttribute("total", carritoService.calcularTotal(carrito));
         model.addAttribute("page", "checkout");
 
-        return "checkout";
+        return "user/checkout";
     }
 
     // POST: Agregar nueva tarjeta (endpoint separado)

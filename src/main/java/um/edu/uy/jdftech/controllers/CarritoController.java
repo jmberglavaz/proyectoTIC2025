@@ -43,7 +43,7 @@ public class CarritoController {
         model.addAttribute("carritoVacio", carrito.getItems().isEmpty());
         model.addAttribute("page", "carrito");
         
-        return "carrito";
+        return "user/carrito";
     }
 
     // POST: Actualizar cantidad de un item
