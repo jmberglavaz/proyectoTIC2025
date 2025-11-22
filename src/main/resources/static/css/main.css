@@ -234,6 +234,13 @@
   .input--number{ max-width: 120px; }
   
   .form-hint{ color: var(--color-text-soft); font-size: .925rem; }
+  .form-hint--total{
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    font-weight: 600;
+    color: var(--color-primary-700);
+  }
   
   .options{ display: grid; gap: var(--space-3); }
   .options--inline{ grid-auto-flow: column; grid-auto-columns: 1fr; overflow-x: auto; padding-bottom: .3rem; }
@@ -248,7 +255,20 @@
     cursor: pointer;
   }
   .option input{ accent-color: var(--color-primary); }
-  .option__label{ font-weight: 600; }
+  .option__label{
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .4rem;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+  .option__price{
+    font-weight: 600;
+    color: var(--color-text-soft);
+    font-variant-numeric: tabular-nums;
+  }
   
   /* =========================
      Resúmenes / Totales

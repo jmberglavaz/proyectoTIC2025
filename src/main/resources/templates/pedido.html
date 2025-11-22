@@ -21,14 +21,35 @@
       <span class="brand__name">PizzUM &amp; BurgUM</span>
     </a>
     <nav class="site-nav">
-      <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
-      <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
-      <a class="nav__link" th:href="@{/favoritos}">❤️ Favoritos</a>
-      <a class="nav__link" th:href="@{/carrito}">Carrito</a>
-      <a class="nav__link is-active" th:href="@{/pedido}">Pedidos</a>
+      <a class="nav__link"
+         th:classappend="${page == 'pizza'} ? ' is-active'"
+         th:href="@{/crear-pizza}">
+         Crear pizza
+      </a>
+      <a class="nav__link"
+         th:classappend="${page == 'burger'} ? ' is-active'"
+         th:href="@{/crear-burger}">
+         Crear hamburguesa
+      </a>
+      <a class="nav__link"
+         th:classappend="${page == 'favoritos'} ? ' is-active'"
+         th:href="@{/favoritos}">
+         ❤️ Favoritos
+      </a>
+      <a class="nav__link"
+         th:classappend="${page == 'carrito'} ? ' is-active'"
+         th:href="@{/carrito}">
+         Carrito
+      </a>
+      <a class="nav__link"
+         th:classappend="${page == 'pedido'} ? ' is-active'"
+         th:href="@{/pedido}">
+         Pedidos
+      </a>
     </nav>
   </div>
 </header>
+
 
   <main>
     <!-- Encabezado de confirmación -->
