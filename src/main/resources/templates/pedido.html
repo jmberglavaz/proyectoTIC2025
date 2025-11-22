@@ -13,7 +13,7 @@
 </head>
 <body class="theme-italian">
   
-<!-- Header global (actualizado con sección de Favoritos) -->
+<!-- Header global -->
 <header class="site-header">
   <div class="container header__inner">
     <a class="brand" th:href="@{/}">
@@ -60,11 +60,11 @@
         </div>
         <div class="order-confirm__content">
           <h1>¡Pedido confirmado!</h1>
-          <p>Nº de pedido: <strong>#000000</strong></p>
-          <p>Hora estimada de entrega: <strong>—:—</strong></p>
+          <p>Nº de pedido: <strong th:text="'#' + ${pedido.id}">#000000</strong></p>
+          <p>Fecha: <strong th:text="${#temporals.format(pedido.date, 'dd/MM/yyyy HH:mm')}">—:—</strong></p>
           <div class="order-confirm__actions">
             <a class="btn btn--primary" th:href="@{/}">Seguir comprando</a>
-            <a class="btn btn--secondary" th:href="@{#seguimiento}">Ver seguimiento</a>
+            <a class="btn btn--secondary" href="#seguimiento">Ver seguimiento</a>
           </div>
         </div>
       </div>
@@ -76,32 +76,32 @@
 
       <!-- Timeline de estados -->
       <ol class="timeline" aria-label="Estados del pedido">
-        <li class="timeline__step is-current">
+        <li class="timeline__step" th:classappend="${enCola ? 'is-current' : ''}">
           <div class="timeline__marker"></div>
           <div class="timeline__content">
             <h3>En cola</h3>
             <p>Tu pedido está en la cola de la cocina.</p>
-            <!-- Cancelar solo en este estado (placeholder de backend) -->
-            <form class="inline-form" method="post" th:action="@{/pedido}">
+            <!-- Cancelar solo en este estado -->
+            <form th:if="${enCola}" class="inline-form" method="post" th:action="@{/pedido/{id}/cancelar(id=${pedido.id})}">
               <button class="btn btn--danger" type="submit">Cancelar pedido</button>
             </form>
           </div>
         </li>
-        <li class="timeline__step">
+        <li class="timeline__step" th:classappend="${enPreparacion ? 'is-current' : ''}">
           <div class="timeline__marker"></div>
           <div class="timeline__content">
             <h3>En preparación</h3>
             <p>Estamos preparando tus productos.</p>
           </div>
         </li>
-        <li class="timeline__step">
+        <li class="timeline__step" th:classappend="${enCamino ? 'is-current' : ''}">
           <div class="timeline__marker"></div>
           <div class="timeline__content">
             <h3>En camino</h3>
             <p>El repartidor ya salió hacia tu domicilio.</p>
           </div>
         </li>
-        <li class="timeline__step">
+        <li class="timeline__step" th:classappend="${entregado ? 'is-current' : ''}">
           <div class="timeline__marker"></div>
           <div class="timeline__content">
             <h3>Entregado</h3>
@@ -111,56 +111,60 @@
       </ol>
     </section>
 
-    <!-- Resumen del pedido (solo lectura) -->
+    <!-- Resumen del pedido -->
     <section class="container section section--grid-2">
       <article class="order-card">
         <h2 class="order-card__title">Detalle del pedido</h2>
         <ul class="order-items">
-          <li class="order-item">
-            <img class="order-item__img" th:src="@{/img/pizza-thumb.png}" alt="Pizza personalizada">
+          <!-- Pizzas -->
+          <li class="order-item" th:each="pizza : ${pedido.pizzas}">
+            <img class="order-item__img" th:src="@{/img/pizza-thumb.png}" alt="Pizza">
             <div class="order-item__info">
               <p class="order-item__name">Pizza personalizada</p>
-              <p class="order-item__meta">Mediana • Napolitana • Tomate • Muzzarella • Albahaca</p>
+              <p class="order-item__meta" th:text="${pizza.tamanio + ' • ' + pizza.tipo_masa + ' • ' + pizza.tipo_salsa + ' • ' + pizza.tipo_queso}">Detalles</p>
             </div>
             <div class="order-item__qty">x1</div>
-            <div class="order-item__price">$ 0</div>
+            <div class="order-item__price" th:text="'$' + ${pizza.precio}">$ 0</div>
           </li>
-          <li class="order-item">
-            <img class="order-item__img" th:src="@{/img/burger-thumb.png}" alt="Hamburguesa personalizada">
+          
+          <!-- Hamburguesas -->
+          <li class="order-item" th:each="hamburguesa : ${pedido.hamburguesas}">
+            <img class="order-item__img" th:src="@{/img/burger-thumb.png}" alt="Hamburguesa">
             <div class="order-item__info">
               <p class="order-item__name">Hamburguesa personalizada</p>
-              <p class="order-item__meta">2 carnes • Vaca • Pan de papa • Queso extra</p>
+              <p class="order-item__meta" th:text="${hamburguesa.cant_de_carnes + ' carnes'}">Detalles</p>
             </div>
-            <div class="order-item__qty">x3</div>
-            <div class="order-item__price">$ 0</div>
+            <div class="order-item__qty">x1</div>
+            <div class="order-item__price" th:text="'$' + ${hamburguesa.precio_base}">$ 0</div>
           </li>
         </ul>
 
         <dl class="totals">
-          <div class="totals__row"><dt>Subtotal</dt><dd>$ 0</dd></div>
+          <div class="totals__row"><dt>Subtotal</dt><dd th:text="'$' + ${pedido.totalCost}">$ 0</dd></div>
           <div class="totals__row"><dt>Envío</dt><dd>$ 0</dd></div>
-          <div class="totals__row totals__row--total"><dt>Total</dt><dd>$ 0</dd></div>
+          <div class="totals__row totals__row--total"><dt>Total</dt><dd th:text="'$' + ${pedido.totalCost}">$ 0</dd></div>
         </dl>
       </article>
 
-      <!-- Datos de entrega y pago (placeholder) -->
+      <!-- Datos de entrega y pago -->
       <aside class="order-aside">
         <h2 class="order-aside__title">Entrega</h2>
         <p class="order-aside__text">
-          <strong>Domicilio:</strong> 18 de Julio 1234, Apto 501<br>
-          <strong>Indicaciones:</strong> Timbre roto, llamar al llegar
+          <strong>Domicilio:</strong> <span th:text="${pedido.direccion.direccion}">Dirección</span><br>
+          <strong th:if="${pedido.direccion.indicaciones}">Indicaciones:</strong> 
+          <span th:if="${pedido.direccion.indicaciones}" th:text="${pedido.direccion.indicaciones}">Indicaciones</span>
         </p>
 
         <h2 class="order-aside__title">Pago</h2>
         <p class="order-aside__text">
-          Tarjeta terminada en <strong>•••• 1234</strong><br>
-          Titular: <strong>Nombre Apellido</strong>
+          Tarjeta terminada en <strong th:text="'•••• ' + ${#strings.substring(pedido.medioDePago.cardNumber.toString(), pedido.medioDePago.cardNumber.toString().length() - 4)}">1234</strong><br>
+          Titular: <strong th:text="${pedido.medioDePago.firstNameOnCard + ' ' + pedido.medioDePago.lastNameOnCard}">Nombre</strong>
         </p>
 
         <h2 class="order-aside__title">Contacto</h2>
         <p class="order-aside__text">
-          <strong>Tel:</strong> 099 000 000<br>
-          <strong>Email:</strong> cliente@correo.com
+          <strong>Tel:</strong> <span th:text="${cliente.phoneNumber}">099 000 000</span><br>
+          <strong>Email:</strong> <span th:text="${cliente.email}">email</span>
         </p>
       </aside>
     </section>
@@ -169,7 +173,7 @@
     <section class="container section">
       <div class="final-actions">
         <a class="btn btn--primary" th:href="@{/}">Volver al inicio</a>
-        <a class="btn btn--ghost" th:href="@{/pedido}">Actualizar estado</a>
+        <a class="btn btn--ghost" th:href="@{/pedido/{id}(id=${pedido.id})}">Actualizar estado</a>
       </div>
     </section>
   </main>

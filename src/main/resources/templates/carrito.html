@@ -13,7 +13,7 @@
 </head>
 <body class="theme-italian">
   
-  <!-- Header global (actualizado con sección de Favoritos) -->
+  <!-- Header global -->
 <header class="site-header">
   <div class="container header__inner">
     <a class="brand" th:href="@{/}">
@@ -50,6 +50,18 @@
   </div>
 </header>
 
+</header>
+
+<!-- ⬇️ AGREGÁ ESTO AQUÍ -->
+<div th:if="${msg}" class="alert alert-success" style="margin: 1rem auto; max-width: 1200px; padding: 1rem; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; color: #155724;">
+  <strong>✓</strong> <span th:text="${msg}"></span>
+</div>
+
+<div th:if="${error}" class="alert alert-error" style="margin: 1rem auto; max-width: 1200px; padding: 1rem; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24;">
+  <strong>✗</strong> <span th:text="${error}"></span>
+</div>
+
+<main>
 
   <main>
     <section class="container section">
@@ -89,6 +101,39 @@
                 <a class="link" th:href="${item.tipo == 'pizza'} ? @{/crear-pizza} : @{/crear-burger}">Editar</a>
                 <form method="post" th:action="@{/carrito/eliminar}" class="inline-form">
                   <input type="hidden" name="id" th:value="${item.id}">
+      <!-- Lista de ítems -->
+      <div th:unless="${carritoVacio}" class="cart" role="region" aria-label="Listado de productos en el carrito">
+        
+        <article class="cart-item" th:each="item : ${items}">
+          <div class="cart-item__media">
+            <img th:src="${item.tipoProducto == 'PIZZA' ? '/img/pizza-thumb.png' : '/img/burger-thumb.png'}" 
+                 th:alt="${item.tipoProducto == 'PIZZA' ? 'Pizza' : 'Hamburguesa'}" 
+                 class="cart-item__img">
+          </div>
+          <div class="cart-item__info">
+            <h2 class="cart-item__title" th:text="${item.tipoProducto == 'PIZZA' ? 'Pizza personalizada' : 'Hamburguesa personalizada'}">Producto</h2>
+            <p class="cart-item__desc">
+              <span th:if="${item.tipoProducto == 'PIZZA'}">Pizza personalizada</span>
+              <span th:if="${item.tipoProducto == 'HAMBURGUESA'}">Hamburguesa personalizada</span>
+            </p>
+            <div class="cart-item__controls">
+              <!-- Form de cantidad -->
+              <form class="cart-item__qty" method="post" th:action="@{/carrito/actualizar-cantidad}">
+                <input type="hidden" name="itemId" th:value="${item.id}">
+                <label th:for="'qty-' + ${item.id}" class="visually-hidden">Cantidad</label>
+                <input th:id="'qty-' + ${item.id}" 
+                       name="cantidad" 
+                       class="input input--number" 
+                       type="number" 
+                       min="1" 
+                       step="1" 
+                       th:value="${item.cantidad}" 
+                       inputmode="numeric">
+                <button class="btn btn--ghost" type="submit">Actualizar</button>
+              </form>
+              <div class="cart-item__actions">
+                <form method="post" th:action="@{/carrito/eliminar}" class="inline-form">
+                  <input type="hidden" name="itemId" th:value="${item.id}">
                   <button class="link link--danger" type="submit">Eliminar</button>
                 </form>
               </div>

@@ -18,7 +18,7 @@ public class Direccion {
     @Column(name = "ADDRESS", nullable = false)
     private String address;
 
-    @Column(name = "INDICATIONS")
+    @Column(name = "INDICACIONES")
     private String indications;
 
     @Column(name = "ALIAS")
@@ -28,6 +28,6 @@ public class Direccion {
     private boolean isDefect;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USUARIO_ID")
-    private Usuario usuario;
+    @JoinColumn(name = "CLIENTE_ID")
+    private Cliente cliente;
 }

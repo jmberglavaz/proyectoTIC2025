@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.util.*;
+import java.time.LocalDate;
+
 
 @Entity
 @Table(name = "usuarios")
@@ -28,9 +29,9 @@ public class Usuario {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "BIRTH_DATE", nullable = false)
-    private Date birthDate;
+    private LocalDate birthDate;
 
-    @Column(name = "EMAIL", unique = true, nullable = false)
+    @Column(name = "EMAIL", nullable = false)
     private String email;
 
     @Column(name = "PASSWORD", nullable = false)
@@ -38,5 +39,4 @@ public class Usuario {
 
     @Column(name = "PHONE_NUMBER", nullable = false)
     private String phoneNumber;
-
 }

@@ -22,6 +22,8 @@ public class Topping {
     @Column(name = "precio_topping")
     private double precio_topping;
 
+    @Column(name = "fecha_agregado")
+    private LocalDateTime fechaAgregado;
     @ManyToOne
     @JoinColumn(name = "id_pizza")
     private Pizza pizza;
@@ -32,14 +34,13 @@ public class Topping {
 
     public Topping() {}
 
-    public Topping(String nombre, int cantidad, double precio_topping) {
-        this.nombre = nombre;
-        this.cantidad = cantidad;
-        this.precio_topping = precio_topping;
-    }
 
-    public double getPrecioTopping() {
-        return precio_topping * cantidad;
+    public Topping(String nombre, char hamburguesaOPizza, char tipo, double precio_topping, LocalDateTime fecha_agregado) {
+        this.nombre = nombre;
+        this.hamburguesaOPizza = hamburguesaOPizza;
+        this.tipo = tipo;
+        this.precioTopping = precio_topping;
+        this.fechaAgregado = fecha_agregado;
     }
 
 }

@@ -20,7 +20,7 @@ public class FavoritoController {
     public String verFavoritos(Model model) {
         model.addAttribute("page", "favoritos");
         model.addAttribute("favoritos", favoritos);
-        return "favoritos";
+        return "user/favoritos";
     }
 
     @PostMapping("/favoritos/agregar")

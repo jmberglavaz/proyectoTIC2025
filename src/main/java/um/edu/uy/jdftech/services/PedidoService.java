@@ -91,13 +91,30 @@ public class PedidoService {
         return pedidoRepository.findHistoricByClient(clienteId, from, to);
     }
 
-    public Pedido updateStatus(Long pedidoId, EstadoPedido nuevoEstado) {
-        Pedido pedido = pedidoRepository.findById(pedidoId)
+    // Obtener pedido por ID
+    public Pedido obtenerPedidoPorId(Long pedidoId) {
+        return pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));
+    }
+
+    // Cambiar estado del pedido
+    public Pedido cambiarEstado(Long pedidoId, EstadoPedido nuevoEstado) {
+        Pedido pedido = obtenerPedidoPorId(pedidoId);
         pedido.setStatus(nuevoEstado);
         return pedidoRepository.save(pedido);
     }
 
+    // Cancelar pedido (solo si está EN_COLA)
+    public void cancelarPedido(Long pedidoId) {
+        Pedido pedido = obtenerPedidoPorId(pedidoId);
+
+        if (pedido.getStatus() != EstadoPedido.EN_COLA) {
+            throw new RuntimeException("Solo se pueden cancelar pedidos en estado EN_COLA");
+        }
+
+        // Eliminar el pedido
+        pedidoRepository.delete(pedido);
+    }
     public List<Pedido> findPedidosActivos() {
         try {
             return pedidoRepository.findByStatusIn(List.of(
@@ -112,6 +129,11 @@ public class PedidoService {
 
     public Optional<Pedido> findById(Long id) {
         return pedidoRepository.findById(id);
+    }
+
+            // Obtener todos los pedidos de un cliente
+    public List<Pedido> obtenerPedidosCliente (Cliente cliente){
+        return pedidoRepository.findByClientIdOrderByDateDesc(cliente.getId());
     }
 
     public List<Pedido> findWithFilters(String numero, String clienteId, String estado,
@@ -192,5 +214,22 @@ public class PedidoService {
     public List<Pedido> findLast10Orders() {
         Pageable pageable = PageRequest.of(0, 10);
         return pedidoRepository.findLast10Orders(pageable);
+    }
+
+    public Pedido updateStatus(Long pedidoId, EstadoPedido nuevoEstado) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));
+        pedido.setStatus(nuevoEstado);
+        return pedidoRepository.save(pedido);
+    }
+
+    public List<Cliente> findByFullName(String firstName, String lastName) {
+        return clienteRepository.findByFullNameContaining(firstName + " " + lastName);
+    }
+
+    // Obtener el pedido activo más reciente de un cliente
+    public Optional<Pedido> obtenerPedidoActivo(Cliente cliente) {
+        List<Pedido> pedidosActivos = pedidoRepository.findPedidosActivosByClientId(cliente.getId());
+        return pedidosActivos.isEmpty() ? Optional.empty() : Optional.of(pedidosActivos.get(0));
     }
 }
