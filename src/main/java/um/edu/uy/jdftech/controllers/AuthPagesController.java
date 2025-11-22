@@ -4,13 +4,17 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import um.edu.uy.jdftech.entitites.Cliente;
 import um.edu.uy.jdftech.entitites.Direccion;
 import um.edu.uy.jdftech.services.ClienteService;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Controller
@@ -28,7 +32,7 @@ public class AuthPagesController {
         if (session.getAttribute("cliente") != null) {
             return "redirect:/";
         }
-        return "auth/login"; // ← CAMBIADO: ahora apunta a auth/login
+        return "auth/login"; //
     }
 
     @PostMapping("/login")
@@ -96,7 +100,7 @@ public class AuthPagesController {
             }
 
             // Convertir fecha
-            Date birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(fechaNacimiento);
+            LocalDate birthDate = LocalDate.parse(fechaNacimiento);
 
             // Crear objeto Cliente
             Cliente nuevoCliente = Cliente.builder()
@@ -119,7 +123,7 @@ public class AuthPagesController {
                         .indications(indicaciones != null ? indicaciones.trim() : null)
                         .alias("Casa") // Dirección principal
                         .isDefect(true) // Es la dirección por defecto
-                        .usuario(clienteGuardado)
+                        .cliente(clienteGuardado)
                         .build();
 
                 clienteGuardado.agregarDireccion(direccion);

@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PizzUM & BurgUM — Checkout</title>
+
+  <!-- Hojas de estilo globales -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
+  
+  <style>
+    /* Fix para los botones del checkout */
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="theme-italian">
+  <!-- Header global -->
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" th:href="@{/}">
+        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+        <span class="brand__name">PizzUM &amp; BurgUM</span>
+      </a>
+      <nav class="site-nav">
+        <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
+        <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
+        <a class="nav__link" th:href="@{/carrito}">Carrito</a>
+        <a class="nav__link is-active" th:href="@{/checkout}">Checkout</a>
+      </nav>
+    </div>
+  </header>
+
+</header>
+
+<div th:if="${msg}" class="alert alert-success" style="margin: 1rem auto; max-width: 1200px; padding: 1rem; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; color: #155724;">
+  <strong>✓</strong> <span th:text="${msg}"></span>
+</div>
+
+<div th:if="${error}" class="alert alert-error" style="margin: 1rem auto; max-width: 1200px; padding: 1rem; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24;">
+  <strong>✗</strong> <span th:text="${error}"></span>
+</div>
+
+<main>
+
+  <main>
+    <!-- Stepper visual -->
+    <section class="container section">
+      <ol class="stepper" aria-label="Pasos de compra">
+        <li class="stepper__item"><a th:href="@{/carrito}">Carrito</a></li>
+        <li class="stepper__item is-current" aria-current="step">Checkout</li>
+        <li class="stepper__item">Confirmación</li>
+      </ol>
+    </section>
+
+    <section class="container section section--grid-2">
+      <!-- Formulario de checkout -->
+      <div>
+        <form id="form-checkout" class="form form--checkout" method="post" th:action="@{/checkout}">
+
+          <!-- Cuenta (solo lectura) -->
+          <fieldset class="form-section" aria-describedby="ayuda-cuenta">
+            <legend class="form-section__title">Tu cuenta</legend>
+            <p id="ayuda-cuenta" class="form-hint">Estás comprando con tu usuario. Estos datos vienen de tu perfil.</p>
+
+            <div class="card card--muted" role="group" aria-label="Datos de cuenta">
+              <dl class="totals" style="padding:0; border:none">
+                <div class="totals__row"><dt>Nombre</dt><dd th:text="${cliente.firstName + ' ' + cliente.lastName}">Nombre Apellido</dd></div>
+                <div class="totals__row"><dt>Email</dt><dd th:text="${cliente.email}">cliente@correo.com</dd></div>
+                <div class="totals__row"><dt>Teléfono</dt><dd th:text="${cliente.phoneNumber}">099 000 000</dd></div>
+              </dl>
+              <small>¿Querés editar estos datos? Hacelo desde tu perfil.</small>
+            </div>
+          </fieldset>
+
+          <!-- Dirección (lista de guardadas + agregar nueva) -->
+          <fieldset class="form-section">
+            <legend class="form-section__title">Dirección de entrega</legend>
+            <p class="form-hint">Elegí una de tus direcciones guardadas o agregá una nueva.</p>
+
+            <!-- Lista de direcciones guardadas (radios) -->
+            <div class="select-list" role="radiogroup" aria-label="Direcciones guardadas">
+              <label class="option select-card" th:each="direccion, iterStat : ${direcciones}">
+                <input type="radio" name="direccion_id" th:value="${direccion.id}" th:checked="${iterStat.first}">
+                <div class="select-card__body">
+                  <div class="select-card__title">
+                    <strong th:text="${direccion.direccion}">Dirección</strong>
+                    <span class="badge badge--ghost" th:if="${iterStat.first}">Seleccionada</span>
+                  </div>
+                  <div class="select-card__meta" th:if="${direccion.indicaciones}">
+                    <small th:text="${direccion.indicaciones}">Indicaciones</small>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Agregar nueva (acordeón inline) -->
+            <details class="accordion">
+              <summary>Agregar nueva dirección</summary>
+              <div class="card" style="margin-top:var(--space-3)">
+                <div class="form-group">
+                  <label for="domicilio_nuevo">Domicilio</label>
+                  <input class="input" id="domicilio_nuevo" name="domicilio_nuevo" type="text" placeholder="Ej: 18 de Julio 1234, Apto 501">
+                </div>
+                <div class="form-group">
+                  <label for="indicaciones_nuevo">Indicaciones (opcional)</label>
+                  <textarea class="input input--textarea" id="indicaciones_nuevo" name="indicaciones_nuevo" rows="2" placeholder="Ej: timbre roto, llamar al llegar"></textarea>
+                </div>
+                <div class="form-actions" style="justify-content:flex-start">
+                  <button class="btn btn--secondary" type="submit" name="accion" value="agregar_direccion">Agregar dirección</button>
+                </div>
+              </div>
+            </details>
+          </fieldset>
+
+          <!-- Pago con tarjeta (lista de guardadas + CVV + agregar nueva) -->
+          <fieldset class="form-section">
+            <legend class="form-section__title">Pago con tarjeta</legend>
+            <p class="form-hint">Seleccioná una tarjeta guardada e ingresá el CVV (3 dígitos).</p>
+
+            <div class="select-list" role="radiogroup" aria-label="Tarjetas guardadas">
+              <label class="option select-card" th:each="tarjeta, iterStat : ${mediosDePago}">
+                <input type="radio" name="tarjeta_id" th:value="${tarjeta.cardNumber}" th:checked="${iterStat.first}">
+                <div class="select-card__body">
+                  <div class="select-card__title">
+                    <strong>•••• •••• •••• [[${#strings.substring(tarjeta.cardNumber.toString(), tarjeta.cardNumber.toString().length() - 4)}]]</strong>
+                    <span class="badge badge--ghost" th:if="${iterStat.first}">Seleccionada</span>
+                  </div>
+                  <div class="select-card__meta">
+                    <small>Titular: [[${tarjeta.firstNameOnCard}]] [[${tarjeta.lastNameOnCard}]]</small>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <div class="form-group" style="max-width:220px; margin-top: var(--space-3);">
+              <label for="cvv_seleccionada">CVV</label>
+              <input class="input" id="cvv_seleccionada" name="cvv_seleccionada" type="number" inputmode="numeric" pattern="[0-9]{3}" placeholder="3 dígitos" aria-describedby="ayuda-cvv">
+              <small id="ayuda-cvv" class="form-hint">Ingresá 3 dígitos del CVV de la tarjeta seleccionada.</small>
+            </div>
+          </fieldset>
+
+          <!-- Acciones -->
+          <div class="form-actions">
+            <a class="btn btn--secondary" th:href="@{/carrito}">Volver al carrito</a>
+            <button class="btn btn--primary" type="button" onclick="confirmarPedido()">Confirmar pedido</button>
+          </div>
+        </form>
+
+        <!-- Form separado para agregar tarjeta -->
+        <div style="margin-top: 2rem;">
+          <h3 style="margin-bottom: 1rem;">Agregar nueva tarjeta</h3>
+          <div class="card">
+            <form method="post" th:action="@{/checkout/agregar-tarjeta}">
+              <div class="form-grid">
+                <div class="form-group form-group--full">
+                  <label for="tarjeta_numero_nueva">Número de tarjeta</label>
+                  <input class="input" id="tarjeta_numero_nueva" name="cardNumber" type="number" placeholder="Solo números" required>
+                </div>
+                <div class="form-group">
+                  <label for="tarjeta_nombre_nueva">Nombre</label>
+                  <input class="input" id="tarjeta_nombre_nueva" name="firstName" type="text" placeholder="Nombre" required>
+                </div>
+                <div class="form-group">
+                  <label for="tarjeta_apellido_nueva">Apellido</label>
+                  <input class="input" id="tarjeta_apellido_nueva" name="lastName" type="text" placeholder="Apellido" required>
+                </div>
+                <div class="form-group">
+                  <label for="tarjeta_exp_mes_nueva">Mes</label>
+                  <input class="input" id="tarjeta_exp_mes_nueva" name="expMonth" type="number" min="1" max="12" placeholder="MM" required>
+                </div>
+                <div class="form-group">
+                  <label for="tarjeta_exp_anio_nueva">Año</label>
+                  <input class="input" id="tarjeta_exp_anio_nueva" name="expYear" type="number" min="2025" max="2099" placeholder="AAAA" required>
+                </div>
+                <div class="form-group">
+                  <label for="tarjeta_cvv_nueva">CVV (3 dígitos)</label>
+                  <input class="input" id="tarjeta_cvv_nueva" name="cvv" type="number" min="0" max="999" placeholder="CVV" required>
+                </div>
+              </div>
+
+              <div class="form-actions" style="justify-content:flex-start; margin-top: 1rem;">
+                <button class="btn btn--secondary" type="submit">Agregar tarjeta</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen de compra -->
+      <aside class="checkout-summary" aria-label="Resumen del pedido">
+        <h2 class="checkout-summary__title">Resumen del pedido</h2>
+
+        <ul class="checkout-items">
+          <li class="checkout-item" th:each="item : ${items}">
+            <img class="checkout-item__img" 
+                 th:src="${item.tipoProducto == 'PIZZA' ? '/img/pizza-thumb.png' : '/img/burger-thumb.png'}" 
+                 alt="Producto">
+            <div class="checkout-item__info">
+              <p class="checkout-item__name" th:text="${item.tipoProducto == 'PIZZA' ? 'Pizza personalizada' : 'Hamburguesa personalizada'}">Producto</p>
+              <p class="checkout-item__meta">Detalles del producto</p>
+            </div>
+            <div class="checkout-item__qty" th:text="'x' + ${item.cantidad}">x1</div>
+            <div class="checkout-item__price" th:text="'$' + ${item.calcularSubtotal()}">$0</div>
+          </li>
+        </ul>
+
+        <dl class="totals">
+          <div class="totals__row">
+            <dt>Subtotal</dt><dd th:text="'$' + ${total}">$ 0</dd>
+          </div>
+          <div class="totals__row">
+            <dt>Envío</dt><dd>$ 0</dd>
+          </div>
+          <div class="totals__row totals__row--total">
+            <dt>Total</dt><dd th:text="'$' + ${total}">$ 0</dd>
+          </div>
+        </dl>
+
+        <div class="delivery-note">
+          <img class="delivery-note__img" th:src="@{/img/delivery-illustration.svg}" alt="Reparto a domicilio">
+          <p class="delivery-note__text">Tu pedido llegará a tu domicilio. Podrás seguir el estado luego de confirmar.</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <small>&copy; 2025 PizzUM &amp; BurgUM</small>
+      <nav class="footer-nav">
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    function confirmarPedido() {
+      const cvv = document.getElementById('cvv_seleccionada').value;
+      
+      if (!cvv || cvv.length !== 3) {
+        alert('Por favor, ingresá el CVV de 3 dígitos');
+        document.getElementById('cvv_seleccionada').focus();
+        return;
+      }
+      
+      // Crear input hidden para enviar la acción
+      const form = document.getElementById('form-checkout');
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'accion';
+      input.value = 'confirmar_pedido';
+      form.appendChild(input);
+      
+      form.submit();
+    }
+  </script>
+</body>
+</html>

@@ -5,15 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PagesController {
-
     @GetMapping("/")
     public String index() {
         return "user/index";
     }
-//    @GetMapping("/login")
-//    public String login() {
-//        return "auth/login";
-//    }
 
     @GetMapping("/static")
     public String staticHome() {
@@ -30,15 +25,15 @@ public class PagesController {
         return "user/crear-burger";
     }
 
-    @GetMapping("/carrito")
-    public String carrito() {
-        return "user/carrito";
-    }
+//    @GetMapping("/carrito")
+//    public String carrito() {
+//        return "user/carrito";
+//    }
 
-    @GetMapping("/pedido")
-    public String pedido() {
-        return "user/pedido";
-    }
+//    @GetMapping("/pedido")
+//    public String pedido() {
+//        return "user/pedido";
+//    }
 
     @GetMapping("/ayuda")
     public String ayuda() { return "user/ayuda"; }

@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PizzUM & BurgUM — Admin / Productos</title>
 
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body>
   <!-- Header admin -->
   <header class="site-header">
     <div class="container header__inner">
-      <a class="brand" href="../html/index.html">
-        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
+      <a class="brand" th:href="@{/}">
+        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
         <span class="brand__name">PizzUM &amp; BurgUM</span>
       </a>
       <nav class="site-nav">
-        <a class="nav__link" href="../html/index-admin.html">Panel</a>
-        <a class="nav__link is-active" href="../html/productos-admin.html">Productos</a>
-        <a class="nav__link" href="../html/pedidos-admin.html">Pedidos</a>
-        <a class="nav__link" href="../html/historial-admin.html">Historial</a>
-        <a class="nav__link" href="../html/admins-admin.html">Administradores</a>
-        <a class="nav__link" href="../html/login.html">Cerrar sesión</a>
+        <a class="nav__link" th:href="@{/admin}">Panel</a>
+        <a class="nav__link is-active" th:href="@{/admin/productos}">Productos</a>
+        <a class="nav__link" th:href="@{/admin/pedidos}">Pedidos</a>
+        <a class="nav__link" th:href="@{/admin/historial}">Historial</a>
+        <a class="nav__link" th:href="@{/admin/administradores}">Administradores</a>
+        <a class="nav__link" th:href="@{/login}">Cerrar sesión</a>
       </nav>
     </div>
   </header>
@@ -50,20 +50,20 @@
         <ul class="summary-list">
           <li>
             <strong>Napolitana</strong> — $ —
-            <form class="inline-form" method="post" action="#">
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
               <button class="link link--danger" type="submit">Eliminar</button>
             </form>
           </li>
           <li>
             <strong>Integral</strong> — $ —
-            <form class="inline-form" method="post" action="#">
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
               <button class="link link--danger" type="submit">Eliminar</button>
             </form>
           </li>
         </ul>
 
         <!-- Agregar -->
-        <form class="form-section form-section--row" method="post" action="#">
+        <form class="form-section form-section--row" method="post" th:action="@{/admin/productos}">
           <div class="form-group">
             <label for="masa_nombre">Nombre</label>
             <input class="input" id="masa_nombre" name="nombre" type="text" required placeholder="Ej: Napolitana">
@@ -86,15 +86,19 @@
         <ul class="summary-list">
           <li>
             <strong>Tomate</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
           <li>
             <strong>Pomodoro</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
         </ul>
 
-        <form class="form-section form-section--row" method="post" action="#">
+        <form class="form-section form-section--row" method="post" th:action="@{/admin/productos}">
           <div class="form-group">
             <label for="salsa_nombre">Nombre</label>
             <input class="input" id="salsa_nombre" name="nombre" type="text" required placeholder="Ej: Tomate">
@@ -117,15 +121,19 @@
         <ul class="summary-list">
           <li>
             <strong>Muzzarella</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
           <li>
             <strong>Roquefort</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
         </ul>
 
-        <form class="form-section form-section--row" method="post" action="#">
+        <form class="form-section form-section--row" method="post" th:action="@{/admin/productos}">
           <div class="form-group">
             <label for="queso_nombre">Nombre</label>
             <input class="input" id="queso_nombre" name="nombre" type="text" required placeholder="Ej: Muzzarella">
@@ -148,15 +156,19 @@
         <ul class="summary-list">
           <li>
             <strong>Albahaca</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
           <li>
             <strong>Aceitunas</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
         </ul>
 
-        <form class="form-section form-section--row" method="post" action="#">
+        <form class="form-section form-section--row" method="post" th:action="@{/admin/productos}">
           <div class="form-group">
             <label for="top_nombre">Nombre</label>
             <input class="input" id="top_nombre" name="nombre" type="text" required placeholder="Ej: Jamón">
@@ -186,15 +198,19 @@
         <ul class="summary-list">
           <li>
             <strong>Pan de papa</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
           <li>
             <strong>Integral</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
         </ul>
 
-        <form class="form-section form-section--row" method="post" action="#">
+        <form class="form-section form-section--row" method="post" th:action="@{/admin/productos}">
           <div class="form-group">
             <label for="pan_nombre">Nombre</label>
             <input class="input" id="pan_nombre" name="nombre" type="text" required placeholder="Ej: Pan brioche">
@@ -217,15 +233,19 @@
         <ul class="summary-list">
           <li>
             <strong>Vaca</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
           <li>
             <strong>Pollo</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
         </ul>
 
-        <form class="form-section form-section--row" method="post" action="#">
+        <form class="form-section form-section--row" method="post" th:action="@{/admin/productos}">
           <div class="form-group">
             <label for="carne_nombre">Nombre</label>
             <input class="input" id="carne_nombre" name="nombre" type="text" required placeholder="Ej: Vaca">
@@ -248,15 +268,19 @@
         <ul class="summary-list">
           <li>
             <strong>Ketchup</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
           <li>
             <strong>Mayonesa</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
         </ul>
 
-        <form class="form-section form-section--row" method="post" action="#">
+        <form class="form-section form-section--row" method="post" th:action="@{/admin/productos}">
           <div class="form-group">
             <label for="adz_nombre">Nombre</label>
             <input class="input" id="adz_nombre" name="nombre" type="text" required placeholder="Ej: Mostaza Dijon">
@@ -279,15 +303,19 @@
         <ul class="summary-list">
           <li>
             <strong>Queso extra</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
           <li>
             <strong>Bacon</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
         </ul>
 
-        <form class="form-section form-section--row" method="post" action="#">
+        <form class="form-section form-section--row" method="post" th:action="@{/admin/productos}">
           <div class="form-group">
             <label for="extra_nombre">Nombre</label>
             <input class="input" id="extra_nombre" name="nombre" type="text" required placeholder="Ej: Queso azul">
@@ -314,15 +342,19 @@
         <ul class="summary-list">
           <li>
             <strong>Agua 500ml</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
           <li>
             <strong>Refresco cola 1.5L</strong> — $ —
-            <form class="inline-form" method="post" action="#"><button class="link link--danger" type="submit">Eliminar</button></form>
+            <form class="inline-form" method="post" th:action="@{/admin/productos}">
+              <button class="link link--danger" type="submit">Eliminar</button>
+            </form>
           </li>
         </ul>
 
-        <form class="form-section form-section--row" method="post" action="#">
+        <form class="form-section form-section--row" method="post" th:action="@{/admin/productos}">
           <div class="form-group">
             <label for="bebida_nombre">Nombre</label>
             <input class="input" id="bebida_nombre" name="nombre" type="text" required placeholder="Ej: Refresco naranja 1.5L">
@@ -340,7 +372,7 @@
 
     <section class="container section">
       <div class="final-actions">
-        <a class="btn btn--secondary" href="/html/index-admin.html">Volver al panel</a>
+        <a class="btn btn--secondary" th:href="@{/admin}">Volver al panel</a>
       </div>
     </section>
   </main>
@@ -349,9 +381,9 @@
     <div class="container footer__inner">
       <small>&copy; 2025 PizzUM &amp; BurgUM — Panel de administración</small>
       <nav class="footer-nav">
-        <a href="#" class="footer__link">Ayuda</a>
-        <a href="#" class="footer__link">Términos</a>
-        <a href="#" class="footer__link">Privacidad</a>
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
       </nav>
     </div>
   </footer>

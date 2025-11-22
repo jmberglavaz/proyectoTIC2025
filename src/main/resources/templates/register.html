@@ -1,27 +1,27 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PizzUM & BurgUM — Crear cuenta</title>
 
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
+  <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body class="theme-italian">
   <header class="site-header">
     <div class="container header__inner">
-      <a class="brand" href="index.html">
-        <img src="../img/logo.png" alt="PizzUM &amp; BurgUM" class="brand__logo">
+      <a class="brand" th:href="@{/}">
+        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
         <span class="brand__name">PizzUM &amp; BurgUM</span>
       </a>
       <nav class="site-nav">
-        <a class="nav__link" href="crear-pizza.html">Crear pizza</a>
-        <a class="nav__link" href="crear-burger.html">Crear hamburguesa</a>
-        <a class="nav__link" href="carrito.html">Carrito</a>
-        <a class="nav__link" href="pedido.html">Pedidos</a>
+        <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
+        <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
+        <a class="nav__link" th:href="@{/carrito}">Carrito</a>
+        <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
       </nav>
     </div>
   </header>
@@ -30,13 +30,13 @@
     <section class="container section auth">
       <div class="auth-card">
         <div class="auth-card__media">
-          <img src="../img/register-illustration.svg" alt="Crear cuenta" class="auth-card__img">
+          <img th:src="@{/img/register-illustration.svg}" alt="Crear cuenta" class="auth-card__img">
         </div>
         <div class="auth-card__content">
           <h1>Crear cuenta</h1>
           <p>Completá tus datos para guardar direcciones, medios de pago y hacer pedidos más rápido.</p>
 
-          <form class="form form--auth" method="post" action="#">
+          <form class="form form--auth" method="post" th:action="@{/register}">
             <!-- Datos personales -->
             <fieldset class="form-section">
               <legend class="form-section__title">Datos personales</legend>
@@ -134,7 +134,7 @@
             </fieldset>
 
             <div class="form-actions">
-              <a class="btn btn--secondary" href="login.html">Ya tengo cuenta</a>
+              <a class="btn btn--secondary" th:href="@{/login}">Ya tengo cuenta</a>
               <button class="btn btn--primary" type="submit">Crear cuenta</button>
             </div>
           </form>
@@ -147,9 +147,9 @@
     <div class="container footer__inner">
       <small>&copy; 2025 PizzUM &amp; BurgUM</small>
       <nav class="footer-nav">
-        <a href="#" class="footer__link">Ayuda</a>
-        <a href="#" class="footer__link">Términos</a>
-        <a href="#" class="footer__link">Privacidad</a>
+        <a th:href="@{#}" class="footer__link">Ayuda</a>
+        <a th:href="@{#}" class="footer__link">Términos</a>
+        <a th:href="@{#}" class="footer__link">Privacidad</a>
       </nav>
     </div>
   </footer>

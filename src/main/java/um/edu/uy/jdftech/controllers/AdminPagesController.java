@@ -9,6 +9,7 @@ import um.edu.uy.jdftech.entitites.*;
 import um.edu.uy.jdftech.enums.EstadoPedido;
 import um.edu.uy.jdftech.services.*;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -419,7 +420,7 @@ public class AdminPagesController {
                         .email(email)
                         .password(password) // En producción, esto debería estar encriptado
                         .phoneNumber(telefono)
-                        .birthDate(java.sql.Date.valueOf(fechaNacimiento))
+                        .birthDate(Date.valueOf(fechaNacimiento).toLocalDate())
                         .build();
 
                 administradorService.crear(nuevoAdmin);
