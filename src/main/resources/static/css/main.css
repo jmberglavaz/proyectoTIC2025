@@ -14,6 +14,9 @@
     --color-text-soft: #6b6b6b;
     --color-border: #e6e2da;
     --color-muted: #f7f3ea;
+
+   --color-primary-dark: #c0392b; /* versión más oscura del primary */
+   --color-primary-light: #ff6b6b; /* versión más clara */
   
     /* Tipografía y ritmo */
     --font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";

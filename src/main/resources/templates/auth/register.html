@@ -168,18 +168,40 @@
     <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body class="theme-italian">
+<!--<header class="site-header">-->
+<!--    <div class="container header__inner">-->
+<!--        <a class="brand" th:href="@{/static}">-->
+<!--            <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">-->
+<!--            <span class="brand__name">PizzUM &amp; BurgUM</span>-->
+<!--        </a>-->
+<!--        <nav class="site-nav">-->
+<!--            <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>-->
+<!--            <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>-->
+<!--            <a class="nav__link" th:href="@{/carrito}">Carrito</a>-->
+<!--            <a class="nav__link" th:href="@{/pedido}">Pedidos</a>-->
+<!--        </nav>-->
+<!--    </div>-->
+<!--</header>-->
 <header class="site-header">
     <div class="container header__inner">
-        <a class="brand" th:href="@{/static}">
+        <a class="brand" th:href="@{/}">
             <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
             <span class="brand__name">PizzUM &amp; BurgUM</span>
         </a>
-        <nav class="site-nav">
-            <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
-            <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
-            <a class="nav__link" th:href="@{/carrito}">Carrito</a>
-            <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
-        </nav>
+
+        <!-- MOSTRAR INFO DEL USUARIO SI ESTÁ LOGUEADO -->
+        <div th:if="${session.cliente != null}" class="user-info">
+            <span>Bienvenido, <strong th:text="${session.clienteNombre}">Usuario</strong></span>
+            <form th:action="@{/logout}" method="post" style="display: inline; margin-left: 1rem;">
+                <button type="submit" class="btn btn--link">Cerrar Sesión</button>
+            </form>
+        </div>
+
+        <!-- MOSTRAR BOTONES DE LOGIN SI NO ESTÁ LOGUEADO -->
+        <div th:unless="${session.cliente != null}" class="auth-buttons">
+            <a th:href="@{/login}" class="btn btn--primary">Iniciar Sesión</a>
+            <a th:href="@{/register}" class="btn btn--secondary">Registrarse</a>
+        </div>
     </div>
 </header>
 

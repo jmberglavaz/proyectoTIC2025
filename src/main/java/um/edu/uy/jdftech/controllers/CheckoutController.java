@@ -1,5 +1,6 @@
 package um.edu.uy.jdftech.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -31,17 +32,19 @@ public class CheckoutController {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    // Método auxiliar para obtener cliente logueado (HARDCODEADO por ahora)
-    private Cliente obtenerClienteActual() {
-        // TODO: Reemplazar con sesión real cuando login esté listo
-        return clienteRepository.findById(3L)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+    // Método auxiliar para obtener cliente logueado
+    private Cliente obtenerClienteActual(HttpSession session) {
+        Cliente cliente = (Cliente) session.getAttribute("cliente");
+        if (cliente == null) {
+            throw new RuntimeException("Debe iniciar sesión para realizar checkout");
+        }
+        return cliente;
     }
 
     // GET: Mostrar página de checkout
     @GetMapping("/checkout")
-    public String view(Model model) {
-        Cliente cliente = obtenerClienteActual();
+    public String view(HttpSession session, Model model) {
+        Cliente cliente = obtenerClienteActual(session);
         Carrito carrito = carritoService.obtenerOCrearCarrito(cliente);
 
         // Verificar que el carrito no esté vacío
@@ -73,8 +76,9 @@ public class CheckoutController {
                                  @RequestParam String expMonth,
                                  @RequestParam String expYear,
                                  @RequestParam Integer cvv,
+                                 HttpSession session,
                                  RedirectAttributes ra) {
-        Cliente cliente = obtenerClienteActual();
+        Cliente cliente = obtenerClienteActual(session);
         
         try {
             // Crear fecha de expiración
@@ -107,10 +111,11 @@ public class CheckoutController {
                          @RequestParam(required = false) String tarjeta_nombre_nueva,
                          @RequestParam(required = false) String tarjeta_exp_mes_nueva,
                          @RequestParam(required = false) String tarjeta_exp_anio_nueva,
+                         HttpSession session,
                          @RequestParam(required = false) Integer tarjeta_cvv_nueva,
                          RedirectAttributes ra) {
 
-        Cliente cliente = obtenerClienteActual();
+        Cliente cliente = obtenerClienteActual(session);
 
         try {
             // Acción: Agregar nueva dirección

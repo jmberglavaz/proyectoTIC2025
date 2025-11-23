@@ -1,4 +1,5 @@
 package um.edu.uy.jdftech.controllers;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,17 +23,19 @@ public class PedidoController {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    // Método auxiliar para obtener cliente logueado (HARDCODEADO por ahora)
-    private Cliente obtenerClienteActual() {
-        // TODO: Reemplazar con sesión real cuando login esté listo
-        return clienteRepository.findById(3L)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+    // Método auxiliar para obtener cliente logueado
+    private Cliente obtenerClienteActual(HttpSession session) {
+        Cliente cliente = (Cliente) session.getAttribute("cliente");
+        if (cliente == null) {
+            throw new RuntimeException("Debe iniciar sesión para ver pedidos");
+        }
+        return cliente;
     }
 
     // GET: Ir al pedido activo del cliente (o home si no tiene)
     @GetMapping
-    public String irAlPedidoActivo(RedirectAttributes ra) {
-        Cliente cliente = obtenerClienteActual();
+    public String irAlPedidoActivo(HttpSession session, RedirectAttributes ra) {
+        Cliente cliente = obtenerClienteActual(session);
         Optional<Pedido> pedidoActivo = pedidoService.obtenerPedidoActivo(cliente);
         
         if (pedidoActivo.isEmpty()) {
@@ -45,11 +48,13 @@ public class PedidoController {
 
     // GET: Ver un pedido específico por ID
     @GetMapping("/{pedidoId}")
-    public String verPedido(@PathVariable Long pedidoId, Model model) {
+    public String verPedido(@PathVariable Long pedidoId,
+                            HttpSession session,
+                            Model model) {
         Pedido pedido = pedidoService.obtenerPedidoPorId(pedidoId);
-        
+
         // Verificar que el pedido pertenezca al cliente actual
-        Cliente cliente = obtenerClienteActual();
+        Cliente cliente = obtenerClienteActual(session);
         if (!pedido.getClient().getId().equals(cliente.getId())) {
             return "redirect:/?error=no-autorizado";
         }
@@ -69,12 +74,14 @@ public class PedidoController {
 
     // POST: Cancelar pedido (lo borra de la BD)
     @PostMapping("/{pedidoId}/cancelar")
-    public String cancelarPedido(@PathVariable Long pedidoId, RedirectAttributes ra) {
+    public String cancelarPedido(@PathVariable Long pedidoId,
+                                 HttpSession session,
+                                 RedirectAttributes ra) {
         try {
             Pedido pedido = pedidoService.obtenerPedidoPorId(pedidoId);
             
             // Verificar que el pedido pertenezca al cliente actual
-            Cliente cliente = obtenerClienteActual();
+            Cliente cliente = obtenerClienteActual(session);
             if (!pedido.getClient().getId().equals(cliente.getId())) {
                 ra.addFlashAttribute("error", "No autorizado");
                 return "redirect:/";
@@ -92,9 +99,11 @@ public class PedidoController {
 
     // POST: Cambiar estado del pedido (solo para testing/admin)
     @PostMapping("/{pedidoId}/cambiar-estado")
-    public String cambiarEstado(@PathVariable Long pedidoId, 
+    public String cambiarEstado(@PathVariable Long pedidoId,
                                 @RequestParam EstadoPedido nuevoEstado,
+                                HttpSession session,
                                 RedirectAttributes ra) {
+        Cliente cliente = obtenerClienteActual(session);
         try {
             pedidoService.cambiarEstado(pedidoId, nuevoEstado);
             ra.addFlashAttribute("msg", "Estado actualizado");

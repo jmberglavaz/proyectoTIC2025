@@ -209,3 +209,142 @@
   color: var(--color-primary);
   font-weight: 700;
 }
+
+/* User info en header */
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    padding: 0 1rem;
+    color: var(--color-text);
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+
+.btn--link {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.9rem;
+}
+
+.btn--link:hover {
+    color: var(--color-primary-dark);
+}
+
+/* Header Layout Mejorado */
+.header__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    margin-right: auto; /* Empuja todo lo demás a la derecha */
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    margin-right: 2rem; /* Espacio entre logo y navegación */
+}
+
+.brand__logo {
+    height: 40px;
+    width: auto;
+    margin-right: 0.75rem;
+}
+
+.brand__name {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: var(--color-primary);
+}
+
+.site-nav {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin: 0 auto; /* Centra la navegación */
+}
+
+.nav__link {
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 500;
+    padding: 0.5rem 0;
+    transition: color 0.2s ease;
+}
+
+.nav__link:hover {
+    color: var(--color-primary);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Empuja a la derecha */
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--color-text);
+}
+
+.logout-form {
+    display: inline;
+    margin: 0;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.btn--link {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.9rem;
+}
+
+.btn--link:hover {
+    opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header__inner {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .site-nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .brand__name {
+        font-size: 1.1rem;
+    }
+}

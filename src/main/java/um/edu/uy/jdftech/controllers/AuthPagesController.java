@@ -49,7 +49,7 @@ public class AuthPagesController {
                 // Login exitoso - guardar en sesión
                 session.setAttribute("cliente", cliente);
                 session.setAttribute("clienteId", cliente.getId());
-                session.setAttribute("clienteNombre", cliente.getFirstName() + " " + cliente.getLastName());
+                session.setAttribute("clienteNombre", cliente.getFirstName());
 
                 return "redirect:/";
             } else {
