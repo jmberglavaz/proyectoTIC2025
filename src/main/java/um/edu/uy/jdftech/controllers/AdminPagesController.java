@@ -1,5 +1,6 @@
 package um.edu.uy.jdftech.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -46,16 +47,44 @@ public class AdminPagesController {
     @Autowired
     private OrganismosPublicosService organismosPublicosService;
 
+    /**
+     * Verificar que el usuario esté autenticado como administrador
+     */
+    private boolean verificarAdminAutenticado(HttpSession session) {
+        return session.getAttribute("admin") != null;
+    }
+
+    /**
+     * Redirigir al login de admin si no está autenticado
+     */
+    private String redirigirSiNoAutenticado(HttpSession session, RedirectAttributes ra) {
+        if (!verificarAdminAutenticado(session)) {
+            ra.addFlashAttribute("error", "Debe iniciar sesión como administrador para acceder a esta página");
+            return "redirect:/admin/login";
+        }
+        return null;
+    }
+
     /* ======================
        Páginas (GET)
        ====================== */
     @GetMapping
-    public String panel() {
+    public String panel(HttpSession session, RedirectAttributes ra) {
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
+
+        if (session.getAttribute("admin") == null) {
+            ra.addFlashAttribute("error", "Debe iniciar sesión como administrador");
+            return "redirect:/admin/login";
+        }
         return "admin/index-admin";
     }
 
     @GetMapping("/productos")
-    public String productos(Model model) {
+    public String productos(HttpSession session, RedirectAttributes ra, Model model) {
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
+
         // Cargar todos los toppings por categoría para pizzas
         model.addAttribute("masas", toppingService.verToppingsDeTipo('M'));
         model.addAttribute("salsas", toppingService.verToppingsDeTipo('S'));
@@ -82,7 +111,10 @@ public class AdminPagesController {
                           @RequestParam(required = false) String tipo,
                           @RequestParam(required = false) String desde,
                           @RequestParam(required = false) String hasta,
-                          Model model) {
+                          HttpSession session, RedirectAttributes ra, Model model) {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
 
         try {
             List<Pedido> pedidos = pedidoService.findWithFilters(numero, clienteId, estado, tipo, desde, hasta);
@@ -108,7 +140,11 @@ public class AdminPagesController {
     }
 
     @GetMapping("/administradores")
-    public String administradores(@RequestParam(required = false) String buscar, Model model) {
+    public String administradores(@RequestParam(required = false) String buscar,
+                                  HttpSession session, RedirectAttributes ra, Model model) {
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
+
         try {
             List<Administrador> administradores;
             if (buscar != null && !buscar.trim().isEmpty()) {
@@ -126,11 +162,52 @@ public class AdminPagesController {
         return "admin/admins-admin";
     }
 
+    @GetMapping("/historial")
+    public String historial(@RequestParam(required = false) String numero,
+                            @RequestParam(required = false) String clienteId,
+                            @RequestParam(required = false) String estado,
+                            @RequestParam(required = false) String tipo,
+                            @RequestParam(required = false) String desde,
+                            @RequestParam(required = false) String hasta,
+                            HttpSession session, RedirectAttributes ra, Model model) {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
+
+        List<Pedido> pedidos;
+
+        // Si hay filtros aplicados, usarlos
+        if (numero != null || clienteId != null || estado != null || tipo != null || desde != null || hasta != null) {
+            pedidos = pedidoService.findWithFilters(numero, clienteId, estado, tipo, desde, hasta);
+        } else {
+            // Si no hay filtros, mostrar los últimos 10 pedidos ordenados por fecha de creación (más recientes primero)
+            pedidos = pedidoService.findLast10Orders();
+        }
+
+        model.addAttribute("pedidos", pedidos != null ? pedidos : Collections.emptyList());
+
+        // Mantener los parámetros en el modelo para que los filtros se mantengan
+        model.addAttribute("filtros", Map.of(
+                "numero", numero != null ? numero : "",
+                "clienteId", clienteId != null ? clienteId : "",
+                "estado", estado != null ? estado : "",
+                "tipo", tipo != null ? tipo : "",
+                "desde", desde != null ? desde : "",
+                "hasta", hasta != null ? hasta : ""
+        ));
+
+        return "admin/historial-admin";
+    }
+
     /* ======================
    CONSULTA DE TARJETAS
    ====================== */
     @GetMapping("/tarjetas")
-    public String consultaTarjetas(@RequestParam(required = false) Long numeroTarjeta, Model model) {
+    public String consultaTarjetas(@RequestParam(required = false) Long numeroTarjeta,
+                                   HttpSession session, RedirectAttributes ra, Model model) {
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
+
         try {
             if (numeroTarjeta != null) {
                 TarjetaInfoDTO info = medioDePagoService.obtenerInfoTarjeta(numeroTarjeta);
@@ -156,7 +233,10 @@ public class AdminPagesController {
                                @RequestParam(required = false) Double precio,
                                @RequestParam char hamburguesaOPizza,
                                @RequestParam char tipo,
-                               RedirectAttributes ra) {
+                               HttpSession session, RedirectAttributes ra)  {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
 
         System.out.println("Creando topping:");
         System.out.println("Nombre: " + nombre);
@@ -191,7 +271,11 @@ public class AdminPagesController {
     }
 
     @PostMapping("/productos/eliminar/{id}")
-    public String eliminarTopping(@PathVariable Long id, RedirectAttributes ra) {
+    public String eliminarTopping(@PathVariable Long id, HttpSession session, RedirectAttributes ra)  {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
+
         System.out.println("Eliminando topping con ID: " + id);
 
         try {
@@ -212,7 +296,10 @@ public class AdminPagesController {
     @PostMapping("/aderezos/crear")
     public String crearAderezo(@RequestParam String nombre,
                                @RequestParam Double precio,
-                               RedirectAttributes ra) {
+                               HttpSession session, RedirectAttributes ra)  {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
 
         System.out.println("Creando aderezo:");
         System.out.println("Nombre: " + nombre);
@@ -235,7 +322,11 @@ public class AdminPagesController {
     }
 
     @PostMapping("/aderezos/eliminar/{id}")
-    public String eliminarAderezo(@PathVariable Long id, RedirectAttributes ra) {
+    public String eliminarAderezo(@PathVariable Long id,
+                                  HttpSession session, RedirectAttributes ra)  {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
         System.out.println("Eliminando aderezo con ID: " + id);
 
         try {
@@ -257,7 +348,10 @@ public class AdminPagesController {
     public String crearAcompanamiento(@RequestParam String name,
                                       @RequestParam String size,
                                       @RequestParam Double price,
-                                      RedirectAttributes ra) {
+                                      HttpSession session, RedirectAttributes ra)  {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
 
         System.out.println("Creando acompañamiento:");
         System.out.println("Nombre: " + name);
@@ -286,7 +380,11 @@ public class AdminPagesController {
     }
 
     @PostMapping("/acompanamientos/eliminar/{id}")
-    public String eliminarAcompanamiento(@PathVariable Long id, RedirectAttributes ra) {
+    public String eliminarAcompanamiento(@PathVariable Long id,
+                                         HttpSession session, RedirectAttributes ra)  {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
         System.out.println("Eliminando acompañamiento con ID: " + id);
 
         try {
@@ -308,7 +406,10 @@ public class AdminPagesController {
     public String crearBebida(@RequestParam String name,
                               @RequestParam String size,
                               @RequestParam Double price,
-                              RedirectAttributes ra) {
+                              HttpSession session, RedirectAttributes ra)  {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
 
         System.out.println("Creando bebida:");
         System.out.println("Nombre: " + name);
@@ -337,7 +438,12 @@ public class AdminPagesController {
     }
 
     @PostMapping("/bebidas/eliminar/{id}")
-    public String eliminarBebida(@PathVariable Long id, RedirectAttributes ra) {
+    public String eliminarBebida(@PathVariable Long id,
+                                 HttpSession session, RedirectAttributes ra)  {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
+
         System.out.println("Eliminando bebida con ID: " + id);
 
         try {
@@ -355,7 +461,11 @@ public class AdminPagesController {
     @PostMapping("/pedidos")
     public String actualizarPedido(@RequestParam Long pedido_id,
                                    @RequestParam String estado,
-                                   RedirectAttributes ra) {
+                                   HttpSession session, RedirectAttributes ra)  {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
+
         try {
             // Convertir el string del formulario al enum
             EstadoPedido nuevoEstado = switch(estado) {
@@ -380,40 +490,6 @@ public class AdminPagesController {
         return "redirect:/admin/pedidos";
     }
 
-    @GetMapping("/historial")
-    public String historial(@RequestParam(required = false) String numero,
-                            @RequestParam(required = false) String clienteId,
-                            @RequestParam(required = false) String estado,
-                            @RequestParam(required = false) String tipo,
-                            @RequestParam(required = false) String desde,
-                            @RequestParam(required = false) String hasta,
-                            Model model) {
-
-        List<Pedido> pedidos;
-
-        // Si hay filtros aplicados, usarlos
-        if (numero != null || clienteId != null || estado != null || tipo != null || desde != null || hasta != null) {
-            pedidos = pedidoService.findWithFilters(numero, clienteId, estado, tipo, desde, hasta);
-        } else {
-            // Si no hay filtros, mostrar los últimos 10 pedidos ordenados por fecha de creación (más recientes primero)
-            pedidos = pedidoService.findLast10Orders();
-        }
-
-        model.addAttribute("pedidos", pedidos != null ? pedidos : Collections.emptyList());
-
-        // Mantener los parámetros en el modelo para que los filtros se mantengan
-        model.addAttribute("filtros", Map.of(
-                "numero", numero != null ? numero : "",
-                "clienteId", clienteId != null ? clienteId : "",
-                "estado", estado != null ? estado : "",
-                "tipo", tipo != null ? tipo : "",
-                "desde", desde != null ? desde : "",
-                "hasta", hasta != null ? hasta : ""
-        ));
-
-        return "admin/historial-admin";
-    }
-
     @PostMapping("/administradores")
     public String gestionarAdministradores(@RequestParam(required = false) String cedula,
                                            @RequestParam(required = false) String nombre,
@@ -425,7 +501,11 @@ public class AdminPagesController {
                                            @RequestParam(required = false) String fechaNacimiento,
                                            @RequestParam(required = false, name = "admin_id") Long adminId,
                                            @RequestParam(required = false, name = "accion") String accion,
-                                           RedirectAttributes ra) {
+                                           HttpSession session, RedirectAttributes ra)  {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
+
 
         try {
             if ("crear".equals(accion)) {
@@ -480,7 +560,10 @@ public class AdminPagesController {
    ORGANISMOS PÚBLICOS
    ====================== */
     @GetMapping("/organismos-publicos")
-    public String organismosPublicos(Model model) {
+    public String organismosPublicos(HttpSession session, RedirectAttributes ra, Model model) {
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
+
         // Obtener estadísticas para mostrar en el panel
         BPSResponseDTO bpsInfo = organismosPublicosService.obtenerCantidadFuncionariosBPS();
         model.addAttribute("bpsInfo", bpsInfo);
@@ -493,7 +576,11 @@ public class AdminPagesController {
     public String consultarTicketsDGI(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
                                       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta,
                                       Model model,
-                                      RedirectAttributes ra) {
+                                      HttpSession session, RedirectAttributes ra)  {
+
+        String redireccion = redirigirSiNoAutenticado(session, ra);
+        if (redireccion != null) return redireccion;
+
         try {
             List<TicketDGIDTO> tickets;
 
@@ -527,5 +614,16 @@ public class AdminPagesController {
         model.addAttribute("hoy", LocalDate.now());
 
         return "admin/organismos-publicos-admin";
+    }
+
+    @PostMapping("/logout")  // Solo el logout de admin aquí
+    public String adminLogout(HttpSession session, RedirectAttributes ra) {
+        session.removeAttribute("admin");
+        session.removeAttribute("adminId");
+        session.removeAttribute("adminNombre");
+        session.invalidate();
+
+        ra.addFlashAttribute("msg", "Sesión de administrador cerrada correctamente.");
+        return "redirect:/admin/login";
     }
 }

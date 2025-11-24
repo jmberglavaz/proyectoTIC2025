@@ -18,13 +18,17 @@
             <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
             <span class="brand__name">PizzUM &amp; BurgUM</span>
         </a>
+
+        <!-- Info del admin logueado -->
+        <div class="admin-info">
+            <span class="admin-welcome">Hola, <strong th:text="${session.adminNombre}">Admin</strong></span>
+            <form th:action="@{/admin/logout}" method="post" class="logout-form">
+                <button type="submit" class="btn btn--danger btn--small">Cerrar Sesión</button>
+            </form>
+        </div>
+
         <nav class="site-nav">
-            <a class="nav__link" th:href="@{/admin}">Panel</a>
-            <a class="nav__link" th:href="@{/admin/productos}">Productos</a>
-            <a class="nav__link is-active" th:href="@{/admin/pedidos}">Pedidos</a>
-            <a class="nav__link" th:href="@{/admin/historial}">Historial</a>
-            <a class="nav__link" th:href="@{/admin/administradores}">Administradores</a>
-            <a class="nav__link" th:href="@{/login}">Cerrar sesión</a>
+            <a class="nav__link is-active" th:href="@{/admin}">Panel</a>
         </nav>
     </div>
 </header>

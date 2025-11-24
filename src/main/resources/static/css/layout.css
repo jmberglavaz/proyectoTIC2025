@@ -259,4 +259,50 @@ main {
     gap: var(--space-3);
     padding-block: var(--space-6);
   }
+
+/* Estilos para info del admin */
+.admin-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-right: var(--space-4);
+}
+
+.admin-welcome {
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+}
+
+.logout-form {
+    margin: 0;
+}
+
+/* Header responsivo */
+.header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+}
+
+.site-nav {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .header__inner {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .admin-info {
+        order: 3;
+        justify-content: center;
+        margin-right: 0;
+        margin-top: var(--space-3);
+    }
+}
   
