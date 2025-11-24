@@ -27,4 +27,7 @@ public interface ToppingRepository extends JpaRepository<Topping, Long> {
 
     @Query("SELECT t FROM Topping t WHERE t.nombre LIKE %:nombre%")
     List<Topping> findByNombreContainingIgnoreCase(@Param("nombreTopping") String nombre);
+
+    @Query("SELECT t FROM Topping t WHERE t.tipo = :tipo AND t.hamburguesaOPizza = :producto")
+    List<Topping> findByTipoAndHamburguesaOPizza(@Param("tipo") char tipo, @Param("producto") char producto);
 }

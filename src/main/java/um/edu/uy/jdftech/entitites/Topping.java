@@ -26,10 +26,10 @@ public class Topping {
     private String nombre;
 
     @Column(name = "hamburguesa_o_pizza")
-    private char hamburguesaOPizza;
+    private char hamburguesaOPizza; // H = hamburguesa, P = pizza
 
     @Column(name = "tipo_de_topping")
-    private char tipo;
+    private char tipo; // M = masa, S = salsa, Q = queso, P = pan, C = carne, X = misc
 
     @Column(name = "precio_topping")
     private double precioTopping;

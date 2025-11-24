@@ -50,4 +50,13 @@ public class ToppingService {
     public List<Topping> findByName(String nombre) {
         return toppingRepository.findByNombreContainingIgnoreCase(nombre);
     }
+
+    public List<Topping> verToppingsDeTipoYProducto(char tipo, char producto) {
+        return toppingRepository.findByTipoAndHamburguesaOPizza(tipo, producto);
+    }
+
+    // Método específico para toppings extras de pizza
+    public List<Topping> verToppingsExtrasPizza() {
+        return toppingRepository.findByTipoAndHamburguesaOPizza('X', 'P'); // X = extras, P = pizza
+    }
 }

@@ -30,21 +30,21 @@ public class PagesController {
         return "user/index";
     }
 
-    @GetMapping("/crear-pizza")
-    public String crearPizza(HttpSession session) {
-        if (session.getAttribute("cliente") == null) {
-            return "redirect:/login";
-        }
-        return "user/crear-pizza";
-    }
+//    @GetMapping("/crear-pizza")
+//    public String crearPizza(HttpSession session) {
+//        if (session.getAttribute("cliente") == null) {
+//            return "redirect:/login";
+//        }
+//        return "user/crear-pizza";
+//    }
 
-    @GetMapping("/crear-burger")
-    public String crearBurger(HttpSession session) {
-        if (session.getAttribute("cliente") == null) {
-            return "redirect:/login";
-        }
-        return "user/crear-burger";
-    }
+//    @GetMapping("/crear-burger")
+//    public String crearBurger(HttpSession session) {
+//        if (session.getAttribute("cliente") == null) {
+//            return "redirect:/login";
+//        }
+//        return "user/crear-burger";
+//    }
 
     @GetMapping("/ayuda")
     public String ayuda() {
