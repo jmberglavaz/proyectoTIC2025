@@ -1,245 +1,440 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PizzUM & BurgUM — Crear pizza</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PizzUM & BurgUM — Crear pizza</title>
 
-  <!-- Hojas de estilo globales -->
-  <link rel="stylesheet" th:href="@{/css/main.css}">
-  <link rel="stylesheet" th:href="@{/css/layout.css}">
-  <link rel="stylesheet" th:href="@{/css/components.css}">
-  <link rel="stylesheet" th:href="@{/css/pages.css}">
+    <!-- Hojas de estilo globales -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body class="theme-italian">
-  <!-- Header global -->
-  <header class="site-header">
-      <div class="container header__inner">
-          <div class="header-left">
-              <a class="brand" th:href="@{/}">
-                  <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
-                  <span class="brand__name">PizzUM &amp; BurgUM</span>
-              </a>
-          </div>
 
-          <!-- NAVEGACIÓN CENTRAL (SOLO SI ESTÁ LOGUEADO) -->
-          <nav class="site-nav" th:if="${session.cliente != null}">
-              <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
-              <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
-              <a class="nav__link" th:href="@{/carrito}">Carrito</a>
-              <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
-          </nav>
+<!-- Header global (actualizado con sección de Favoritos) -->
+<header class="site-header">
+    <div class="container header__inner">
+        <a class="brand" th:href="@{/}">
+            <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+            <span class="brand__name">PizzUM &amp; BurgUM</span>
+        </a>
+        <nav class="site-nav">
+            <a class="nav__link"
+               th:classappend="${page == 'pizza'} ? ' is-active'"
+               th:href="@{/crear-pizza}">
+                Crear pizza
+            </a>
+            <a class="nav__link"
+               th:classappend="${page == 'burger'} ? ' is-active'"
+               th:href="@{/crear-burger}">
+                Crear hamburguesa
+            </a>
+            <a class="nav__link"
+               th:classappend="${page == 'favoritos'} ? ' is-active'"
+               th:href="@{/favoritos}">
+                ❤️ Favoritos
+            </a>
+            <a class="nav__link"
+               th:classappend="${page == 'carrito'} ? ' is-active'"
+               th:href="@{/carrito}">
+                Carrito
+            </a>
+            <a class="nav__link"
+               th:classappend="${page == 'pedido'} ? ' is-active'"
+               th:href="@{/pedido}">
+                Pedidos
+            </a>
+        </nav>
+    </div>
+</header>
 
-          <div class="header-right">
-              <!-- INFO DEL USUARIO LOGUEADO -->
-              <div th:if="${session.cliente != null}" class="user-info">
-                  <span>Hola, <strong th:text="${session.clienteNombre}">Usuario</strong></span>
-                  <form th:action="@{/logout}" method="post" class="logout-form">
-                      <button type="submit" class="btn btn--link">Cerrar Sesión</button>
-                  </form>
-              </div>
 
-              <!-- BOTONES DE LOGIN SI NO ESTÁ LOGUEADO -->
-              <div th:unless="${session.cliente != null}" class="auth-buttons">
-                  <a th:href="@{/login}" class="btn btn--primary">Iniciar Sesión</a>
-                  <a th:href="@{/register}" class="btn btn--secondary">Registrarse</a>
-              </div>
-          </div>
-      </div>
-  </header>
-
-  <main>
+<main>
     <!-- Hero/encabezado visual de la página -->
     <section class="page-hero">
-      <div class="container page-hero__inner">
-        <div class="page-hero__media">
-          <img th:src="@{/img/custom-pizza.png}" alt="Ingredientes frescos para tu pizza" class="page-hero__img">
+        <div class="container page-hero__inner">
+            <div class="page-hero__media">
+                <img th:src="@{/img/custom-pizza.png}" alt="Ingredientes frescos para tu pizza" class="page-hero__img">
+            </div>
+            <div class="page-hero__content">
+                <h1>Creá tu pizza 🍕</h1>
+                <p>Elegí tamaño, masa, salsa, queso y toppings. Después agregala al carrito.</p>
+            </div>
         </div>
-        <div class="page-hero__content">
-          <h1>Creá tu pizza 🍕</h1>
-          <p>Elegí tamaño, masa, salsa, queso y toppings. Después agregala al carrito.</p>
-        </div>
-      </div>
     </section>
 
     <!-- Formulario principal -->
     <section class="container section">
-      <!--
-        IMPORTANTE PARA BACKEND:
-        - De momento dejamos el POST a esta misma ruta (/crear-pizza).
-        - Cuando implementemos el @PostMapping, usaremos este mismo endpoint.
-      -->
-      <form class="form form--builder" method="post" th:action="@{/crear-pizza}">
-        <!-- Tamaño -->
-        <fieldset class="form-section">
-          <legend class="form-section__title">Tamaño</legend>
-          <div class="options options--inline">
-            <label class="option">
-              <input type="radio" name="tamanio" id="tamanio-s" value="S" required>
-              <span class="option__label">Pequeña (S)</span>
-            </label>
-            <label class="option">
-              <input type="radio" name="tamanio" id="tamanio-m" value="M">
-              <span class="option__label">Mediana (M)</span>
-            </label>
-            <label class="option">
-              <input type="radio" name="tamanio" id="tamanio-l" value="L">
-              <span class="option__label">Grande (L)</span>
-            </label>
-          </div>
-        </fieldset>
+        <!-- Form "oculto" para favoritos (se referencia desde el botón mediante form="favForm") -->
+        <form id="favForm" th:action="@{/favoritos/agregar}" method="post" style="display:none;">
+            <input type="hidden" name="tipo" value="pizza">
+            <!-- En el futuro podés inyectar más campos ocultos con el detalle de la pizza -->
+        </form>
 
-        <!-- Tipo de masa -->
-        <fieldset class="form-section">
-          <legend class="form-section__title">Tipo de masa</legend>
-          <div class="options options--inline">
-            <label class="option">
-              <input type="radio" name="masa" id="masa-napolitana" value="napolitana" required>
-              <span class="option__label">Napolitana</span>
-            </label>
-            <label class="option">
-              <input type="radio" name="masa" id="masa-integral" value="integral">
-              <span class="option__label">Integral</span>
-            </label>
-            <label class="option">
-              <input type="radio" name="masa" id="masa-sin-gluten" value="sin_gluten">
-              <span class="option__label">Sin gluten</span>
-            </label>
-          </div>
-        </fieldset>
+        <!--
+          IMPORTANTE PARA BACKEND:
+          - De momento dejamos el POST a esta misma ruta (/crear-pizza).
+          - Cuando implementemos el @PostMapping, usaremos este mismo endpoint.
+        -->
+        <form class="form form--builder" method="post" th:action="@{/crear-pizza}" data-builder="pizza">
+            <!-- Tamaño -->
+            <fieldset class="form-section">
+                <legend class="form-section__title">Tamaño</legend>
+                <div class="options options--inline">
+                    <label class="option">
+                        <input type="radio" name="tamanio" id="tamanio-s" value="S" required data-label="Pequeña (S)" data-price="320">
+                        <span class="option__label">Pequeña (S) <small class="option__price">$ 320</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="tamanio" id="tamanio-m" value="M" data-label="Mediana (M)" data-price="420">
+                        <span class="option__label">Mediana (M) <small class="option__price">$ 420</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="tamanio" id="tamanio-l" value="L" data-label="Grande (L)" data-price="520">
+                        <span class="option__label">Grande (L) <small class="option__price">$ 520</small></span>
+                    </label>
+                </div>
+            </fieldset>
 
-        <!-- Salsa -->
-        <fieldset class="form-section">
-          <legend class="form-section__title">Salsa</legend>
-          <div class="options options--inline">
-            <label class="option">
-              <input type="radio" name="salsa" id="salsa-tomate" value="tomate" required>
-              <span class="option__label">Tomate</span>
-            </label>
-            <label class="option">
-              <input type="radio" name="salsa" id="salsa-pomodoro" value="pomodoro">
-              <span class="option__label">Pomodoro</span>
-            </label>
-            <!-- Preparado para extensiones futuras (4 quesos, blanca, etc.) -->
-            <label class="option">
-              <input type="radio" name="salsa" id="salsa-otra" value="otra">
-              <span class="option__label">Otra</span>
-            </label>
-          </div>
-        </fieldset>
+            <!-- Tipo de masa -->
+            <fieldset class="form-section">
+                <legend class="form-section__title">Tipo de masa</legend>
+                <div class="options options--inline">
+                    <label class="option">
+                        <input type="radio" name="masa" id="masa-napolitana" value="napolitana" required data-label="Napolitana" data-price="0">
+                        <span class="option__label">Napolitana <small class="option__price">incluido</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="masa" id="masa-integral" value="integral" data-label="Integral" data-price="40">
+                        <span class="option__label">Integral <small class="option__price">$ 40</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="masa" id="masa-sin-gluten" value="sin_gluten" data-label="Sin gluten" data-price="60">
+                        <span class="option__label">Sin gluten <small class="option__price">$ 60</small></span>
+                    </label>
+                </div>
+            </fieldset>
 
-        <!-- Queso -->
-        <fieldset class="form-section">
-          <legend class="form-section__title">Queso</legend>
-          <div class="options options--inline">
-            <label class="option">
-              <input type="radio" name="queso" id="queso-muzza" value="muzza" required>
-              <span class="option__label">Muzzarella</span>
-            </label>
-            <label class="option">
-              <input type="radio" name="queso" id="queso-roquefort" value="roquefort">
-              <span class="option__label">Roquefort</span>
-            </label>
-            <label class="option">
-              <input type="radio" name="queso" id="queso-otro" value="otro">
-              <span class="option__label">Otro</span>
-            </label>
-          </div>
-        </fieldset>
+            <!-- Salsa -->
+            <fieldset class="form-section">
+                <legend class="form-section__title">Salsa</legend>
+                <div class="options options--inline">
+                    <label class="option">
+                        <input type="radio" name="salsa" id="salsa-tomate" value="tomate" required data-label="Tomate" data-price="0">
+                        <span class="option__label">Tomate <small class="option__price">incluido</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="salsa" id="salsa-pomodoro" value="pomodoro" data-label="Pomodoro" data-price="35">
+                        <span class="option__label">Pomodoro <small class="option__price">$ 35</small></span>
+                    </label>
+                    <!-- Preparado para extensiones futuras (4 quesos, blanca, etc.) -->
+                    <label class="option">
+                        <input type="radio" name="salsa" id="salsa-otra" value="otra" data-label="Especial" data-price="45">
+                        <span class="option__label">Especial <small class="option__price">$ 45</small></span>
+                    </label>
+                </div>
+            </fieldset>
 
-        <!-- Toppings -->
-        <fieldset class="form-section">
-          <legend class="form-section__title">Toppings</legend>
-          <p class="form-hint">Seleccioná los que quieras (opcional).</p>
+            <!-- Queso -->
+            <fieldset class="form-section">
+                <legend class="form-section__title">Queso</legend>
+                <div class="options options--inline">
+                    <label class="option">
+                        <input type="radio" name="queso" id="queso-muzza" value="muzza" required data-label="Muzzarella" data-price="0">
+                        <span class="option__label">Muzzarella <small class="option__price">incluido</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="queso" id="queso-roquefort" value="roquefort" data-label="Roquefort" data-price="70">
+                        <span class="option__label">Roquefort <small class="option__price">$ 70</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="queso" id="queso-otro" value="otro" data-label="Blend especial" data-price="40">
+                        <span class="option__label">Blend especial <small class="option__price">$ 40</small></span>
+                    </label>
+                </div>
+            </fieldset>
 
-          <!-- Grid de toppings (checkbox múltiple) -->
-          <div class="options options--grid">
-            <label class="option option--checkbox">
-              <input type="checkbox" name="toppings[]" id="top-aceitunas" value="aceitunas">
-              <span class="option__label">Aceitunas</span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="toppings[]" id="top-albahaca" value="albahaca">
-              <span class="option__label">Albahaca</span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="toppings[]" id="top-morron" value="morron">
-              <span class="option__label">Morrón</span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="toppings[]" id="top-cebolla" value="cebolla">
-              <span class="option__label">Cebolla</span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="toppings[]" id="top-champiniones" value="champiniones">
-              <span class="option__label">Champiñones</span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="toppings[]" id="top-jamon" value="jamon">
-              <span class="option__label">Jamón</span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="toppings[]" id="top-bacon" value="bacon">
-              <span class="option__label">Bacon</span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="toppings[]" id="top-anana" value="anana">
-              <span class="option__label">Ananá</span>
-            </label>
-          </div>
-        </fieldset>
+            <!-- Toppings -->
+            <fieldset class="form-section">
+                <legend class="form-section__title">Toppings</legend>
+                <p class="form-hint">Seleccioná los que quieras (opcional).</p>
+                <p class="form-hint form-hint--total" data-section-total="toppings">
+                    Sin toppings extras · $ 0
+                </p>
 
-        <!-- Cantidad + observaciones -->
-        <fieldset class="form-section form-section--row">
-          <div class="form-group">
-            <label for="cantidad">Cantidad</label>
-            <input type="number" id="cantidad" name="cantidad" min="1" step="1" value="1" inputmode="numeric" class="input input--number">
-          </div>
-          <div class="form-group form-group--grow">
-            <label for="observaciones">Observaciones (opcional)</label>
-            <textarea id="observaciones" name="observaciones" rows="2" class="input input--textarea" placeholder="Ej: sin picante, cortar en 8 porciones"></textarea>
-          </div>
-        </fieldset>
+                <!-- Grid de toppings (checkbox múltiple) -->
+                <div class="options options--grid">
+                    <label class="option option--checkbox">
+                        <input type="checkbox"
+                               name="toppings"
+                               id="top-aceitunas"
+                               value="aceitunas"
+                               data-label="Aceitunas"
+                               data-price="30">
+                        <span class="option__label">
+                Aceitunas <small class="option__price">$ 30</small>
+              </span>
+                    </label>
 
-        <!-- Resumen visual (estático por ahora) -->
-        <section class="summary-box" aria-live="polite">
-          <h2 class="summary-box__title">Resumen</h2>
-          <ul class="summary-list">
-            <li><strong>Tamaño:</strong> —</li>
-            <li><strong>Masa:</strong> —</li>
-            <li><strong>Salsa:</strong> —</li>
-            <li><strong>Queso:</strong> —</li>
-            <li><strong>Toppings:</strong> —</li>
-            <li><strong>Cantidad:</strong> 1</li>
-          </ul>
-          <div class="summary-total">
-            <span class="summary-total__label">Total estimado</span>
-            <span class="summary-total__value">$ —</span>
-          </div>
-        </section>
+                    <label class="option option--checkbox">
+                        <input type="checkbox"
+                               name="toppings"
+                               id="top-albahaca"
+                               value="albahaca"
+                               data-label="Albahaca"
+                               data-price="25">
+                        <span class="option__label">
+                Albahaca <small class="option__price">$ 25</small>
+              </span>
+                    </label>
 
-        <!-- Acciones -->
-        <div class="form-actions">
-          <!-- Botón principal: el backend luego define el @PostMapping de /crear-pizza -->
-          <button type="submit" class="btn btn--primary">Agregar al carrito</button>
-          <!-- Navegación útil mientras está estático -->
-          <a class="btn btn--ghost" th:href="@{/carrito}">Ver carrito</a>
-          <a class="btn btn--link" th:href="@{/static}">Volver al inicio</a>
-        </div>
-      </form>
+                    <label class="option option--checkbox">
+                        <input type="checkbox"
+                               name="toppings"
+                               id="top-morron"
+                               value="morron"
+                               data-label="Morrón"
+                               data-price="25">
+                        <span class="option__label">
+                Morrón <small class="option__price">$ 25</small>
+              </span>
+                    </label>
+
+                    <label class="option option--checkbox">
+                        <input type="checkbox"
+                               name="toppings"
+                               id="top-cebolla"
+                               value="cebolla"
+                               data-label="Cebolla"
+                               data-price="20">
+                        <span class="option__label">
+                Cebolla <small class="option__price">$ 20</small>
+              </span>
+                    </label>
+
+                    <label class="option option--checkbox">
+                        <input type="checkbox"
+                               name="toppings"
+                               id="top-champiniones"
+                               value="champiniones"
+                               data-label="Champiñones"
+                               data-price="35">
+                        <span class="option__label">
+                Champiñones <small class="option__price">$ 35</small>
+              </span>
+                    </label>
+
+                    <label class="option option--checkbox">
+                        <input type="checkbox"
+                               name="toppings"
+                               id="top-jamon"
+                               value="jamon"
+                               data-label="Jamón"
+                               data-price="40">
+                        <span class="option__label">
+                Jamón <small class="option__price">$ 40</small>
+              </span>
+                    </label>
+
+                    <label class="option option--checkbox">
+                        <input type="checkbox"
+                               name="toppings"
+                               id="top-bacon"
+                               value="bacon"
+                               data-label="Bacon"
+                               data-price="40">
+                        <span class="option__label">
+                Bacon <small class="option__price">$ 40</small>
+              </span>
+                    </label>
+
+                    <label class="option option--checkbox">
+                        <input type="checkbox"
+                               name="toppings"
+                               id="top-anana"
+                               value="anana"
+                               data-label="Ananá"
+                               data-price="30">
+                        <span class="option__label">
+                Ananá <small class="option__price">$ 30</small>
+              </span>
+                    </label>
+                </div>
+            </fieldset>
+
+            <!-- Cantidad + observaciones -->
+            <fieldset class="form-section form-section--row">
+                <div class="form-group">
+                    <label for="cantidad">Cantidad</label>
+                    <input type="number" id="cantidad" name="cantidad" min="1" step="1" value="1" inputmode="numeric" class="input input--number">
+                </div>
+                <div class="form-group form-group--grow">
+                    <label for="observaciones">Observaciones (opcional)</label>
+                    <textarea id="observaciones" name="observaciones" rows="2" class="input input--textarea" placeholder="Ej: sin picante, cortar en 8 porciones"></textarea>
+                </div>
+            </fieldset>
+
+            <!-- Botón de favoritos (Thymeleafizado, sin anidar forms) -->
+            <div class="favorites-box" style="text-align: right; margin-bottom: 1rem;">
+                <button
+                        type="submit"
+                        class="btn btn--secondary"
+                        form="favForm"
+                        formaction="/favoritos/agregar"
+                        formmethod="post">
+                    ❤️ Agregar a favoritos
+                </button>
+            </div>
+
+            <!-- Resumen visual (estático por ahora) -->
+            <section class="summary-box" aria-live="polite">
+                <h2 class="summary-box__title">Resumen</h2>
+                <ul class="summary-list">
+                    <li><strong>Tamaño:</strong> <span data-summary="tamanio">—</span></li>
+                    <li><strong>Masa:</strong> <span data-summary="masa">—</span></li>
+                    <li><strong>Salsa:</strong> <span data-summary="salsa">—</span></li>
+                    <li><strong>Queso:</strong> <span data-summary="queso">—</span></li>
+                    <li><strong>Toppings:</strong> <span data-summary="toppings">—</span></li>
+                    <li><strong>Cantidad:</strong> <span data-summary="cantidad">1</span></li>
+                </ul>
+                <div class="summary-total">
+                    <span class="summary-total__label">Total estimado</span>
+                    <span class="summary-total__value" data-summary="total">$ —</span>
+                </div>
+            </section>
+
+            <!-- Acciones -->
+            <div class="form-actions">
+                <!-- Botón principal: el backend luego define el @PostMapping de /crear-pizza -->
+                <button type="submit" class="btn btn--primary">Agregar al carrito</button>
+                <!-- Navegación útil mientras está estático -->
+                <a class="btn btn--ghost" th:href="@{/carrito}">Ver carrito</a>
+                <a class="btn btn--link" th:href="@{/}">Volver al inicio</a>
+            </div>
+        </form>
     </section>
-  </main>
+</main>
 
-  <!-- Footer -->
-  <footer class="site-footer">
+<!-- Footer -->
+<footer class="site-footer">
     <div class="container footer__inner">
-      <small>&copy; 2025 PizzUM &amp; BurgUM</small>
-      <nav class="footer-nav">
-        <a th:href="@{#}" class="footer__link">Ayuda</a>
-        <a th:href="@{#}" class="footer__link">Términos</a>
-        <a th:href="@{#}" class="footer__link">Privacidad</a>
-      </nav>
+        <small>&copy; 2025 PizzUM &amp; BurgUM</small>
+        <nav class="footer-nav">
+            <a th:href="@{#}" class="footer__link">Ayuda</a>
+            <a th:href="@{#}" class="footer__link">Términos</a>
+            <a th:href="@{#}" class="footer__link">Privacidad</a>
+        </nav>
     </div>
-  </footer>
+</footer>
+<script>
+    (() => {
+        const form = document.querySelector('[data-builder="pizza"]');
+        if (!form) {
+            return;
+        }
+
+        const summaryEls = {
+            tamanio: document.querySelector('[data-summary="tamanio"]'),
+            masa: document.querySelector('[data-summary="masa"]'),
+            salsa: document.querySelector('[data-summary="salsa"]'),
+            queso: document.querySelector('[data-summary="queso"]'),
+            toppings: document.querySelector('[data-summary="toppings"]'),
+            cantidad: document.querySelector('[data-summary="cantidad"]'),
+            total: document.querySelector('[data-summary="total"]')
+        };
+
+        // Línea "Sin toppings extras · $ 0"
+        const sectionTotals = {
+            toppings: document.querySelector('[data-section-total="toppings"]')
+        };
+
+        const currencyFormatter = new Intl.NumberFormat('es-UY', {
+            style: 'currency',
+            currency: 'UYU',
+            maximumFractionDigits: 0
+        });
+
+        const formatPrice = (value) => {
+            if (!value) {
+                return 'incluido';
+            }
+            return currencyFormatter.format(value);
+        };
+
+        const describeRadio = (name) => {
+            const input = form.querySelector(`input[name="${name}"]:checked`);
+            if (!input) {
+                return { text: '—', price: 0 };
+            }
+            const price = Number(input.dataset.price || 0);
+            const label = input.dataset.label || input.value;
+            return { text: `${label} · ${formatPrice(price)}`, price };
+        };
+
+        const updateSummary = () => {
+            let perUnitTotal = 0;
+
+            // Tamaño, masa, salsa, queso
+            ['tamanio', 'masa', 'salsa', 'queso'].forEach((name) => {
+                const { text, price } = describeRadio(name);
+                if (summaryEls[name]) {
+                    summaryEls[name].textContent = text;
+                }
+                perUnitTotal += price;
+            });
+
+            // Toppings
+            const toppingsInputs = Array.from(form.querySelectorAll('input[name="toppings"]:checked'));
+            let toppingsCount = 0;
+            let toppingsTotal = 0;
+
+            if (toppingsInputs.length) {
+                const descriptions = toppingsInputs.map((input) => {
+                    const price = Number(input.dataset.price || 0);
+                    toppingsTotal += price;
+                    perUnitTotal += price;
+                    toppingsCount++;
+                    const label = input.dataset.label || input.value;
+                    return `${label} (${formatPrice(price)})`;
+                });
+                summaryEls.toppings.textContent = descriptions.join(', ');
+            } else {
+                summaryEls.toppings.textContent = '—';
+            }
+
+            // Actualizar línea "Sin toppings extras..."
+            if (sectionTotals.toppings) {
+                if (toppingsCount === 0) {
+                    sectionTotals.toppings.textContent = 'Sin toppings extras · $ 0';
+                } else if (toppingsCount === 1) {
+                    sectionTotals.toppings.textContent =
+                        `1 topping extra · ${currencyFormatter.format(toppingsTotal)}`;
+                } else {
+                    sectionTotals.toppings.textContent =
+                        `${toppingsCount} toppings extra · ${currencyFormatter.format(toppingsTotal)}`;
+                }
+            }
+
+            // Cantidad
+            const quantityInput = form.querySelector('input[name="cantidad"]');
+            const quantity = Math.max(1, Number(quantityInput?.value) || 1);
+            if (quantityInput) {
+                quantityInput.value = quantity;
+            }
+            summaryEls.cantidad.textContent = quantity;
+
+            // Total estimado
+            const estimatedTotal = perUnitTotal * quantity;
+            summaryEls.total.textContent =
+                estimatedTotal ? currencyFormatter.format(estimatedTotal) : '$ —';
+        };
+
+        form.addEventListener('input', updateSummary);
+        updateSummary();
+    })();
+</script>
+
 </body>
 </html>

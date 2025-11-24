@@ -137,6 +137,7 @@ public class AdminPagesController {
             double precioFinal = (precio != null) ? precio : 0.0;
 
             Topping nuevoTopping = new Topping(
+                    null,
                     nombre,
                     hamburguesaOPizza,
                     tipo,
@@ -187,7 +188,7 @@ public class AdminPagesController {
         System.out.println("Precio: " + precio);
 
         try {
-            Aderezo nuevoAderezo = new Aderezo(nombre, precio);
+            Aderezo nuevoAderezo = new Aderezo(null, nombre, precio);
             Aderezo aderezoGuardado = aderezoService.createNewAderezo(nuevoAderezo);
 
             System.out.println("Aderezo guardado con ID: " + aderezoGuardado.getIdAderezo());
