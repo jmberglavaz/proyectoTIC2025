@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PizzUM & BurgUM — Admin / Organismos Públicos</title>
+
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/pages.css}">
+</head>
+<body>
+<!-- Header admin -->
+<header class="site-header">
+    <div class="container header__inner">
+        <a class="brand" th:href="@{/admin}">
+            <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+            <span class="brand__name">PizzUM &amp; BurgUM</span>
+        </a>
+        <nav class="site-nav">
+            <a class="nav__link" th:href="@{/admin}">Panel</a>
+            <a class="nav__link" th:href="@{/admin/productos}">Productos</a>
+            <a class="nav__link" th:href="@{/admin/pedidos}">Pedidos</a>
+            <a class="nav__link" th:href="@{/admin/historial}">Historial</a>
+            <a class="nav__link" th:href="@{/admin/administradores}">Administradores</a>
+            <a class="nav__link" th:href="@{/admin/tarjetas}">Consulta Tarjetas</a>
+            <a class="nav__link is-active" th:href="@{/admin/organismos-publicos}">Organismos Públicos</a>
+            <a class="nav__link" th:href="@{/login}">Cerrar sesión</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <!-- Título -->
+    <section class="container section">
+        <h1>Organismos Públicos</h1>
+        <p class="form-hint">Servicios web para DGI (tickets de venta) y BPS (cantidad de funcionarios).</p>
+
+        <!-- Mensajes de éxito/error -->
+        <div th:if="${msg}" class="alert alert--success" th:text="${msg}"></div>
+        <div th:if="${error}" class="alert alert--error" th:text="${error}"></div>
+    </section>
+
+    <!-- Servicio BPS -->
+    <section class="container section">
+        <article class="card">
+            <h2>BPS - Cantidad de Funcionarios</h2>
+            <div class="info-grid">
+                <div class="info-section">
+                    <h3>Información Actual</h3>
+                    <dl class="data-list">
+                        <dt>Cantidad de Funcionarios:</dt>
+                        <dd th:text="${bpsInfo.cantidadFuncionarios}"></dd>
+
+                        <dt>Fecha de Consulta:</dt>
+                        <dd th:text="${bpsInfo.fechaConsulta}"></dd>
+
+                        <dt>Empresa:</dt>
+                        <dd th:text="${bpsInfo.empresa}"></dd>
+                    </dl>
+                </div>
+
+                <div class="info-section">
+                    <h3>Estado del Servicio</h3>
+                    <div class="service-status">
+                        <div class="status-indicator status--active"></div>
+                        <span class="status-text">Servicio activo</span>
+                    </div>
+                    <p class="form-hint">El servicio BPS está disponible para consultas automatizadas.</p>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <!-- Servicio DGI -->
+    <section class="container section">
+        <article class="card">
+            <h2>DGI - Tickets de Venta</h2>
+            <p class="form-hint">Consultar tickets/pedidos por fecha específica o rango de fechas.</p>
+
+            <form class="form form--auth" method="post" th:action="@{/admin/organismos-publicos/dgi}">
+                <fieldset class="form-section">
+                    <legend class="visually-hidden">Consulta de tickets DGI</legend>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fecha_desde">Fecha Desde</label>
+                            <input class="input" id="fecha_desde" name="fecha"
+                                   type="date"
+                                   th:value="${hoy}"
+                                   required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fecha_hasta">Fecha Hasta (opcional)</label>
+                            <input class="input" id="fecha_hasta" name="hasta"
+                                   type="date"
+                                   th:value="${hoy}">
+                            <small class="form-hint">Si se especifica, se consulta por rango de fechas</small>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn--primary" type="submit">
+                            Consultar Tickets
+                        </button>
+                        <a class="btn btn--ghost" th:href="@{/admin}">Cancelar</a>
+                    </div>
+                </fieldset>
+            </form>
+
+            <!-- Estado del servicio DGI -->
+            <div style="margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--color-border);">
+                <h3>Estado del Servicio DGI</h3>
+                <div class="service-status">
+                    <div class="status-indicator status--active"></div>
+                    <span class="status-text">Servicio activo</span>
+                </div>
+                <p class="form-hint">El servicio DGI está disponible para consultas automatizadas de tickets.</p>
+            </div>
+        </article>
+    </section>
+
+    <!-- Resultados DGI -->
+    <div th:if="${fecha != null or desde != null}">
+        <section class="container section" th:if="${hayResultados}">
+            <article class="card">
+                <h2>
+                    Resultados DGI
+                    <span th:if="${rango}">
+                            ([[${#temporals.format(desde, 'dd/MM/yyyy')}]] - [[${#temporals.format(hasta, 'dd/MM/yyyy')}]])
+                        </span>
+                    <span th:if="${!rango}">
+                            ([[${#temporals.format(fecha, 'dd/MM/yyyy')}]])
+                        </span>
+                </h2>
+
+                <div class="result-summary">
+                    <div class="summary-item">
+                        <span class="summary-number" th:text="${tickets.size()}"></span>
+                        <span class="summary-label">tickets encontrados</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-number" th:text="'$' + ${#numbers.formatDecimal(tickets.?[total != null].![total].sum(), 1, 2)}"></span>
+                        <span class="summary-label">total en ventas</span>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Cédula</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Items</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="ticket : ${tickets}">
+                            <td>
+                                <strong th:text="${ticket.id}"></strong>
+                            </td>
+                            <td th:text="${#temporals.format(ticket.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td th:text="${ticket.clienteNombre}"></td>
+                            <td th:text="${ticket.clienteCedula}"></td>
+                            <td>
+                                <strong th:text="${'$' + #numbers.formatDecimal(ticket.total, 1, 2)}"></strong>
+                            </td>
+                            <td>
+                                        <span class="badge"
+                                              th:classappend="${ticket.estado.name().equals('ENTREGADO')} ? 'badge--success' :
+                                                              ${ticket.estado.name().equals('EN_COLA')} ? 'badge--warning' :
+                                                              ${ticket.estado.name().equals('EN_PREPARACION')} ? 'badge--info' : 'badge--primary'"
+                                              th:text="${ticket.estado}">
+                                        </span>
+                            </td>
+                            <td>
+                                <small th:text="${ticket.items.size() + ' items'}"></small>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-actions">
+                    <a class="btn btn--secondary" th:href="@{/admin/organismos-publicos}">
+                        Nueva Consulta
+                    </a>
+                    <a class="btn btn--ghost" th:href="@{/admin/historial}">
+                        Ver Historial Completo
+                    </a>
+                </div>
+            </article>
+        </section>
+
+        <section class="container section" th:if="${!hayResultados}">
+            <article class="card">
+                <h2>Resultados DGI</h2>
+                <div class="alert alert--info">
+                    <strong>No se encontraron tickets</strong><br>
+                    Para la fecha
+                    <span th:if="${rango}">
+                            entre <strong>[[${#temporals.format(desde, 'dd/MM/yyyy')}]]</strong> y
+                            <strong>[[${#temporals.format(hasta, 'dd/MM/yyyy')}]]</strong>
+                        </span>
+                    <span th:if="${!rango}">
+                            <strong>[[${#temporals.format(fecha, 'dd/MM/yyyy')}]]</strong>
+                        </span>
+                </div>
+
+                <div class="form-actions">
+                    <a class="btn btn--secondary" th:href="@{/admin/organismos-publicos}">
+                        Intentar con otra fecha
+                    </a>
+                    <a class="btn btn--ghost" th:href="@{/admin/historial}">
+                        Ver Historial Completo
+                    </a>
+                </div>
+            </article>
+        </section>
+    </div>
+
+    <section class="container section">
+        <div class="final-actions">
+            <a class="btn btn--secondary" th:href="@{/admin}">
+                Volver al panel
+            </a>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer__inner">
+        <small>&copy; 2025 PizzUM &amp; BurgUM — Panel de administración</small>
+        <nav class="footer-nav">
+            <a th:href="@{#}" class="footer__link">Ayuda</a>
+            <a th:href="@{#}" class="footer__link">Términos</a>
+            <a th:href="@{#}" class="footer__link">Privacidad</a>
+        </nav>
+    </div>
+</footer>
+</body>
+</html>

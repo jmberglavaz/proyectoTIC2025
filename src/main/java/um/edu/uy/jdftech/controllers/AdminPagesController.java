@@ -1,15 +1,18 @@
 package um.edu.uy.jdftech.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import um.edu.uy.jdftech.dto.*;
 import um.edu.uy.jdftech.entitites.*;
 import um.edu.uy.jdftech.enums.EstadoPedido;
 import um.edu.uy.jdftech.services.*;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -37,8 +40,14 @@ public class AdminPagesController {
     @Autowired
     private AdministradorService administradorService;
 
+    @Autowired
+    private MedioDePagoService medioDePagoService;
+
+    @Autowired
+    private OrganismosPublicosService organismosPublicosService;
+
     /* ======================
-       Páginas (GET) - ACTUALIZADO
+       Páginas (GET)
        ====================== */
     @GetMapping
     public String panel() {
@@ -115,6 +124,28 @@ public class AdminPagesController {
             model.addAttribute("error", "Error al cargar los administradores: " + e.getMessage());
         }
         return "admin/admins-admin";
+    }
+
+    /* ======================
+   CONSULTA DE TARJETAS
+   ====================== */
+    @GetMapping("/tarjetas")
+    public String consultaTarjetas(@RequestParam(required = false) Long numeroTarjeta, Model model) {
+        try {
+            if (numeroTarjeta != null) {
+                TarjetaInfoDTO info = medioDePagoService.obtenerInfoTarjeta(numeroTarjeta);
+                model.addAttribute("infoTarjeta", info);
+                model.addAttribute("encontrado", true);
+            } else {
+                model.addAttribute("encontrado", false);
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "Tarjeta no encontrada: " + e.getMessage());
+            model.addAttribute("encontrado", false);
+        }
+
+        model.addAttribute("numeroTarjeta", numeroTarjeta != null ? numeroTarjeta : "");
+        return "admin/tarjetas-admin";
     }
 
     /* ======================
@@ -443,5 +474,58 @@ public class AdminPagesController {
         }
 
         return "redirect:/admin/administradores";
+    }
+
+    /* ======================
+   ORGANISMOS PÚBLICOS
+   ====================== */
+    @GetMapping("/organismos-publicos")
+    public String organismosPublicos(Model model) {
+        // Obtener estadísticas para mostrar en el panel
+        BPSResponseDTO bpsInfo = organismosPublicosService.obtenerCantidadFuncionariosBPS();
+        model.addAttribute("bpsInfo", bpsInfo);
+        model.addAttribute("hoy", LocalDate.now());
+
+        return "admin/organismos-publicos-admin";
+    }
+
+    @PostMapping("/organismos-publicos/dgi")
+    public String consultarTicketsDGI(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+                                      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta,
+                                      Model model,
+                                      RedirectAttributes ra) {
+        try {
+            List<TicketDGIDTO> tickets;
+
+            if (hasta != null) {
+                // Consulta por rango
+                if (fecha.isAfter(hasta)) {
+                    ra.addFlashAttribute("error", "La fecha 'desde' no puede ser posterior a la fecha 'hasta'");
+                    return "redirect:/admin/organismos-publicos";
+                }
+                tickets = organismosPublicosService.obtenerTicketsDGIPorRango(fecha, hasta);
+                model.addAttribute("rango", true);
+                model.addAttribute("desde", fecha);
+                model.addAttribute("hasta", hasta);
+            } else {
+                // Consulta por fecha única
+                tickets = organismosPublicosService.obtenerTicketsDGI(fecha);
+                model.addAttribute("rango", false);
+                model.addAttribute("fecha", fecha);
+            }
+
+            model.addAttribute("tickets", tickets);
+            model.addAttribute("hayResultados", !tickets.isEmpty());
+
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", "Error al consultar tickets: " + e.getMessage());
+        }
+
+        // Recargar datos BPS
+        BPSResponseDTO bpsInfo = organismosPublicosService.obtenerCantidadFuncionariosBPS();
+        model.addAttribute("bpsInfo", bpsInfo);
+        model.addAttribute("hoy", LocalDate.now());
+
+        return "admin/organismos-publicos-admin";
     }
 }

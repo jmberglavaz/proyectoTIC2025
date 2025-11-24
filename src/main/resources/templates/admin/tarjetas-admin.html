@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PizzUM & BurgUM — Admin / Consulta de Tarjetas</title>
+
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/pages.css}">
+</head>
+<body>
+<!-- Header admin -->
+<header class="site-header">
+    <div class="container header__inner">
+        <a class="brand" th:href="@{/admin}">
+            <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+            <span class="brand__name">PizzUM &amp; BurgUM</span>
+        </a>
+        <nav class="site-nav">
+            <a class="nav__link" th:href="@{/admin}">Panel</a>
+            <a class="nav__link" th:href="@{/admin/productos}">Productos</a>
+            <a class="nav__link" th:href="@{/admin/pedidos}">Pedidos</a>
+            <a class="nav__link" th:href="@{/admin/historial}">Historial</a>
+            <a class="nav__link" th:href="@{/admin/administradores}">Administradores</a>
+            <a class="nav__link is-active" th:href="@{/admin/tarjetas}">Consulta Tarjetas</a>
+            <a class="nav__link" th:href="@{/login}">Cerrar sesión</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <!-- Título -->
+    <section class="container section">
+        <h1>Consulta de Tarjetas de Crédito</h1>
+        <p class="form-hint">Buscar información de tarjetas registradas en el sistema por número de tarjeta.</p>
+
+        <!-- Mensajes de éxito/error -->
+        <div th:if="${msg}" class="alert alert--success" th:text="${msg}"></div>
+        <div th:if="${error}" class="alert alert--error" th:text="${error}"></div>
+    </section>
+
+    <!-- Búsqueda de tarjeta -->
+    <section class="container section">
+        <article class="card">
+            <h2>Buscar Tarjeta</h2>
+            <form class="form form--auth" method="get" th:action="@{/admin/tarjetas}">
+                <fieldset class="form-section">
+                    <legend class="visually-hidden">Datos de búsqueda</legend>
+
+                    <div class="form-group">
+                        <label for="numero_tarjeta">Número de Tarjeta</label>
+                        <input class="input" id="numero_tarjeta" name="numeroTarjeta"
+                               type="number"
+                               placeholder="Ingrese el número de tarjeta (sin espacios)"
+                               th:value="${numeroTarjeta}"
+                               required>
+                    </div>
+
+                    <p class="form-hint">Ingrese el número completo de la tarjeta para consultar la información del titular.</p>
+
+                    <div class="form-actions">
+                        <button class="btn btn--primary" type="submit">Buscar Tarjeta</button>
+                        <a class="btn btn--ghost" th:href="@{/admin}">Cancelar</a>
+                    </div>
+                </fieldset>
+            </form>
+        </article>
+    </section>
+
+    <!-- Resultados de la búsqueda -->
+    <div th:if="${numeroTarjeta != null and numeroTarjeta != ''}">
+        <section class="container section" th:if="${encontrado}">
+            <article class="card">
+                <h2>Información de la Tarjeta</h2>
+
+                <div class="info-grid">
+                    <!-- Información de la tarjeta -->
+                    <div class="info-section">
+                        <h3>Datos de la Tarjeta</h3>
+                        <dl class="data-list">
+                            <dt>Número de Tarjeta:</dt>
+                            <dd th:text="${infoTarjeta.cardNumber}"></dd>
+
+                            <dt>Nombre en la Tarjeta:</dt>
+                            <dd th:text="${infoTarjeta.firstNameOnCard + ' ' + infoTarjeta.lastNameOnCard}"></dd>
+
+                            <dt>Fecha de Expiración:</dt>
+                            <dd th:text="${#dates.format(infoTarjeta.expirationDate, 'MM/yyyy')}"></dd>
+                        </dl>
+                    </div>
+
+                    <!-- Información del titular -->
+                    <div class="info-section">
+                        <h3>Datos del Titular</h3>
+                        <dl class="data-list">
+                            <dt>Cédula:</dt>
+                            <dd th:text="${infoTarjeta.clienteId}"></dd>
+
+                            <dt>Nombre Completo:</dt>
+                            <dd th:text="${infoTarjeta.clienteNombre + ' ' + infoTarjeta.clienteApellido}"></dd>
+
+                            <dt>Email:</dt>
+                            <dd th:text="${infoTarjeta.clienteEmail}"></dd>
+
+                            <dt>Teléfono:</dt>
+                            <dd th:text="${infoTarjeta.clientePhoneNumber}"></dd>
+
+                            <dt>Fecha de Nacimiento:</dt>
+                            <dd th:text="${#temporals.format(infoTarjeta.clienteBirthDate, 'dd/MM/yyyy')}"></dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a class="btn btn--secondary" th:href="@{/admin/tarjetas}">Nueva Búsqueda</a>
+                </div>
+            </article>
+        </section>
+
+        <section class="container section" th:if="${!encontrado and error == null}">
+            <article class="card">
+                <h2>Resultado de la Búsqueda</h2>
+                <div class="alert alert--info">
+                    No se encontró ninguna tarjeta con el número: <strong th:text="${numeroTarjeta}"></strong>
+                </div>
+                <div class="form-actions">
+                    <a class="btn btn--secondary" th:href="@{/admin/tarjetas}">Intentar con otro número</a>
+                </div>
+            </article>
+        </section>
+    </div>
+
+    <section class="container section">
+        <div class="final-actions">
+            <a class="btn btn--secondary" th:href="@{/admin}">Volver al panel</a>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer__inner">
+        <small>&copy; 2025 PizzUM &amp; BurgUM — Panel de administración</small>
+        <nav class="footer-nav">
+            <a th:href="@{#}" class="footer__link">Ayuda</a>
+            <a th:href="@{#}" class="footer__link">Términos</a>
+            <a th:href="@{#}" class="footer__link">Privacidad</a>
+        </nav>
+    </div>
+</footer>
+</body>
+</html>
