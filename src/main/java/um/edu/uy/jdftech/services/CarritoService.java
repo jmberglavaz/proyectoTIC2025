@@ -7,6 +7,9 @@ import um.edu.uy.jdftech.entitites.*;
 import um.edu.uy.jdftech.repositories.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -116,5 +119,36 @@ public class CarritoService {
         } else {
             throw new IllegalArgumentException("Tipo de producto no válido: " + tipoProducto);
         }
+    }
+
+    private final List<um.edu.uy.jdftech.dto.CarritoItem> items = new ArrayList<>();
+
+    public List<um.edu.uy.jdftech.dto.CarritoItem> getItems() {
+        return Collections.unmodifiableList(items);
+    }
+
+    public void addItem(um.edu.uy.jdftech.dto.CarritoItem item) {
+        items.add(item);
+    }
+
+    public void removeItem(String id) {
+        items.removeIf(i -> i.getId().equals(id));
+    }
+
+    public void updateQuantity(String id, int cantidad) {
+        Optional<um.edu.uy.jdftech.dto.CarritoItem> item = items.stream()
+                .filter(i -> i.getId().equals(id))
+                .findFirst();
+        item.ifPresent(i -> i.setCantidad(cantidad));
+    }
+
+    public double getSubtotal() {
+        return items.stream()
+                .mapToDouble(um.edu.uy.jdftech.dto.CarritoItem::getSubtotal)
+                .sum();
+    }
+
+    public void clear() {
+        items.clear();
     }
 }

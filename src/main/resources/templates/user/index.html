@@ -14,35 +14,63 @@
 <body class="theme-italian">
   <!-- Header global -->
   <header class="site-header">
-    <div class="container header__inner">
-      <a class="brand" th:href="@{/static}">
-        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
-        <span class="brand__name">PizzUM &amp; BurgUM</span>
-      </a>
-      <nav class="site-nav">
-        <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
-        <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
-        <a class="nav__link" th:href="@{/carrito}">Carrito</a>
-        <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
-      </nav>
-    </div>
+      <div class="container header__inner">
+          <div class="header-left">
+              <a class="brand" th:href="@{/}">
+                  <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+                  <span class="brand__name">PizzUM &amp; BurgUM</span>
+              </a>
+          </div>
+
+          <!-- NAVEGACIÓN CENTRAL (SOLO SI ESTÁ LOGUEADO) -->
+          <nav class="site-nav" th:if="${session.cliente != null}">
+              <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
+              <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
+              <a class="nav__link" th:href="@{/carrito}">Carrito</a>
+              <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
+          </nav>
+
+          <div class="header-right">
+              <!-- INFO DEL USUARIO LOGUEADO -->
+              <div th:if="${session.cliente != null}" class="user-info">
+                  <span>Hola, <strong th:text="${session.clienteNombre}">Usuario</strong></span>
+                  <form th:action="@{/logout}" method="post" class="logout-form">
+                      <button type="submit" class="btn btn--link">Cerrar Sesión</button>
+                  </form>
+              </div>
+
+              <!-- BOTONES DE LOGIN SI NO ESTÁ LOGUEADO -->
+              <div th:unless="${session.cliente != null}" class="auth-buttons">
+                  <a th:href="@{/login}" class="btn btn--primary">Iniciar Sesión</a>
+                  <a th:href="@{/register}" class="btn btn--secondary">Registrarse</a>
+              </div>
+          </div>
+      </div>
   </header>
 
   <main>
-    <!-- Hero con imagen cálida pizzería -->
-    <section class="hero">
-      <div class="hero__media">
-        <img th:src="@{/img/hero-pizzeria.png}" alt="Horno de leña y pizza recién hecha" class="hero__img">
-      </div>
-      <div class="hero__content container">
-        <h1 class="hero__title">Armá tu pizza o hamburguesa, a tu gusto</h1>
-        <p class="hero__subtitle">Ingredientes frescos, combinaciones infinitas.</p>
-        <div class="hero__actions">
-          <a class="btn btn--primary" th:href="@{/crear-pizza}">🍕 Crear pizza</a>
-          <a class="btn btn--secondary" th:href="@{/crear-burger}">🍔 Crear hamburguesa</a>
-        </div>
-      </div>
-    </section>
+      <section class="hero">
+          <div class="hero__media">
+              <img th:src="@{/img/hero-pizzeria.png}" alt="Horno de leña y pizza recién hecha" class="hero__img">
+          </div>
+          <div class="hero__content container">
+              <!-- Mensaje personalizado si está logueado -->
+              <div th:if="${session.cliente != null}" class="welcome-message">
+                  <h1 class="hero__title">¡Hola <span th:text="${session.clienteNombre}">Usuario</span>!</h1>
+                  <p class="hero__subtitle">¿Listo para crear tu próxima pizza o hamburguesa?</p>
+              </div>
+              <!-- Mensaje normal si no está logueado -->
+              <div th:unless="${session.cliente != null}">
+                  <h1 class="hero__title">Armá tu pizza o hamburguesa, a tu gusto</h1>
+                  <p class="hero__subtitle">Ingredientes frescos, combinaciones infinitas.</p>
+              </div>
+
+              <div class="hero__actions">
+                  <a class="btn btn--primary" th:href="@{/crear-pizza}">🍕 Crear pizza</a>
+                  <a class="btn btn--secondary" th:href="@{/crear-burger}">🍔 Crear hamburguesa</a>
+              </div>
+          </div>
+      </section>
 
     <!-- Cards de entrada rápida al configurador -->
     <section class="container section section--grid">

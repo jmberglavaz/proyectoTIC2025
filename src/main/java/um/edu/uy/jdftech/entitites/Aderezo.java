@@ -1,7 +1,9 @@
 package um.edu.uy.jdftech.entitites;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -9,8 +11,9 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "aderezos")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Aderezo {
-
     @Id
     @GeneratedValue(generator = "aderezos_ids")
     @GenericGenerator(name = "aderezos_ids", strategy = "increment")
@@ -23,15 +26,4 @@ public class Aderezo {
     @Column(name = "precio")
     private double precio;
 
-    @ManyToOne
-    @JoinColumn(name = "id_hamburguesa")
-    private Hamburguesa hamburguesa;
-
-    public Aderezo() {
-    }
-
-    public Aderezo(String nombre, double precio) {
-        this.nombre = nombre;
-        this.precio = precio;
-    }
 }

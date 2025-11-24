@@ -1,5 +1,6 @@
 package um.edu.uy.jdftech.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,19 +23,20 @@ public class CarritoController {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    // Método auxiliar para obtener cliente logueado (HARDCODEADO por ahora)
-    private Cliente obtenerClienteActual() {
-        // TODO: Reemplazar con sesión real cuando login esté listo
-        return clienteRepository.findById(3L)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+    private Cliente obtenerClienteActual(HttpSession session) {
+        Cliente cliente = (Cliente) session.getAttribute("cliente");
+        if (cliente == null) {
+            throw new RuntimeException("Debe iniciar sesión para acceder al carrito");
+        }
+        return cliente;
     }
 
     // GET: Ver carrito
     @GetMapping
-    public String verCarrito(Model model) {
-        Cliente cliente = obtenerClienteActual();
+    public String verCarrito(HttpSession session, Model model) {
+        Cliente cliente = obtenerClienteActual(session);
         Carrito carrito = carritoService.obtenerOCrearCarrito(cliente);
-        
+
         BigDecimal total = carritoService.calcularTotal(carrito);
         
         model.addAttribute("carrito", carrito);
@@ -48,8 +50,10 @@ public class CarritoController {
 
     // POST: Actualizar cantidad de un item
     @PostMapping("/actualizar-cantidad")
-    public String actualizarCantidad(@RequestParam Long itemId, 
-                                     @RequestParam Integer cantidad) {
+    public String actualizarCantidad(@RequestParam Long itemId,
+                                     @RequestParam Integer cantidad,
+                                     HttpSession session) {
+        Cliente cliente = obtenerClienteActual(session);
         try {
             carritoService.actualizarCantidad(itemId, cantidad);
         } catch (Exception e) {
@@ -61,15 +65,16 @@ public class CarritoController {
 
     // POST: Eliminar item del carrito
     @PostMapping("/eliminar")
-    public String eliminarItem(@RequestParam Long itemId) {
+    public String eliminarItem(@RequestParam Long itemId, HttpSession session) {
+        Cliente cliente = obtenerClienteActual(session);
         carritoService.eliminarItem(itemId);
         return "redirect:/carrito";
     }
 
     // POST: Vaciar carrito completo
     @PostMapping("/vaciar")
-    public String vaciarCarrito() {
-        Cliente cliente = obtenerClienteActual();
+    public String vaciarCarrito(HttpSession session) {
+        Cliente cliente = obtenerClienteActual(session);
         Carrito carrito = carritoService.obtenerOCrearCarrito(cliente);
         carritoService.vaciarCarrito(carrito);
         return "redirect:/carrito";
@@ -77,8 +82,8 @@ public class CarritoController {
 
     // GET: Ir al checkout
     @GetMapping("/checkout")
-    public String irAlCheckout() {
-        Cliente cliente = obtenerClienteActual();
+    public String irAlCheckout(HttpSession session) {
+        Cliente cliente = obtenerClienteActual(session);
         Carrito carrito = carritoService.obtenerOCrearCarrito(cliente);
         
         if (carrito.getItems().isEmpty()) {
