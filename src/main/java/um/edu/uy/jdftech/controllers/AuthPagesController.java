@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import um.edu.uy.jdftech.entitites.Administrador;
 import um.edu.uy.jdftech.entitites.Cliente;
 import um.edu.uy.jdftech.entitites.Direccion;
+import um.edu.uy.jdftech.services.AdministradorService;
 import um.edu.uy.jdftech.services.ClienteService;
 
 import java.text.SimpleDateFormat;
@@ -22,6 +24,8 @@ import java.util.Date;
 public class AuthPagesController {
 
     private final ClienteService clienteService;
+
+    private final AdministradorService administradorService;
 
     /* ======================
        LOGIN (con cédula)
@@ -137,6 +141,48 @@ public class AuthPagesController {
             return "redirect:/register";
         }
     }
+
+    /* ======================
+       ADMIN LOGIN
+       ====================== */
+    @GetMapping("/admin/login")
+    public String adminLoginView(HttpSession session) {
+        // Si ya está logueado como admin, redirigir al panel
+        if (session.getAttribute("admin") != null) {
+            return "redirect:/admin";
+        }
+        return "auth/login-admin";
+    }
+
+    @PostMapping("/admin/login")
+    public String adminLoginSubmit(@RequestParam Long cedula,
+                                   @RequestParam String password,
+                                   HttpSession session,
+                                   Model model) {
+        try {
+            // Validar credenciales de administrador
+            if (administradorService.validarLogin(cedula, password)) {
+                Administrador admin = administradorService.findById(cedula);
+
+                // Login exitoso - guardar en sesión
+                session.setAttribute("admin", admin);
+                session.setAttribute("adminId", admin.getId());
+                session.setAttribute("adminNombre", admin.getFirstName() + " " + admin.getLastName());
+
+                return "redirect:/admin";
+            } else {
+                // Credenciales incorrectas
+                model.addAttribute("error", "Cédula o contraseña incorrectos");
+                return "auth/login-admin";
+            }
+        } catch (Exception e) {
+            // Administrador no encontrado u otro error
+            model.addAttribute("error", "Cédula o contraseña incorrectos");
+            return "auth/login-admin";
+        }
+    }
+
+
 
     /* ======================
        LOGOUT
