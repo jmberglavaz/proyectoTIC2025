@@ -1,9 +1,10 @@
+<!-- src/main/resources/templates/crear-burger.html -->
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PizzUM & BurgUM — Crear hamburguesa</title>
+    <title>PizzUM &amp; BurgUM — Crear hamburguesa</title>
 
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/layout.css}">
@@ -11,35 +12,40 @@
     <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body class="theme-italian">
+
 <header class="site-header">
     <div class="container header__inner">
-        <div class="header-left">
-            <a class="brand" th:href="@{/}">
-                <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
-                <span class="brand__name">PizzUM &amp; BurgUM</span>
+        <a class="brand" th:href="@{/}">
+            <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+            <span class="brand__name">PizzUM &amp; BurgUM</span>
+        </a>
+        <nav class="site-nav">
+            <a class="nav__link"
+               th:classappend="${page == 'pizza'} ? ' is-active'"
+               th:href="@{/crear-pizza}">
+                Crear pizza
             </a>
-        </div>
-
-        <nav class="site-nav" th:if="${session.cliente != null}">
-            <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
-            <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
-            <a class="nav__link" th:href="@{/carrito}">Carrito</a>
-            <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
+            <a class="nav__link"
+               th:classappend="${page == 'burger'} ? ' is-active'"
+               th:href="@{/crear-burger}">
+                Crear hamburguesa
+            </a>
+            <a class="nav__link"
+               th:classappend="${page == 'favoritos'} ? ' is-active'"
+               th:href="@{/favoritos}">
+                ❤️ Favoritos
+            </a>
+            <a class="nav__link"
+               th:classappend="${page == 'carrito'} ? ' is-active'"
+               th:href="@{/carrito}">
+                Carrito
+            </a>
+            <a class="nav__link"
+               th:classappend="${page == 'pedido'} ? ' is-active'"
+               th:href="@{/pedido}">
+                Pedidos
+            </a>
         </nav>
-
-        <div class="header-right">
-            <div th:if="${session.cliente != null}" class="user-info">
-                <span>Hola, <strong th:text="${session.clienteNombre}">Usuario</strong></span>
-                <form th:action="@{/logout}" method="post" class="logout-form">
-                    <button type="submit" class="btn btn--link">Cerrar Sesión</button>
-                </form>
-            </div>
-
-            <div th:unless="${session.cliente != null}" class="auth-buttons">
-                <a th:href="@{/login}" class="btn btn--primary">Iniciar Sesión</a>
-                <a th:href="@{/register}" class="btn btn--secondary">Registrarse</a>
-            </div>
-        </div>
     </div>
 </header>
 
@@ -57,126 +63,181 @@
     </section>
 
     <section class="container section">
+        <form id="favBurgerForm" th:action="@{/favoritos/agregar}" method="post" style="display:none;">
+            <input type="hidden" name="tipo" value="burger">
+        </form>
+
         <form class="form form--builder" method="post" th:action="@{/crear-burger}">
             <!-- Cantidad de carnes -->
             <fieldset class="form-section">
                 <legend class="form-section__title">Cantidad de carnes</legend>
                 <div class="options options--inline">
                     <label class="option">
-                        <input type="radio" name="cantidad_carnes" id="carnes-1" value="1" required
-                               th:checked="${cantidadCarnesSeleccionada != null && cantidadCarnesSeleccionada == 1}">
-                        <span class="option__label">1 carne</span>
+                        <input type="radio" name="cantidad_carnes" value="1"
+                               required
+                               th:checked="${cantidad_carnes} == 1">
+                        <span class="option__label">1 carne <small class="option__price">$ 310</small></span>
                     </label>
                     <label class="option">
-                        <input type="radio" name="cantidad_carnes" id="carnes-2" value="2"
-                               th:checked="${cantidadCarnesSeleccionada != null && cantidadCarnesSeleccionada == 2}">
-                        <span class="option__label">2 carnes</span>
+                        <input type="radio" name="cantidad_carnes" value="2"
+                               th:checked="${cantidad_carnes} == 2">
+                        <span class="option__label">2 carnes <small class="option__price">$ 420</small></span>
                     </label>
                     <label class="option">
-                        <input type="radio" name="cantidad_carnes" id="carnes-3" value="3"
-                               th:checked="${cantidadCarnesSeleccionada != null && cantidadCarnesSeleccionada == 3}">
-                        <span class="option__label">3 carnes</span>
+                        <input type="radio" name="cantidad_carnes" value="3"
+                               th:checked="${cantidad_carnes} == 3">
+                        <span class="option__label">3 carnes <small class="option__price">$ 520</small></span>
                     </label>
                 </div>
             </fieldset>
 
-            <!-- Tipo de carne DESDE BD -->
+            <!-- Tipo de carne -->
             <fieldset class="form-section">
                 <legend class="form-section__title">Tipo de carne</legend>
                 <div class="options options--inline">
-                    <label class="option" th:each="carne : ${carnes}">
-                        <input type="radio" name="tipo_carne" th:value="${carne.idTopping}" required
-                               th:checked="${carneSeleccionada != null && carneSeleccionada == carne.idTopping}">
-                        <span class="option__label">
-                <span th:text="${carne.nombre}">Carne</span>
-                <small class="option__price"
-                       th:text="${carne.precioTopping} == 0 ? 'incluido' : '$ ' + ${#numbers.formatDecimal(carne.precioTopping, 1, 2)}">
-                  precio
-                </small>
-              </span>
+                    <label class="option">
+                        <input type="radio" name="tipo_carne" value="vaca"
+                               required
+                               th:checked="${tipo_carne} == 'vaca'">
+                        <span class="option__label">Vaca <small class="option__price">incluido</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="tipo_carne" value="pollo"
+                               th:checked="${tipo_carne} == 'pollo'">
+                        <span class="option__label">Pollo <small class="option__price">$ 25</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="tipo_carne" value="cerdo"
+                               th:checked="${tipo_carne} == 'cerdo'">
+                        <span class="option__label">Cerdo <small class="option__price">$ 30</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="tipo_carne" value="salmon"
+                               th:checked="${tipo_carne} == 'salmon'">
+                        <span class="option__label">Salmón <small class="option__price">$ 45</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="tipo_carne" value="lentejas"
+                               th:checked="${tipo_carne} == 'lentejas'">
+                        <span class="option__label">Lentejas <small class="option__price">$ 15</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="tipo_carne" value="soja"
+                               th:checked="${tipo_carne} == 'soja'">
+                        <span class="option__label">Soja <small class="option__price">$ 18</small></span>
                     </label>
                 </div>
             </fieldset>
 
-            <!-- Tipo de pan DESDE BD -->
+            <!-- Tipo de pan -->
             <fieldset class="form-section">
                 <legend class="form-section__title">Tipo de pan</legend>
                 <div class="options options--inline">
-                    <label class="option" th:each="pan : ${panes}">
-                        <input type="radio" name="tipo_pan" th:value="${pan.idTopping}" required
-                               th:checked="${panSeleccionado != null && panSeleccionado == pan.idTopping}">
-                        <span class="option__label">
-                <span th:text="${pan.nombre}">Pan</span>
-                <small class="option__price"
-                       th:text="${pan.precioTopping} == 0 ? 'incluido' : '$ ' + ${#numbers.formatDecimal(pan.precioTopping, 1, 2)}">
-                  precio
-                </small>
-              </span>
+                    <label class="option">
+                        <input type="radio" name="tipo_pan" value="papa"
+                               required
+                               th:checked="${tipo_pan} == 'papa' or tipo_pan == null">
+                        <span class="option__label">Pan de papa <small class="option__price">incluido</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="tipo_pan" value="integral"
+                               th:checked="${tipo_pan} == 'integral'">
+                        <span class="option__label">Integral <small class="option__price">$ 25</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="tipo_pan" value="sin_gluten"
+                               th:checked="${tipo_pan} == 'sin_gluten'">
+                        <span class="option__label">Sin gluten <small class="option__price">$ 45</small></span>
                     </label>
                 </div>
             </fieldset>
 
-            <!-- Aderezos DESDE BD - CON CANTIDAD -->
+            <!-- Aderezos -->
             <fieldset class="form-section">
                 <legend class="form-section__title">Aderezos</legend>
-                <p class="form-hint">Seleccioná los aderezos. Podés elegir la cantidad de cada uno.</p>
-
-                <div class="aderezos-grid">
-                    <div class="aderezo-item" th:each="aderezo : ${aderezos}">
-                        <div class="aderezo-controls" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding: 0.5rem; border: 1px solid #e0e0e0; border-radius: 4px;">
-                            <div>
-                                <strong th:text="${aderezo.nombre}">Aderezo</strong>
-                                <small class="option__price" th:text="' - $ ' + ${#numbers.formatDecimal(aderezo.precio, 1, 2)}">$ 0</small>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <label :for="'cantidad-aderezo-' + ${aderezo.idAderezo}" class="form-label">Cantidad:</label>
-                                <input type="number"
-                                       :id="'cantidad-aderezo-' + ${aderezo.idAderezo}"
-                                       :name="'aderezosCantidad[' + ${aderezo.idAderezo} + ']'"
-                                       min="0" max="10"
-                                       class="input input--number input--small"
-                                       style="width: 80px;"
-                                       th:value="${aderezosCantidad != null && aderezosCantidad[aderezo.idAderezo] != null} ? ${aderezosCantidad[aderezo.idAderezo]} : 0">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Resumen de aderezos seleccionados -->
-                <div th:if="${aderezosSeleccionadosResumen}" class="form-hint form-hint--total">
-                    <span th:text="${aderezosSeleccionadosResumen}">Sin aderezos · $ 0</span>
+                <p class="form-hint">Podés elegir varios (opcional).</p>
+                <p class="form-hint form-hint--total"
+                   data-section-total="aderezos"
+                   th:text="${aderezosLinea}">Sin aderezos · $ 0</p>
+                <div class="options options--grid">
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="aderezos" value="ketchup"
+                               th:checked="${aderezosSeleccionados != null && aderezosSeleccionados.contains('ketchup')}">
+                        <span class="option__label">Ketchup</span>
+                    </label>
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="aderezos" value="mostaza"
+                               th:checked="${aderezosSeleccionados != null && aderezosSeleccionados.contains('mostaza')}">
+                        <span class="option__label">Mostaza</span>
+                    </label>
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="aderezos" value="mayonesa"
+                               th:checked="${aderezosSeleccionados != null && aderezosSeleccionados.contains('mayonesa')}">
+                        <span class="option__label">Mayonesa</span>
+                    </label>
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="aderezos" value="bbq"
+                               th:checked="${aderezosSeleccionados != null && aderezosSeleccionados.contains('bbq')}">
+                        <span class="option__label">BBQ</span>
+                    </label>
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="aderezos" value="picante"
+                               th:checked="${aderezosSeleccionados != null && aderezosSeleccionados.contains('picante')}">
+                        <span class="option__label">Picante</span>
+                    </label>
                 </div>
             </fieldset>
 
-            <!-- Extras DESDE BD - CON CANTIDAD -->
+            <!-- Extras -->
             <fieldset class="form-section">
                 <legend class="form-section__title">Extras</legend>
-                <p class="form-hint">Seleccioná los extras. Podés elegir la cantidad de cada uno.</p>
-
-                <div class="extras-grid">
-                    <div class="extra-item" th:each="extra : ${extras}">
-                        <div class="extra-controls" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding: 0.5rem; border: 1px solid #e0e0e0; border-radius: 4px;">
-                            <div>
-                                <strong th:text="${extra.nombre}">Extra</strong>
-                                <small class="option__price" th:text="' - $ ' + ${#numbers.formatDecimal(extra.precioTopping, 1, 2)}">$ 0</small>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <label :for="'cantidad-extra-' + ${extra.idTopping}" class="form-label">Cantidad:</label>
-                                <input type="number"
-                                       :id="'cantidad-extra-' + ${extra.idTopping}"
-                                       :name="'extrasCantidad[' + ${extra.idTopping} + ']'"
-                                       min="0" max="10"
-                                       class="input input--number input--small"
-                                       style="width: 80px;"
-                                       th:value="${extrasCantidad != null && extrasCantidad[extra.idTopping] != null} ? ${extrasCantidad[extra.idTopping]} : 0">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Resumen de extras seleccionados -->
-                <div th:if="${extrasSeleccionadosResumen}" class="form-hint form-hint--total">
-                    <span th:text="${extrasSeleccionadosResumen}">Sin extras · $ 0</span>
+                <p class="form-hint">Seleccioná los que quieras (opcional).</p>
+                <p class="form-hint form-hint--total"
+                   data-section-total="extras"
+                   th:text="${extrasLinea}">Sin extras · $ 0</p>
+                <div class="options options--grid">
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="extras" value="extra_queso"
+                               th:checked="${extrasSeleccionados != null && extrasSeleccionados.contains('extra_queso')}">
+                        <span class="option__label">
+              Queso extra <small class="option__price">$ 35</small>
+            </span>
+                    </label>
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="extras" value="bacon"
+                               th:checked="${extrasSeleccionados != null && extrasSeleccionados.contains('bacon')}">
+                        <span class="option__label">
+              Bacon <small class="option__price">$ 45</small>
+            </span>
+                    </label>
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="extras" value="huevo"
+                               th:checked="${extrasSeleccionados != null && extrasSeleccionados.contains('huevo')}">
+                        <span class="option__label">
+              Huevo <small class="option__price">$ 30</small>
+            </span>
+                    </label>
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="extras" value="queso_azul"
+                               th:checked="${extrasSeleccionados != null && extrasSeleccionados.contains('queso_azul')}">
+                        <span class="option__label">
+              Queso azul <small class="option__price">$ 40</small>
+            </span>
+                    </label>
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="extras" value="cebolla"
+                               th:checked="${extrasSeleccionados != null && extrasSeleccionados.contains('cebolla')}">
+                        <span class="option__label">
+              Cebolla <small class="option__price">$ 20</small>
+            </span>
+                    </label>
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="extras" value="tomate"
+                               th:checked="${extrasSeleccionados != null && extrasSeleccionados.contains('tomate')}">
+                        <span class="option__label">
+              Tomate <small class="option__price">$ 20</small>
+            </span>
+                    </label>
                 </div>
             </fieldset>
 
@@ -185,26 +246,39 @@
                 <div class="form-group">
                     <label for="cantidad">Cantidad</label>
                     <input type="number" id="cantidad" name="cantidad" min="1" step="1"
-                           class="input input--number" th:value="${cantidad}">
+                           class="input input--number"
+                           th:value="${cantidad != null} ? ${cantidad} : 1">
                 </div>
                 <div class="form-group form-group--grow">
                     <label for="observaciones">Observaciones (opcional)</label>
-                    <textarea id="observaciones" name="observaciones" rows="2" class="input input--textarea"
+                    <textarea id="observaciones" name="observaciones" rows="2"
+                              class="input input--textarea"
                               placeholder="Ej: sin pepinillos, con mucho ketchup"
                               th:text="${observaciones}"></textarea>
                 </div>
             </fieldset>
 
+            <!-- Botón de favoritos -->
+            <div class="favorites-box" style="text-align: right; margin-bottom: 1rem;">
+                <button type="submit"
+                        class="btn btn--secondary"
+                        form="favBurgerForm"
+                        th:formaction="@{/favoritos/agregar}"
+                        formmethod="post">
+                    ❤️ Agregar a favoritos
+                </button>
+            </div>
+
             <!-- Resumen -->
             <section class="summary-box" aria-live="polite">
                 <h2 class="summary-box__title">Resumen</h2>
                 <ul class="summary-list">
-                    <li><strong>Cant. carnes:</strong> <span th:text="${cantidadCarnesResumen}">—</span></li>
-                    <li><strong>Tipo de carne:</strong> <span th:text="${carneResumen}">—</span></li>
-                    <li><strong>Pan:</strong> <span th:text="${panResumen}">—</span></li>
+                    <li><strong>Cant. carnes:</strong> <span th:text="${cantCarnesResumen}">—</span></li>
+                    <li><strong>Tipo de carne:</strong> <span th:text="${tipoCarneResumen}">—</span></li>
+                    <li><strong>Pan:</strong> <span th:text="${tipoPanResumen}">—</span></li>
                     <li><strong>Aderezos:</strong> <span th:text="${aderezosResumen}">—</span></li>
                     <li><strong>Extras:</strong> <span th:text="${extrasResumen}">—</span></li>
-                    <li><strong>Cantidad:</strong> <span th:text="${cantidad}">1</span></li>
+                    <li><strong>Cantidad:</strong> <span th:text="${cantidad != null} ? ${cantidad} : 1">1</span></li>
                 </ul>
                 <div class="summary-total">
                     <span class="summary-total__label">Total estimado</span>
@@ -214,8 +288,7 @@
 
             <!-- Acciones -->
             <div class="form-actions">
-                <button type="submit" class="btn btn--secondary" name="accion" value="actualizar"
-                        formaction="@{/crear-burger}" formmethod="get">
+                <button type="submit" class="btn btn--secondary" name="accion" value="actualizar">
                     Actualizar resumen
                 </button>
                 <button type="submit" class="btn btn--primary" name="accion" value="agregar">
@@ -238,5 +311,6 @@
         </nav>
     </div>
 </footer>
+
 </body>
 </html>

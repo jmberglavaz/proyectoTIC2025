@@ -1,3 +1,4 @@
+<!-- src/main/resources/templates/crear-pizza.html -->
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -46,9 +47,6 @@
             </a>
         </nav>
     </div>
-    <div th:if="${clienteNombre}" class="user-info">
-        Hola, <span th:text="${clienteNombre}"></span>!
-    </div>
 </header>
 
 <main>
@@ -70,8 +68,7 @@
         </form>
 
         <form class="form form--builder" method="post" th:action="@{/crear-pizza}">
-
-            <!-- TAMAÑOS FIJOS -->
+            <!-- Tamaño -->
             <fieldset class="form-section">
                 <legend class="form-section__title">Tamaño</legend>
                 <div class="options options--inline">
@@ -94,113 +91,149 @@
                 </div>
             </fieldset>
 
-            <!-- MASAS DESDE BD -->
+            <!-- Tipo de masa -->
             <fieldset class="form-section">
                 <legend class="form-section__title">Tipo de masa</legend>
                 <div class="options options--inline">
-                    <label class="option" th:each="masa : ${masas}">
-                        <input type="radio" name="masa" th:value="${masa.idTopping}"
+                    <label class="option">
+                        <input type="radio" name="masa" id="masa-napolitana" value="napolitana"
                                required
-                               th:checked="${masaSeleccionada} == ${masa.idTopping}">
-                        <span class="option__label">
-                            <span th:text="${masa.nombre}">Masa</span>
-                            <small class="option__price"
-                                   th:text="${masa.precioTopping} == 0 ? 'incluido' : '$ ' + ${#numbers.formatDecimal(masa.precioTopping, 1, 2)}">
-                                precio
-                            </small>
-                        </span>
+                               th:checked="${masaSeleccionada} == 'napolitana'">
+                        <span class="option__label">Napolitana <small class="option__price">incluido</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="masa" id="masa-integral" value="integral"
+                               th:checked="${masaSeleccionada} == 'integral'">
+                        <span class="option__label">Integral <small class="option__price">$ 40</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="masa" id="masa-sin-gluten" value="sin_gluten"
+                               th:checked="${masaSeleccionada} == 'sin_gluten'">
+                        <span class="option__label">Sin gluten <small class="option__price">$ 60</small></span>
                     </label>
                 </div>
             </fieldset>
 
-            <!-- SALSAS DESDE BD -->
+            <!-- Salsa -->
             <fieldset class="form-section">
                 <legend class="form-section__title">Salsa</legend>
                 <div class="options options--inline">
-                    <label class="option" th:each="salsa : ${salsas}">
-                        <input type="radio" name="salsa" th:value="${salsa.idTopping}"
+                    <label class="option">
+                        <input type="radio" name="salsa" id="salsa-tomate" value="tomate"
                                required
-                               th:checked="${salsaSeleccionada} == ${salsa.idTopping}">
-                        <span class="option__label">
-                            <span th:text="${salsa.nombre}">Salsa</span>
-                            <small class="option__price"
-                                   th:text="${salsa.precioTopping} == 0 ? 'incluido' : '$ ' + ${#numbers.formatDecimal(salsa.precioTopping, 1, 2)}">
-                                precio
-                            </small>
-                        </span>
+                               th:checked="${salsaSeleccionada} == 'tomate'">
+                        <span class="option__label">Tomate <small class="option__price">incluido</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="salsa" id="salsa-pomodoro" value="pomodoro"
+                               th:checked="${salsaSeleccionada} == 'pomodoro'">
+                        <span class="option__label">Pomodoro <small class="option__price">$ 35</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="salsa" id="salsa-otra" value="otra"
+                               th:checked="${salsaSeleccionada} == 'otra'">
+                        <span class="option__label">Especial <small class="option__price">$ 45</small></span>
                     </label>
                 </div>
             </fieldset>
 
-            <!-- QUESOS DESDE BD -->
+            <!-- Queso -->
             <fieldset class="form-section">
                 <legend class="form-section__title">Queso</legend>
                 <div class="options options--inline">
-                    <label class="option" th:each="queso : ${quesos}">
-                        <input type="radio" name="queso" th:value="${queso.idTopping}"
+                    <label class="option">
+                        <input type="radio" name="queso" id="queso-muzza" value="muzza"
                                required
-                               th:checked="${quesoSeleccionado} == ${queso.idTopping}">
-                        <span class="option__label">
-                            <span th:text="${queso.nombre}">Queso</span>
-                            <small class="option__price"
-                                   th:text="${queso.precioTopping} == 0 ? 'incluido' : '$ ' + ${#numbers.formatDecimal(queso.precioTopping, 1, 2)}">
-                                precio
-                            </small>
-                        </span>
+                               th:checked="${quesoSeleccionado} == 'muzza'">
+                        <span class="option__label">Muzzarella <small class="option__price">incluido</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="queso" id="queso-roquefort" value="roquefort"
+                               th:checked="${quesoSeleccionado} == 'roquefort'">
+                        <span class="option__label">Roquefort <small class="option__price">$ 70</small></span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="queso" id="queso-otro" value="otro"
+                               th:checked="${quesoSeleccionado} == 'otro'">
+                        <span class="option__label">Blend especial <small class="option__price">$ 40</small></span>
                     </label>
                 </div>
             </fieldset>
 
-            <!-- TOPPINGS EXTRAS DESDE BD -->
-            <!-- Toppings extras DESDE BD - CON CANTIDAD -->
+            <!-- Toppings -->
             <fieldset class="form-section">
-                <legend class="form-section__title">Toppings extras</legend>
-                <p class="form-hint">Seleccioná los toppings extras. Podés elegir la cantidad de cada uno.</p>
+                <legend class="form-section__title">Toppings</legend>
+                <p class="form-hint">Seleccioná los que quieras (opcional).</p>
+                <p class="form-hint form-hint--total"
+                   data-section-total="toppings"
+                   th:text="${toppingsLinea}">Sin toppings extras · $ 0</p>
 
-                <div class="toppings-grid">
-                    <div class="topping-item" th:each="topping : ${toppingsExtras}">
-                        <div class="topping-controls" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding: 0.5rem; border: 1px solid #e0e0e0; border-radius: 4px;">
-                            <div>
-                                <strong th:text="${topping.nombre}">Topping</strong>
-                                <small class="option__price" th:text="' - $ ' + ${#numbers.formatDecimal(topping.precioTopping, 1, 2)}">$ 0</small>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <label :for="'cantidad-topping-' + ${topping.idTopping}" class="form-label">Cantidad:</label>
-                                <input type="number"
-                                       :id="'cantidad-topping-' + ${topping.idTopping}"
-                                       :name="'toppingsCantidad[' + ${topping.idTopping} + ']'"
-                                       min="0" max="10"
-                                       class="input input--number input--small"
-                                       style="width: 80px;"
-                                       th:value="${toppingsCantidad != null && toppingsCantidad[topping.idTopping] != null} ? ${toppingsCantidad[topping.idTopping]} : 0">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="options options--grid">
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="toppings" value="aceitunas"
+                               th:checked="${toppingsSeleccionados != null and toppingsSeleccionados.contains('aceitunas')}">
+                        <span class="option__label">
+              Aceitunas <small class="option__price">$ 30</small>
+            </span>
+                    </label>
 
-                <!-- Resumen de toppings seleccionados -->
-                <div th:if="${toppingsSeleccionadosResumen}" class="form-hint form-hint--total">
-                    <span th:text="${toppingsSeleccionadosResumen}">Sin toppings extras · $ 0</span>
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="toppings" value="albahaca"
+                               th:checked="${toppingsSeleccionados != null and toppingsSeleccionados.contains('albahaca')}">
+                        <span class="option__label">
+              Albahaca <small class="option__price">$ 25</small>
+            </span>
+                    </label>
+
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="toppings" value="morron"
+                               th:checked="${toppingsSeleccionados != null and toppingsSeleccionados.contains('morron')}">
+                        <span class="option__label">
+              Morrón <small class="option__price">$ 25</small>
+            </span>
+                    </label>
+
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="toppings" value="cebolla"
+                               th:checked="${toppingsSeleccionados != null and toppingsSeleccionados.contains('cebolla')}">
+                        <span class="option__label">
+              Cebolla <small class="option__price">$ 20</small>
+            </span>
+                    </label>
+
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="toppings" value="champiniones"
+                               th:checked="${toppingsSeleccionados != null && toppingsSeleccionados.contains('champiniones')}">
+                        <span class="option__label">
+              Champiñones <small class="option__price">$ 35</small>
+            </span>
+                    </label>
+
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="toppings" value="jamon"
+                               th:checked="${toppingsSeleccionados != null && toppingsSeleccionados.contains('jamon')}">
+                        <span class="option__label">
+              Jamón <small class="option__price">$ 40</small>
+            </span>
+                    </label>
+
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="toppings" value="bacon"
+                               th:checked="${toppingsSeleccionados != null && toppingsSeleccionados.contains('bacon')}">
+                        <span class="option__label">
+              Bacon <small class="option__price">$ 40</small>
+            </span>
+                    </label>
+
+                    <label class="option option--checkbox">
+                        <input type="checkbox" name="toppings" value="anana"
+                               th:checked="${toppingsSeleccionados != null && toppingsSeleccionados.contains('anana')}">
+                        <span class="option__label">
+              Ananá <small class="option__price">$ 30</small>
+            </span>
+                    </label>
                 </div>
             </fieldset>
-<!--            <fieldset class="form-section">-->
-<!--                <legend class="form-section__title">Toppings extras</legend>-->
-<!--                <p class="form-hint">Seleccioná los que quieras (opcional).</p>-->
-<!--                <p class="form-hint form-hint&#45;&#45;total"-->
-<!--                   data-section-total="toppings"-->
-<!--                   th:text="${toppingsLinea}">Sin toppings extras · $ 0</p>-->
-
-<!--                <div class="options options&#45;&#45;grid">-->
-<!--                    <label class="option option&#45;&#45;checkbox" th:each="topping : ${toppingsExtras}">-->
-<!--                        <input type="checkbox" name="toppingsExtras" th:value="${topping.idTopping}"-->
-<!--                               th:checked="${toppingsExtrasSeleccionados != null and toppingsExtrasSeleccionados.contains(topping.idTopping)}">-->
-<!--                        <span class="option__label">-->
-<!--                            <span th:text="${topping.nombre}">Topping</span>-->
-<!--                            <small class="option__price" th:text="'$ ' + ${#numbers.formatDecimal(topping.precioTopping, 1, 2)}">$ 0</small>-->
-<!--                        </span>-->
-<!--                    </label>-->
-<!--                </div>-->
-<!--            </fieldset>-->
 
             <!-- Cantidad + observaciones -->
             <fieldset class="form-section form-section--row">
@@ -238,7 +271,7 @@
                     <li><strong>Masa:</strong> <span th:text="${masaResumen}">—</span></li>
                     <li><strong>Salsa:</strong> <span th:text="${salsaResumen}">—</span></li>
                     <li><strong>Queso:</strong> <span th:text="${quesoResumen}">—</span></li>
-                    <li><strong>Toppings extras:</strong> <span th:text="${toppingsExtrasResumen}">—</span></li>
+                    <li><strong>Toppings:</strong> <span th:text="${toppingsResumen}">—</span></li>
                     <li><strong>Cantidad:</strong> <span th:text="${cantidad != null} ? ${cantidad} : 1">1</span></li>
                 </ul>
                 <div class="summary-total">
