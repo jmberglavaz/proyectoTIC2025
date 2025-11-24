@@ -1,13 +1,23 @@
 package um.edu.uy.jdftech.entitites;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import um.edu.uy.jdftech.entitites.tablasIntermedias.HamburguesaAderezo;
+import um.edu.uy.jdftech.entitites.tablasIntermedias.HamburguesaTopping;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "hamburguesas")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Hamburguesa {
 
     @Id
@@ -21,31 +31,38 @@ public class Hamburguesa {
 
     @Column(name = "precio_base")
     private double precio_base;
-    @OneToMany(mappedBy = "hamburguesa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Aderezo> aderezos;
 
     @OneToMany(mappedBy = "hamburguesa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Topping> toppings;
+    private List<HamburguesaAderezo> hamburguesaAderezos = new ArrayList<>();
 
-    public Hamburguesa() {
+    @OneToMany(mappedBy = "hamburguesa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HamburguesaTopping> hamburguesaToppings = new ArrayList<>();
+
+    // Métodos para manejar toppings
+
+    public void agregarTopping(Topping topping, int cantidad) {
+        HamburguesaTopping ht = new HamburguesaTopping(null, this, topping, cantidad);
+        hamburguesaToppings.add(ht);
     }
 
-    public Hamburguesa(int cant_de_carnes, double precio_base) {
-        this.cant_de_carnes = cant_de_carnes;
-        this.precio_base = precio_base;
-        this.aderezos = new ArrayList<>();
-        this.toppings = new ArrayList<>();
+    public void agregarAderezo(Aderezo aderezo, int cantidad) {
+        HamburguesaAderezo ha = new HamburguesaAderezo(null, this, aderezo, cantidad);
+        hamburguesaAderezos.add(ha);
     }
 
-    // Calcular precio total con aderezos y toppings
     public double getPrecioTotal() {
         double total = precio_base;
-        if (aderezos != null) {
-            for (Aderezo a : aderezos) total += a.getPrecio();
+
+        for (HamburguesaTopping ht : hamburguesaToppings) {
+            total += ht.getTopping().getPrecioTopping() * ht.getCantidad();
         }
-        if (toppings != null) {
-            for (Topping t : toppings) total += t.getPrecioTopping();
+
+        for (HamburguesaAderezo ha : hamburguesaAderezos) {
+            total += ha.getAderezo().getPrecio() * ha.getCantidad();
         }
+
         return total;
     }
+
+
 }
