@@ -11,17 +11,17 @@ import um.edu.uy.jdftech.services.CarritoService;
 @Controller
 public class CarritoController {
 
-    private final CarritoService carritoService;
+    private final CarritoService cartService;
 
-    public CarritoController(CarritoService carritoService) {
-        this.carritoService = carritoService;
+    public CarritoController(CarritoService cartService) {
+        this.cartService = cartService;
     }
 
     @GetMapping("/carrito")
     public String verCarrito(Model model) {
         model.addAttribute("page", "carrito");
-        model.addAttribute("items", carritoService.getItems());
-        double subtotal = carritoService.getSubtotal();
+        model.addAttribute("items", cartService.getItems());
+        double subtotal = cartService.getSubtotal();
         double costoEnvio = subtotal > 0 ? 120 : 0;
         model.addAttribute("subtotal", subtotal);
         model.addAttribute("envio", costoEnvio);
@@ -33,14 +33,14 @@ public class CarritoController {
     public String actualizarCantidad(@RequestParam String id,
                                      @RequestParam int cantidad,
                                      RedirectAttributes redirectAttributes) {
-        carritoService.updateQuantity(id, cantidad);
+        cartService.updateQuantity(id, cantidad);
         redirectAttributes.addFlashAttribute("mensaje", "Cantidad actualizada");
         return "redirect:/carrito";
     }
 
     @PostMapping("/carrito/eliminar")
     public String eliminarItem(@RequestParam String id, RedirectAttributes redirectAttributes) {
-        carritoService.removeItem(id);
+        cartService.removeItem(id);
         redirectAttributes.addFlashAttribute("mensaje", "Producto eliminado del carrito");
         return "redirect:/carrito";
     }

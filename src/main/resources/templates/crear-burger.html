@@ -1,19 +1,18 @@
+<!-- src/main/resources/templates/crear-burger.html -->
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PizzUM & BurgUM — Crear hamburguesa</title>
+  <title>PizzUM &amp; BurgUM — Crear hamburguesa</title>
 
-  <!-- Hojas de estilo globales -->
   <link rel="stylesheet" th:href="@{/css/main.css}">
   <link rel="stylesheet" th:href="@{/css/layout.css}">
   <link rel="stylesheet" th:href="@{/css/components.css}">
   <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body class="theme-italian">
-  
-  <!-- Header global (actualizado con sección de Favoritos) -->
+
 <header class="site-header">
   <div class="container header__inner">
     <a class="brand" th:href="@{/}">
@@ -24,385 +23,294 @@
       <a class="nav__link"
          th:classappend="${page == 'pizza'} ? ' is-active'"
          th:href="@{/crear-pizza}">
-         Crear pizza
+        Crear pizza
       </a>
       <a class="nav__link"
          th:classappend="${page == 'burger'} ? ' is-active'"
          th:href="@{/crear-burger}">
-         Crear hamburguesa
+        Crear hamburguesa
       </a>
       <a class="nav__link"
          th:classappend="${page == 'favoritos'} ? ' is-active'"
          th:href="@{/favoritos}">
-         ❤️ Favoritos
+        ❤️ Favoritos
       </a>
       <a class="nav__link"
          th:classappend="${page == 'carrito'} ? ' is-active'"
          th:href="@{/carrito}">
-         Carrito
+        Carrito
       </a>
       <a class="nav__link"
          th:classappend="${page == 'pedido'} ? ' is-active'"
          th:href="@{/pedido}">
-         Pedidos
+        Pedidos
       </a>
     </nav>
   </div>
 </header>
 
-
-  <main>
-    <!-- Hero/encabezado -->
-    <section class="page-hero">
-      <div class="container page-hero__inner">
-        <div class="page-hero__media">
-          <img th:src="@{/img/custom-burger.png}" alt="Ingredientes frescos para tu hamburguesa" class="page-hero__img">
-        </div>
-        <div class="page-hero__content">
-          <h1>Creá tu hamburguesa 🍔</h1>
-          <p>Elegí la cantidad de carnes (1 a 3), tipo de carne, pan, aderezos y extras. Agregala al carrito.</p>
-        </div>
+<main>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="page-hero__media">
+        <img th:src="@{/img/custom-burger.png}" alt="Ingredientes frescos para tu hamburguesa" class="page-hero__img">
       </div>
-    </section>
+      <div class="page-hero__content">
+        <h1>Creá tu hamburguesa 🍔</h1>
+        <p>Elegí la cantidad de carnes (1 a 3), tipo de carne, pan, aderezos y extras. Agregala al carrito.</p>
+      </div>
+    </div>
+  </section>
 
-    <!-- Formulario principal -->
-    <section class="container section">
-      <form id="favBurgerForm" th:action="@{/favoritos/agregar}" method="post" style="display:none;">
-        <input type="hidden" name="tipo" value="burger">
-      </form>
-      <!-- Preparado para backend -->
-      <form class="form form--builder" method="post" th:action="@{/crear-burger}" data-builder="burger">
-        <!-- Cantidad de carnes -->
-        <fieldset class="form-section">
-          <legend class="form-section__title">Cantidad de carnes</legend>
-          <div class="options options--inline">
-            <label class="option">
-              <input type="radio" name="cantidad_carnes" id="carnes-1" value="1" required data-label="1 carne" data-price="310">
-              <span class="option__label">1 carne <small class="option__price">$ 310</small></span>
-            </label>
-            <label class="option">
-              <input type="radio" name="cantidad_carnes" id="carnes-2" value="2" data-label="2 carnes" data-price="420">
-              <span class="option__label">2 carnes <small class="option__price">$ 420</small></span>
-            </label>
-            <label class="option">
-              <input type="radio" name="cantidad_carnes" id="carnes-3" value="3" data-label="3 carnes" data-price="520">
-              <span class="option__label">3 carnes <small class="option__price">$ 520</small></span>
-            </label>
-          </div>
-        </fieldset>
+  <section class="container section">
+    <form id="favBurgerForm" th:action="@{/favoritos/agregar}" method="post" style="display:none;">
+      <input type="hidden" name="tipo" value="burger">
+    </form>
 
-        <!-- Tipo de carne -->
-        <fieldset class="form-section">
-          <legend class="form-section__title">Tipo de carne</legend>
-          <div class="options options--inline">
-            <label class="option">
-              <input type="radio" name="tipo_carne" id="carne-vaca" value="vaca" required data-label="Vaca" data-price="0">
-              <span class="option__label">Vaca <small class="option__price">incluido</small></span>
-            </label>
-            <label class="option">
-              <input type="radio" name="tipo_carne" id="carne-pollo" value="pollo" data-label="Pollo" data-price="25">
-              <span class="option__label">Pollo <small class="option__price">$ 25</small></span>
-            </label>
-            <label class="option">
-              <input type="radio" name="tipo_carne" id="carne-cerdo" value="cerdo" data-label="Cerdo" data-price="30">
-              <span class="option__label">Cerdo <small class="option__price">$ 30</small></span>
-            </label>
-            <label class="option">
-              <input type="radio" name="tipo_carne" id="carne-salmon" value="salmon" data-label="Salmón" data-price="45">
-              <span class="option__label">Salmón <small class="option__price">$ 45</small></span>
-            </label>
-            <label class="option">
-              <input type="radio" name="tipo_carne" id="carne-lentejas" value="lentejas" data-label="Lentejas" data-price="15">
-              <span class="option__label">Lentejas <small class="option__price">$ 15</small></span>
-            </label>
-            <label class="option">
-              <input type="radio" name="tipo_carne" id="carne-soja" value="soja" data-label="Soja" data-price="18">
-              <span class="option__label">Soja <small class="option__price">$ 18</small></span>
-            </label>
-          </div>
-        </fieldset>
-
-        <!-- Tipo de pan -->
-        <fieldset class="form-section">
-          <legend class="form-section__title">Tipo de pan</legend>
-          <div class="options options--inline">
-            <label class="option">
-              <input type="radio" name="tipo_pan" id="pan-papa" value="papa" required data-label="Pan de papa" data-price="0">
-              <span class="option__label">Pan de papa <small class="option__price">incluido</small></span>
-            </label>
-            <label class="option">
-              <input type="radio" name="tipo_pan" id="pan-integral" value="integral" data-label="Integral" data-price="25">
-              <span class="option__label">Integral <small class="option__price">$ 25</small></span>
-            </label>
-            <label class="option">
-              <input type="radio" name="tipo_pan" id="pan-sin-gluten" value="sin_gluten" data-label="Sin gluten" data-price="45">
-              <span class="option__label">Sin gluten <small class="option__price">$ 45</small></span>
-            </label>
-          </div>
-        </fieldset>
-
-        <!-- Aderezos -->
-        <fieldset class="form-section">
-          <legend class="form-section__title">Aderezos</legend>
-          <p class="form-hint">Podés elegir varios (opcional).</p>
-          <p class="form-hint form-hint--total" data-section-total="aderezos">Sin aderezos · $ 0</p>
-          <div class="options options--grid">
-            <label class="option option--checkbox">
-              <input type="checkbox" name="aderezos" id="adz-ketchup" value="ketchup">
-              <span class="option__label">Ketchup</span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="aderezos" id="adz-mostaza" value="mostaza">
-              <span class="option__label">Mostaza</span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="aderezos" id="adz-mayonesa" value="mayonesa">
-              <span class="option__label">Mayonesa</span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="aderezos" id="adz-bbq" value="bbq">
-              <span class="option__label">BBQ</span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="aderezos" id="adz-picante" value="picante">
-              <span class="option__label">Picante</span>
-            </label>
-          </div>
-        </fieldset>
-
-        <!-- Extras -->
+    <form class="form form--builder" method="post" th:action="@{/crear-burger}">
+      <!-- Cantidad de carnes -->
       <fieldset class="form-section">
-          <legend class="form-section__title">Extras</legend>
-          <p class="form-hint">Seleccioná los que quieras (opcional).</p>
-          <p class="form-hint form-hint--total" data-section-total="extras">Sin extras · $ 0</p>
-          <div class="options options--grid">
-            <label class="option option--checkbox">
-              <input type="checkbox" name="extras" id="ex-queso" value="extra_queso"
-                     data-label="Queso extra" data-price="35">
-              <span class="option__label">
-          Queso extra <small class="option__price">$ 35</small>
-        </span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="extras" id="ex-bacon" value="bacon"
-                     data-label="Bacon" data-price="45">
-              <span class="option__label">
-          Bacon <small class="option__price">$ 45</small>
-        </span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="extras" id="ex-huevo" value="huevo"
-                     data-label="Huevo" data-price="30">
-              <span class="option__label">
-          Huevo <small class="option__price">$ 30</small>
-        </span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="extras" id="ex-queso-azul" value="queso_azul"
-                     data-label="Queso azul" data-price="40">
-              <span class="option__label">
-          Queso azul <small class="option__price">$ 40</small>
-        </span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="extras" id="ex-cebolla" value="cebolla"
-                     data-label="Cebolla" data-price="20">
-              <span class="option__label">
-          Cebolla <small class="option__price">$ 20</small>
-        </span>
-            </label>
-            <label class="option option--checkbox">
-              <input type="checkbox" name="extras" id="ex-tomate" value="tomate"
-                     data-label="Tomate" data-price="20">
-              <span class="option__label">
-          Tomate <small class="option__price">$ 20</small>
-        </span>
-            </label>
-          </div>
+        <legend class="form-section__title">Cantidad de carnes</legend>
+        <div class="options options--inline">
+          <label class="option">
+            <input type="radio" name="cantidad_carnes" value="1"
+                   required
+                   th:checked="${cantidad_carnes} == 1">
+            <span class="option__label">1 carne <small class="option__price">$ 310</small></span>
+          </label>
+          <label class="option">
+            <input type="radio" name="cantidad_carnes" value="2"
+                   th:checked="${cantidad_carnes} == 2">
+            <span class="option__label">2 carnes <small class="option__price">$ 420</small></span>
+          </label>
+          <label class="option">
+            <input type="radio" name="cantidad_carnes" value="3"
+                   th:checked="${cantidad_carnes} == 3">
+            <span class="option__label">3 carnes <small class="option__price">$ 520</small></span>
+          </label>
+        </div>
       </fieldset>
 
-        <!-- Cantidad + observaciones -->
-        <fieldset class="form-section form-section--row">
-          <div class="form-group">
-            <label for="cantidad">Cantidad</label>
-            <input type="number" id="cantidad" name="cantidad" min="1" step="1" value="1" inputmode="numeric" class="input input--number">
-          </div>
-          <div class="form-group form-group--grow">
-            <label for="observaciones">Observaciones (opcional)</label>
-            <textarea id="observaciones" name="observaciones" rows="2" class="input input--textarea" placeholder="Ej: sin pepinillos, con mucho ketchup"></textarea>
-          </div>
-        </fieldset>
-
-        <!-- Botón de favoritos (Thymeleafizado) -->
-        <div class="favorites-box" style="text-align: right; margin-bottom: 1rem;">
-          <button
-            type="submit"
-            class="btn btn--secondary"
-            form="favBurgerForm"
-            formaction="/favoritos/agregar"
-            formmethod="post">
-            ❤️ Agregar a favoritos
-          </button>
+      <!-- Tipo de carne -->
+      <fieldset class="form-section">
+        <legend class="form-section__title">Tipo de carne</legend>
+        <div class="options options--inline">
+          <label class="option">
+            <input type="radio" name="tipo_carne" value="vaca"
+                   required
+                   th:checked="${tipo_carne} == 'vaca'">
+            <span class="option__label">Vaca <small class="option__price">incluido</small></span>
+          </label>
+          <label class="option">
+            <input type="radio" name="tipo_carne" value="pollo"
+                   th:checked="${tipo_carne} == 'pollo'">
+            <span class="option__label">Pollo <small class="option__price">$ 25</small></span>
+          </label>
+          <label class="option">
+            <input type="radio" name="tipo_carne" value="cerdo"
+                   th:checked="${tipo_carne} == 'cerdo'">
+            <span class="option__label">Cerdo <small class="option__price">$ 30</small></span>
+          </label>
+          <label class="option">
+            <input type="radio" name="tipo_carne" value="salmon"
+                   th:checked="${tipo_carne} == 'salmon'">
+            <span class="option__label">Salmón <small class="option__price">$ 45</small></span>
+          </label>
+          <label class="option">
+            <input type="radio" name="tipo_carne" value="lentejas"
+                   th:checked="${tipo_carne} == 'lentejas'">
+            <span class="option__label">Lentejas <small class="option__price">$ 15</small></span>
+          </label>
+          <label class="option">
+            <input type="radio" name="tipo_carne" value="soja"
+                   th:checked="${tipo_carne} == 'soja'">
+            <span class="option__label">Soja <small class="option__price">$ 18</small></span>
+          </label>
         </div>
+      </fieldset>
 
-        <!-- Resumen -->
-        <section class="summary-box" aria-live="polite">
-          <h2 class="summary-box__title">Resumen</h2>
-          <ul class="summary-list">
-            <li><strong>Cant. carnes:</strong> <span data-summary="cantidad_carnes">—</span></li>
-            <li><strong>Tipo de carne:</strong> <span data-summary="tipo_carne">—</span></li>
-            <li><strong>Pan:</strong> <span data-summary="tipo_pan">—</span></li>
-            <li><strong>Aderezos:</strong> <span data-summary="aderezos">—</span></li>
-            <li><strong>Extras:</strong> <span data-summary="extras">—</span></li>
-            <li><strong>Cantidad:</strong> <span data-summary="cantidad">1</span></li>
-          </ul>
-          <div class="summary-total">
-            <span class="summary-total__label">Total estimado</span>
-            <span class="summary-total__value" data-summary="total">$ —</span>
-          </div>
-        </section>
-
-        <!-- Acciones -->
-        <div class="form-actions">
-          <button type="submit" class="btn btn--primary">Agregar al carrito</button>
-          <a class="btn btn--ghost" th:href="@{/carrito}">Ver carrito</a>
-          <a class="btn btn--link" th:href="@{/}">Volver al inicio</a>
+      <!-- Tipo de pan -->
+      <fieldset class="form-section">
+        <legend class="form-section__title">Tipo de pan</legend>
+        <div class="options options--inline">
+          <label class="option">
+            <input type="radio" name="tipo_pan" value="papa"
+                   required
+                   th:checked="${tipo_pan} == 'papa' or tipo_pan == null">
+            <span class="option__label">Pan de papa <small class="option__price">incluido</small></span>
+          </label>
+          <label class="option">
+            <input type="radio" name="tipo_pan" value="integral"
+                   th:checked="${tipo_pan} == 'integral'">
+            <span class="option__label">Integral <small class="option__price">$ 25</small></span>
+          </label>
+          <label class="option">
+            <input type="radio" name="tipo_pan" value="sin_gluten"
+                   th:checked="${tipo_pan} == 'sin_gluten'">
+            <span class="option__label">Sin gluten <small class="option__price">$ 45</small></span>
+          </label>
         </div>
-      </form>
-    </section>
-  </main>
+      </fieldset>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container footer__inner">
-      <small>&copy; 2025 PizzUM &amp; BurgUM</small>
-      <nav class="footer-nav">
-        <a th:href="@{#}" class="footer__link">Ayuda</a>
-        <a th:href="@{#}" class="footer__link">Términos</a>
-        <a th:href="@{#}" class="footer__link">Privacidad</a>
-      </nav>
-    </div>
-  </footer>
-  <script>
-    (() => {
-      const form = document.querySelector('[data-builder="burger"]');
-      if (!form) {
-        return;
-      }
+      <!-- Aderezos -->
+      <fieldset class="form-section">
+        <legend class="form-section__title">Aderezos</legend>
+        <p class="form-hint">Podés elegir varios (opcional).</p>
+        <p class="form-hint form-hint--total"
+           data-section-total="aderezos"
+           th:text="${aderezosLinea}">Sin aderezos · $ 0</p>
+        <div class="options options--grid">
+          <label class="option option--checkbox">
+            <input type="checkbox" name="aderezos" value="ketchup"
+                   th:checked="${aderezosSeleccionados != null && aderezosSeleccionados.contains('ketchup')}">
+            <span class="option__label">Ketchup</span>
+          </label>
+          <label class="option option--checkbox">
+            <input type="checkbox" name="aderezos" value="mostaza"
+                   th:checked="${aderezosSeleccionados != null && aderezosSeleccionados.contains('mostaza')}">
+            <span class="option__label">Mostaza</span>
+          </label>
+          <label class="option option--checkbox">
+            <input type="checkbox" name="aderezos" value="mayonesa"
+                   th:checked="${aderezosSeleccionados != null && aderezosSeleccionados.contains('mayonesa')}">
+            <span class="option__label">Mayonesa</span>
+          </label>
+          <label class="option option--checkbox">
+            <input type="checkbox" name="aderezos" value="bbq"
+                   th:checked="${aderezosSeleccionados != null && aderezosSeleccionados.contains('bbq')}">
+            <span class="option__label">BBQ</span>
+          </label>
+          <label class="option option--checkbox">
+            <input type="checkbox" name="aderezos" value="picante"
+                   th:checked="${aderezosSeleccionados != null && aderezosSeleccionados.contains('picante')}">
+            <span class="option__label">Picante</span>
+          </label>
+        </div>
+      </fieldset>
 
-      const summaryEls = {
-        cantidad_carnes: document.querySelector('[data-summary="cantidad_carnes"]'),
-        tipo_carne: document.querySelector('[data-summary="tipo_carne"]'),
-        tipo_pan: document.querySelector('[data-summary="tipo_pan"]'),
-        aderezos: document.querySelector('[data-summary="aderezos"]'),
-        extras: document.querySelector('[data-summary="extras"]'),
-        cantidad: document.querySelector('[data-summary="cantidad"]'),
-        total: document.querySelector('[data-summary="total"]')
-      };
+      <!-- Extras -->
+      <fieldset class="form-section">
+        <legend class="form-section__title">Extras</legend>
+        <p class="form-hint">Seleccioná los que quieras (opcional).</p>
+        <p class="form-hint form-hint--total"
+           data-section-total="extras"
+           th:text="${extrasLinea}">Sin extras · $ 0</p>
+        <div class="options options--grid">
+          <label class="option option--checkbox">
+            <input type="checkbox" name="extras" value="extra_queso"
+                   th:checked="${extrasSeleccionados != null && extrasSeleccionados.contains('extra_queso')}">
+            <span class="option__label">
+              Queso extra <small class="option__price">$ 35</small>
+            </span>
+          </label>
+          <label class="option option--checkbox">
+            <input type="checkbox" name="extras" value="bacon"
+                   th:checked="${extrasSeleccionados != null && extrasSeleccionados.contains('bacon')}">
+            <span class="option__label">
+              Bacon <small class="option__price">$ 45</small>
+            </span>
+          </label>
+          <label class="option option--checkbox">
+            <input type="checkbox" name="extras" value="huevo"
+                   th:checked="${extrasSeleccionados != null && extrasSeleccionados.contains('huevo')}">
+            <span class="option__label">
+              Huevo <small class="option__price">$ 30</small>
+            </span>
+          </label>
+          <label class="option option--checkbox">
+            <input type="checkbox" name="extras" value="queso_azul"
+                   th:checked="${extrasSeleccionados != null && extrasSeleccionados.contains('queso_azul')}">
+            <span class="option__label">
+              Queso azul <small class="option__price">$ 40</small>
+            </span>
+          </label>
+          <label class="option option--checkbox">
+            <input type="checkbox" name="extras" value="cebolla"
+                   th:checked="${extrasSeleccionados != null && extrasSeleccionados.contains('cebolla')}">
+            <span class="option__label">
+              Cebolla <small class="option__price">$ 20</small>
+            </span>
+          </label>
+          <label class="option option--checkbox">
+            <input type="checkbox" name="extras" value="tomate"
+                   th:checked="${extrasSeleccionados != null && extrasSeleccionados.contains('tomate')}">
+            <span class="option__label">
+              Tomate <small class="option__price">$ 20</small>
+            </span>
+          </label>
+        </div>
+      </fieldset>
 
-      const sectionTotals = {
-        aderezos: document.querySelector('[data-section-total="aderezos"]'),
-        extras: document.querySelector('[data-section-total="extras"]')
-      };
+      <!-- Cantidad + observaciones -->
+      <fieldset class="form-section form-section--row">
+        <div class="form-group">
+          <label for="cantidad">Cantidad</label>
+          <input type="number" id="cantidad" name="cantidad" min="1" step="1"
+                 class="input input--number"
+                 th:value="${cantidad != null} ? ${cantidad} : 1">
+        </div>
+        <div class="form-group form-group--grow">
+          <label for="observaciones">Observaciones (opcional)</label>
+          <textarea id="observaciones" name="observaciones" rows="2"
+                    class="input input--textarea"
+                    placeholder="Ej: sin pepinillos, con mucho ketchup"
+                    th:text="${observaciones}"></textarea>
+        </div>
+      </fieldset>
 
-      const currencyFormatter = new Intl.NumberFormat('es-UY', {
-        style: 'currency',
-        currency: 'UYU',
-        maximumFractionDigits: 0
-      });
+      <!-- Botón de favoritos -->
+      <div class="favorites-box" style="text-align: right; margin-bottom: 1rem;">
+        <button type="submit"
+                class="btn btn--secondary"
+                form="favBurgerForm"
+                th:formaction="@{/favoritos/agregar}"
+                formmethod="post">
+          ❤️ Agregar a favoritos
+        </button>
+      </div>
 
-      const formatPrice = (value) => {
-        if (!value) {
-          return 'incluido';
-        }
-        return currencyFormatter.format(value);
-      };
+      <!-- Resumen -->
+      <section class="summary-box" aria-live="polite">
+        <h2 class="summary-box__title">Resumen</h2>
+        <ul class="summary-list">
+          <li><strong>Cant. carnes:</strong> <span th:text="${cantCarnesResumen}">—</span></li>
+          <li><strong>Tipo de carne:</strong> <span th:text="${tipoCarneResumen}">—</span></li>
+          <li><strong>Pan:</strong> <span th:text="${tipoPanResumen}">—</span></li>
+          <li><strong>Aderezos:</strong> <span th:text="${aderezosResumen}">—</span></li>
+          <li><strong>Extras:</strong> <span th:text="${extrasResumen}">—</span></li>
+          <li><strong>Cantidad:</strong> <span th:text="${cantidad != null} ? ${cantidad} : 1">1</span></li>
+        </ul>
+        <div class="summary-total">
+          <span class="summary-total__label">Total estimado</span>
+          <span class="summary-total__value" th:text="${totalEstimado}">$ —</span>
+        </div>
+      </section>
 
-      const describeRadio = (name) => {
-        const input = form.querySelector(`input[name="${name}"]:checked`);
-        if (!input) {
-          return { text: '—', price: 0 };
-        }
-        const price = Number(input.dataset.price || 0);
-        const label = input.dataset.label || input.value;
-        return { text: `${label} · ${formatPrice(price)}`, price };
-      };
+      <!-- Acciones -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn--secondary" name="accion" value="actualizar">
+          Actualizar resumen
+        </button>
+        <button type="submit" class="btn btn--primary" name="accion" value="agregar">
+          Agregar al carrito
+        </button>
+        <a class="btn btn--ghost" th:href="@{/carrito}">Ver carrito</a>
+        <a class="btn btn--link" th:href="@{/}">Volver al inicio</a>
+      </div>
+    </form>
+  </section>
+</main>
 
-      const describeMultiple = (name) => {
-        const selected = Array.from(form.querySelectorAll(`input[name="${name}"]:checked`));
-        if (!selected.length) {
-          return { text: '—', price: 0, count: 0 };
-        }
-        let subtotal = 0;
-        let count = 0;
-        const details = selected.map((input) => {
-          const price = Number(input.dataset.price || 0);
-          subtotal += price;
-          count++;
-          const label = input.dataset.label || input.value;
-          return `${label} (${formatPrice(price)})`;
-        });
-        return { text: details.join(', '), price: subtotal, count };
-      };
+<footer class="site-footer">
+  <div class="container footer__inner">
+    <small>&copy; 2025 PizzUM &amp; BurgUM</small>
+    <nav class="footer-nav">
+      <a th:href="@{#}" class="footer__link">Ayuda</a>
+      <a th:href="@{#}" class="footer__link">Términos</a>
+      <a th:href="@{#}" class="footer__link">Privacidad</a>
+    </nav>
+  </div>
+</footer>
 
-      const updateSummary = () => {
-        let perUnitTotal = 0;
-
-        ['cantidad_carnes', 'tipo_carne', 'tipo_pan'].forEach((name) => {
-          const { text, price } = describeRadio(name);
-          if (summaryEls[name]) {
-            summaryEls[name].textContent = text;
-          }
-          perUnitTotal += price;
-        });
-
-        const aderezosInfo = describeMultiple('aderezos');
-        summaryEls.aderezos.textContent = aderezosInfo.text;
-        perUnitTotal += aderezosInfo.price;
-
-        if (sectionTotals.aderezos) {
-          if (aderezosInfo.count === 0) {
-            sectionTotals.aderezos.textContent = 'Sin aderezos · $ 0';
-          } else if (aderezosInfo.count === 1) {
-            sectionTotals.aderezos.textContent =
-                    `1 aderezo · ${currencyFormatter.format(aderezosInfo.price)}`;
-          } else {
-            sectionTotals.aderezos.textContent =
-                    `${aderezosInfo.count} aderezos · ${currencyFormatter.format(aderezosInfo.price)}`;
-          }
-        }
-
-        const extrasInfo = describeMultiple('extras');
-        summaryEls.extras.textContent = extrasInfo.text;
-        perUnitTotal += extrasInfo.price;
-
-        if (sectionTotals.extras) {
-          if (extrasInfo.count === 0) {
-            sectionTotals.extras.textContent = 'Sin extras · $ 0';
-          } else if (extrasInfo.count === 1) {
-            sectionTotals.extras.textContent =
-                    `1 extra · ${currencyFormatter.format(extrasInfo.price)}`;
-          } else {
-            sectionTotals.extras.textContent =
-                    `${extrasInfo.count} extras · ${currencyFormatter.format(extrasInfo.price)}`;
-          }
-        }
-
-        const quantityInput = form.querySelector('input[name="cantidad"]');
-        const quantity = Math.max(1, Number(quantityInput?.value) || 1);
-        if (quantityInput) {
-          quantityInput.value = quantity;
-        }
-        summaryEls.cantidad.textContent = quantity;
-
-        const estimatedTotal = perUnitTotal * quantity;
-        summaryEls.total.textContent =
-                estimatedTotal ? currencyFormatter.format(estimatedTotal) : '$ —';
-      };
-
-      form.addEventListener('input', updateSummary);
-      updateSummary();
-    })();
-  </script>
 </body>
 </html>
