@@ -22,7 +22,7 @@
             </a>
         </div>
 
-        <!-- NAVEGACIÓN CENTRAL (SOLO SI ESTÁ LOGUEADO) -->
+        <!-- NAVEGACIÓN CENTRAL -->
         <nav class="site-nav" th:if="${session.cliente != null}">
             <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
             <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
@@ -33,13 +33,15 @@
         <div class="header-right">
             <!-- INFO DEL USUARIO LOGUEADO -->
             <div th:if="${session.cliente != null}" class="user-info">
-                <span>Hola, <strong th:text="${session.clienteNombre}">Usuario</strong></span>
+                <a th:href="@{/perfil}" class="user-link">
+                    <span>Hola, <strong th:text="${session.clienteNombre}">Usuario</strong></span>
+                </a>
                 <form th:action="@{/logout}" method="post" class="logout-form">
                     <button type="submit" class="btn btn--link">Cerrar Sesión</button>
                 </form>
             </div>
 
-            <!-- BOTONES DE LOGIN SI NO ESTÁ LOGUEADO -->
+            <!-- BOTONES DE LOGIN -->
             <div th:unless="${session.cliente != null}" class="auth-buttons">
                 <a th:href="@{/login}" class="btn btn--primary">Iniciar Sesión</a>
                 <a th:href="@{/register}" class="btn btn--secondary">Registrarse</a>

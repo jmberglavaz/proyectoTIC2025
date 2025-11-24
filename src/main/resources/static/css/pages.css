@@ -8,7 +8,7 @@
     margin-bottom: var(--space-4);
     text-align: center;
   }
-  
+
   /* “Cómo funciona” */
   .how-it-works {
     background: linear-gradient(180deg, transparent, var(--color-muted));
@@ -45,7 +45,7 @@
   @media (min-width: 900px){
     .steps { grid-template-columns: repeat(4, 1fr); }
   }
-  
+
   /* =========================
      Builder (crear-pizza / crear-burger)
      ========================= */
@@ -65,12 +65,12 @@
     gap: var(--space-3);
     justify-content: flex-end;
   }
-  
+
   /* Hints y labels */
   .form-hint {
     margin-bottom: var(--space-3);
   }
-  
+
   /* Resumen de builder */
   .summary-box__title { margin-bottom: var(--space-3); }
   .summary-total__value { letter-spacing: .3px; }
@@ -129,11 +129,11 @@
       text-align: left;
     }
   }
-  
+
   /* Resumen del carrito */
   .cart-summary__title { margin-bottom: var(--space-3); }
   .cart-summary .totals { margin-bottom: var(--space-4); }
-  
+
   /* =========================
      Checkout
      ========================= */
@@ -151,7 +151,7 @@
     }
   }
   .checkbox input { margin-right: .5rem; }
-  
+
   .delivery-note {
     display: grid;
     grid-template-columns: 40px 1fr;
@@ -189,7 +189,7 @@
 .accordion[open] { box-shadow: var(--shadow-sm); }
 
 
-  
+
   /* Stepper */
   .stepper {
     justify-content: center;
@@ -203,7 +203,7 @@
     color: var(--color-border);
     margin-right: .6rem;
   }
-  
+
   /* =========================
      Pedido (confirmación y seguimiento)
      ========================= */
@@ -220,7 +220,7 @@
     display: flex;
     justify-content: flex-end;
   }
-  
+
   /* =========================
      Auth (login / register)
      ========================= */
@@ -236,7 +236,7 @@
   @media (min-width: 768px){
     .form--auth .form-grid { grid-template-columns: repeat(2, 1fr); }
   }
-  
+
   /* =========================
      Footer / detalles finales
      ========================= */
@@ -246,7 +246,7 @@
   .footer__inner .footer__link {
     opacity: .9;
   }
-  
+
   /* =========================
      Ajustes responsivos generales
      ========================= */
@@ -260,4 +260,3 @@
       gap: var(--space-3);
     }
   }
-  
