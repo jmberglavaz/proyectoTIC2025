@@ -75,4 +75,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
             "LEFT JOIN FETCH p.acompanamientos " +
             "WHERE p.id = :pedidoId")
     Optional<Pedido> findByIdWithDetails(@Param("pedidoId") Long pedidoId);
+
+    // Xa historial admin:
+    List<Pedido> findByStatusInAndDateBetween(List<EstadoPedido> estados, LocalDateTime desde, LocalDateTime hasta);
 }
