@@ -39,6 +39,7 @@ public class Pedido {
 
     @Column(name = "STATUS")
     @Builder.Default
+    @Enumerated(EnumType.STRING)
     private EstadoPedido status = EstadoPedido.EN_COLA;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

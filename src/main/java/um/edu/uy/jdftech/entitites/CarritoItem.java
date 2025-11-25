@@ -33,11 +33,11 @@ public class CarritoItem {
     private Integer cantidad;
     
     @Column(name = "precio_unitario", nullable = false)
-    private BigDecimal precioUnitario;
+    private Double precioUnitario;
     
     // Calcular subtotal (cantidad * precio unitario)
-    public BigDecimal calcularSubtotal() {
-        return precioUnitario.multiply(BigDecimal.valueOf(cantidad));
+    public Double calcularSubtotal() {
+        return precioUnitario * cantidad;
     }
     
     // Actualizar cantidad

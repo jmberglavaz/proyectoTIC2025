@@ -39,86 +39,75 @@
         <p class="form-hint">Filtrá pedidos por diferentes criterios para gestionarlos.</p>
     </section>
 
+    <!-- Filtros avanzados -->
     <section class="container section">
-        <form class="form-section form-section--row" method="get" th:action="@{/admin/pedidos}">
-            <div class="form-group">
-                <label for="f_numero">Nº de pedido</label>
-                <input class="input" id="f_numero" name="numero" type="text" placeholder="Ej: 123" th:value="${param.numero}">
+        <form class="form-section" method="get" th:action="@{/admin/pedidos}">
+            <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4);">
+                <!-- Filtro por número de pedido -->
+                <div class="form-group">
+                    <label for="f_numero">Nº de pedido</label>
+                    <input class="input" id="f_numero" name="numero" type="text"
+                           placeholder="Ej: 123" th:value="${filtros != null ? filtros.numero : param.numero}">
+                </div>
+
+                <!-- Filtro por ID de cliente -->
+                <div class="form-group">
+                    <label for="f_cliente">ID Cliente</label>
+                    <input class="input" id="f_cliente" name="clienteId" type="text"
+                           placeholder="Ej: 123" th:value="${filtros != null ? filtros.clienteId : param.clienteId}">
+                </div>
+
+                <!-- Filtro por estado -->
+                <div class="form-group">
+                    <label for="f_estado">Estado</label>
+                    <select class="input" id="f_estado" name="estado">
+                        <option value="">Todos los estados</option>
+                        <option value="EN_COLA"
+                                th:selected="${(filtros != null ? filtros.estado : param.estado) == 'EN_COLA'}">En cola</option>
+                        <option value="EN_PREPARACION"
+                                th:selected="${(filtros != null ? filtros.estado : param.estado) == 'EN_PREPARACION'}">En preparación</option>
+                        <option value="EN_CAMINO"
+                                th:selected="${(filtros != null ? filtros.estado : param.estado) == 'EN_CAMINO'}">En camino</option>
+                        <option value="ENTREGADO"
+                                th:selected="${(filtros != null ? filtros.estado : param.estado) == 'ENTREGADO'}">Entregado</option>
+                    </select>
+                </div>
+
+                <!-- Filtro por tipo (activo/inactivo) -->
+                <div class="form-group">
+                    <label for="f_tipo">Tipo</label>
+                    <select class="input" id="f_tipo" name="tipo">
+                        <option value="">Todos los pedidos</option>
+                        <option value="activo"
+                                th:selected="${(filtros != null ? filtros.tipo : param.tipo) == 'activo'}">Solo activos</option>
+                        <option value="inactivo"
+                                th:selected="${(filtros != null ? filtros.tipo : param.tipo) == 'inactivo'}">Solo entregados</option>
+                    </select>
+                </div>
+
+                <!-- Filtro por fecha desde -->
+                <div class="form-group">
+                    <label for="f_desde">Desde fecha</label>
+                    <input class="input" id="f_desde" name="desde" type="date"
+                           th:value="${filtros != null ? filtros.desde : param.desde}"
+                           pattern="\d{4}-\d{2}-\d{2}">
+                </div>
+
+                <!-- Filtro por fecha hasta -->
+                <div class="form-group">
+                    <label for="f_hasta">Hasta fecha</label>
+                    <input class="input" id="f_hasta" name="hasta" type="date"
+                           th:value="${filtros != null ? filtros.hasta : param.hasta}"
+                           pattern="\d{4}-\d{2}-\d{2}">
+                </div>
             </div>
+
             <div class="form-actions">
                 <button class="btn btn--primary" type="submit">Buscar</button>
-                <a class="btn btn--ghost" th:href="@{/admin/pedidos}">Limpiar</a>
+                <a class="btn btn--ghost" th:href="@{/admin/pedidos}">Limpiar filtros</a>
             </div>
         </form>
     </section>
-
-<!--    &lt;!&ndash; Filtros avanzados &ndash;&gt;-->
-<!--    <section class="container section">-->
-<!--        <form class="form-section" method="get" th:action="@{/admin/pedidos}">-->
-<!--            <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(&#45;&#45;space-4);">-->
-<!--                &lt;!&ndash; Filtro por número de pedido &ndash;&gt;-->
-<!--                <div class="form-group">-->
-<!--                    <label for="f_numero">Nº de pedido</label>-->
-<!--                    <input class="input" id="f_numero" name="numero" type="text"-->
-<!--                           placeholder="Ej: 123" th:value="${filtros != null ? filtros.numero : param.numero}">-->
-<!--                </div>-->
-
-<!--                &lt;!&ndash; Filtro por ID de cliente &ndash;&gt;-->
-<!--                <div class="form-group">-->
-<!--                    <label for="f_cliente">ID Cliente</label>-->
-<!--                    <input class="input" id="f_cliente" name="clienteId" type="text"-->
-<!--                           placeholder="Ej: 123" th:value="${filtros != null ? filtros.clienteId : param.clienteId}">-->
-<!--                </div>-->
-
-<!--                &lt;!&ndash; Filtro por estado &ndash;&gt;-->
-<!--                <div class="form-group">-->
-<!--                    <label for="f_estado">Estado</label>-->
-<!--                    <select class="input" id="f_estado" name="estado">-->
-<!--                        <option value="">Todos los estados</option>-->
-<!--                        <option value="EN_COLA"-->
-<!--                                th:selected="${(filtros != null ? filtros.estado : param.estado) == 'EN_COLA'}">En cola</option>-->
-<!--                        <option value="EN_PREPARACION"-->
-<!--                                th:selected="${(filtros != null ? filtros.estado : param.estado) == 'EN_PREPARACION'}">En preparación</option>-->
-<!--                        <option value="EN_CAMINO"-->
-<!--                                th:selected="${(filtros != null ? filtros.estado : param.estado) == 'EN_CAMINO'}">En camino</option>-->
-<!--                        <option value="ENTREGADO"-->
-<!--                                th:selected="${(filtros != null ? filtros.estado : param.estado) == 'ENTREGADO'}">Entregado</option>-->
-<!--                    </select>-->
-<!--                </div>-->
-
-<!--                &lt;!&ndash; Filtro por tipo (activo/inactivo) &ndash;&gt;-->
-<!--                <div class="form-group">-->
-<!--                    <label for="f_tipo">Tipo</label>-->
-<!--                    <select class="input" id="f_tipo" name="tipo">-->
-<!--                        <option value="">Todos los pedidos</option>-->
-<!--                        <option value="activo"-->
-<!--                                th:selected="${(filtros != null ? filtros.tipo : param.tipo) == 'activo'}">Solo activos</option>-->
-<!--                        <option value="inactivo"-->
-<!--                                th:selected="${(filtros != null ? filtros.tipo : param.tipo) == 'inactivo'}">Solo entregados</option>-->
-<!--                    </select>-->
-<!--                </div>-->
-
-<!--                &lt;!&ndash; Filtro por fecha desde &ndash;&gt;-->
-<!--                <div class="form-group">-->
-<!--                    <label for="f_desde">Desde fecha</label>-->
-<!--                    <input class="input" id="f_desde" name="desde" type="date"-->
-<!--                           th:value="${filtros != null ? filtros.desde : param.desde}">-->
-<!--                </div>-->
-
-<!--                &lt;!&ndash; Filtro por fecha hasta &ndash;&gt;-->
-<!--                <div class="form-group">-->
-<!--                    <label for="f_hasta">Hasta fecha</label>-->
-<!--                    <input class="input" id="f_hasta" name="hasta" type="date"-->
-<!--                           th:value="${filtros != null ? filtros.hasta : param.hasta}">-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <div class="form-actions">-->
-<!--                <button class="btn btn&#45;&#45;primary" type="submit">Buscar</button>-->
-<!--                <a class="btn btn&#45;&#45;ghost" th:href="@{/admin/pedidos}">Limpiar filtros</a>-->
-<!--            </div>-->
-<!--        </form>-->
-<!--    </section>-->
 
     <!-- Lista de pedidos -->
     <section class="container section">
@@ -147,41 +136,46 @@
                      style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);padding:var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-top:var(--space-4);">
 
                 <div style="display:grid;gap:.35rem;">
-                    <h3 style="margin:0;">Pedido #<span th:text="${#strings.format('%06d', pedido.id)}">000000</span></h3>
+                    <h3 style="margin:0;">Pedido #<span th:text="${'#' + pedido.id}">#000000</span></h3>
                     <small>
                         Creado: <span th:text="${#temporals.format(pedido.date, 'dd/MM/yyyy HH:mm')}">fecha</span> —
                         Cliente: <span th:text="${pedido.client.firstName + ' ' + pedido.client.lastName}">Cliente</span> —
                         ID: <span th:text="${pedido.client.id}">id</span>
                     </small>
-                    <small>Domicilio: <span th:text="${pedido.address}">dirección</span></small>
+                    <small>Domicilio: <span th:text="${pedido.direccion.address}">dirección</span></small>
 
                     <div class="summary-list">
                         <div><strong>Items:</strong>
                             <span th:each="pizza : ${pedido.pizzas}">
-                  Pizza <span th:text="${pizza.nombre}">nombre</span> ·
-                </span>
+                                Pizza <span th:text="${pizza.tamanio}">tamaño</span>
+                                <span th:each="pt : ${pizza.pizzaToppings}">
+                                    • <span th:text="${pt.topping.nombre}">topping</span>
+                                </span> ·
+                            </span>
                             <span th:each="hamburguesa : ${pedido.hamburguesas}">
-                  Hamburguesa <span th:text="${hamburguesa.nombre}">nombre</span> ·
-                </span>
-                            <span th:each="acompanamiento : ${pedido.acompanamientos}">
-                  <span th:text="${acompanamiento.name}">acompañamiento</span> ·
-                </span>
+                                Hamburguesa <span th:text="${hamburguesa.cant_de_carnes}">carnes</span> carnes
+                                <span th:each="ht : ${hamburguesa.hamburguesaToppings}">
+                                    • <span th:text="${ht.topping.nombre}">topping</span>
+                                </span>
+                                <span th:each="ha : ${hamburguesa.hamburguesaAderezos}">
+                                    • <span th:text="${ha.aderezo.nombre}">aderezo</span>
+                                </span> ·
+                            </span>
                             <span th:each="bebida : ${pedido.bebidas}">
-                  <span th:text="${bebida.name}">bebida</span>
-                </span>
+                                <span th:text="${bebida.name}">bebida</span> ·
+                            </span>
+                            <span th:each="acompanamiento : ${pedido.acompanamientos}">
+                                <span th:text="${acompanamiento.name}">acompañamiento</span> ·
+                            </span>
                             <span th:if="${pedido.pizzas.isEmpty() and pedido.hamburguesas.isEmpty() and pedido.acompanamientos.isEmpty() and pedido.bebidas.isEmpty()}">
-                  Sin items
-                </span>
+                                Sin items
+                            </span>
                         </div>
                     </div>
 
                     <div><strong>Total:</strong> $<span th:text="${#numbers.formatDecimal(pedido.totalCost, 1, 2)}">0.00</span></div>
                     <div><strong>Estado actual:</strong>
-                        <span class="badge"
-                              th:classappend="${pedido.status?.name() == 'EN_COLA'} ? '' :
-                                   ${pedido.status?.name() == 'EN_PREPARACION'} ? 'badge--accent' :
-                                   ${pedido.status?.name() == 'EN_CAMINO'} ? 'badge--primary' : 'badge--success'"
-                              th:text="${pedido.status?.name()?.replace('_', ' ')}">Estado</span>
+                        <span class="badge" th:text="${pedido.status?.displayName}">Estado</span>
                     </div>
                 </div>
 
@@ -191,19 +185,19 @@
                         <h4 style="margin-bottom:var(--space-3);">Cambiar estado</h4>
                         <div class="form-group">
                             <label class="option">
-                                <input type="radio" name="estado" value="en_cola" th:checked="${pedido.status?.name() == 'EN_COLA'}">
+                                <input type="radio" name="estado" value="EN_COLA" th:checked="${pedido.status?.name() == 'EN_COLA'}">
                                 <span class="option__label">En cola</span>
                             </label>
                             <label class="option">
-                                <input type="radio" name="estado" value="en_preparacion" th:checked="${pedido.status?.name() == 'EN_PREPARACION'}">
+                                <input type="radio" name="estado" value="EN_PREPARACION" th:checked="${pedido.status?.name() == 'EN_PREPARACION'}">
                                 <span class="option__label">En preparación</span>
                             </label>
                             <label class="option">
-                                <input type="radio" name="estado" value="en_camino" th:checked="${pedido.status?.name() == 'EN_CAMINO'}">
+                                <input type="radio" name="estado" value="EN_CAMINO" th:checked="${pedido.status?.name() == 'EN_CAMINO'}">
                                 <span class="option__label">En camino</span>
                             </label>
                             <label class="option">
-                                <input type="radio" name="estado" value="entregado" th:checked="${pedido.status?.name() == 'ENTREGADO'}">
+                                <input type="radio" name="estado" value="ENTREGADO" th:checked="${pedido.status?.name() == 'ENTREGADO'}">
                                 <span class="option__label">Entregado</span>
                             </label>
                         </div>

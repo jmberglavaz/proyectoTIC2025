@@ -51,7 +51,7 @@ public class PedidoController {
     public String verPedido(@PathVariable Long pedidoId,
                             HttpSession session,
                             Model model) {
-        Pedido pedido = pedidoService.obtenerPedidoPorId(pedidoId);
+        Pedido pedido = pedidoService.obtenerPedidoConDetalles(pedidoId);
 
         // Verificar que el pedido pertenezca al cliente actual
         Cliente cliente = obtenerClienteActual(session);
@@ -62,25 +62,27 @@ public class PedidoController {
         model.addAttribute("pedido", pedido);
         model.addAttribute("cliente", cliente);
         model.addAttribute("page", "pedido");
-        
+
         // Estados para el timeline
         model.addAttribute("enCola", pedido.getStatus() == EstadoPedido.EN_COLA);
         model.addAttribute("enPreparacion", pedido.getStatus() == EstadoPedido.EN_PREPARACION);
         model.addAttribute("enCamino", pedido.getStatus() == EstadoPedido.EN_CAMINO);
         model.addAttribute("entregado", pedido.getStatus() == EstadoPedido.ENTREGADO);
-        
+
         return "user/pedido";
     }
 
-    // POST: Cancelar pedido (lo borra de la BD)
     @PostMapping("/{pedidoId}/cancelar")
     public String cancelarPedido(@PathVariable Long pedidoId,
                                  HttpSession session,
                                  RedirectAttributes ra) {
         try {
+            System.out.println("=== INTENTANDO CANCELAR PEDIDO " + pedidoId + " ===");
+
             Pedido pedido = pedidoService.obtenerPedidoPorId(pedidoId);
-            
-            // Verificar que el pedido pertenezca al cliente actual
+            System.out.println("Estado actual del pedido: " + pedido.getStatus());
+            System.out.println("¿Está en cola? " + (pedido.getStatus() == EstadoPedido.EN_COLA));
+
             Cliente cliente = obtenerClienteActual(session);
             if (!pedido.getClient().getId().equals(cliente.getId())) {
                 ra.addFlashAttribute("error", "No autorizado");
@@ -88,14 +90,20 @@ public class PedidoController {
             }
 
             pedidoService.cancelarPedido(pedidoId);
+
+            // Verificar que se canceló
+            Pedido pedidoCancelado = pedidoService.obtenerPedidoPorId(pedidoId);
+            System.out.println("Estado después de cancelar: " + pedidoCancelado.getStatus());
+
             ra.addFlashAttribute("msg", "Pedido cancelado exitosamente");
-            return "redirect:/"; // Va al home después de cancelar
-            
+            return "redirect:/pedido/" + pedidoId;
         } catch (RuntimeException e) {
+            System.out.println("ERROR al cancelar: " + e.getMessage());
             ra.addFlashAttribute("error", e.getMessage());
             return "redirect:/pedido/" + pedidoId;
         }
     }
+
 
     // POST: Cambiar estado del pedido (solo para testing/admin)
     @PostMapping("/{pedidoId}/cambiar-estado")
@@ -112,5 +120,11 @@ public class PedidoController {
             ra.addFlashAttribute("error", e.getMessage());
             return "redirect:/pedido/" + pedidoId;
         }
+    }
+
+    @PostMapping("/{pedidoId}/actualizar")
+    public String actualizarPedido(@PathVariable Long pedidoId, HttpSession session) {
+        // Esto fuerza una recarga desde la BD con todas las relaciones
+        return "redirect:/pedido/" + pedidoId;
     }
 }

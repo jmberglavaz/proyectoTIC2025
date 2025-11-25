@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import um.edu.uy.jdftech.dto.*;
 import um.edu.uy.jdftech.entitites.*;
 import um.edu.uy.jdftech.enums.EstadoPedido;
+import um.edu.uy.jdftech.repositories.PedidoRepository;
 import um.edu.uy.jdftech.services.*;
 
 import java.sql.Date;
@@ -46,6 +47,9 @@ public class AdminPagesController {
 
     @Autowired
     private OrganismosPublicosService organismosPublicosService;
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
 
     /**
      * Verificar que el usuario esté autenticado como administrador
@@ -117,16 +121,32 @@ public class AdminPagesController {
         if (redireccion != null) return redireccion;
 
         try {
-            List<Pedido> pedidos = pedidoService.findWithFilters(numero, clienteId, estado, tipo, desde, hasta);
+            // TEMPORAL: Mostrar todos los pedidos sin filtros
+            List<Pedido> pedidos = pedidoRepository.findAll();
+
+            // O si quieres los últimos 10:
+            // List<Pedido> pedidos = pedidoService.findLast10Orders();
+
+            System.out.println("DEBUG - Encontrados " + (pedidos != null ? pedidos.size() : 0) + " pedidos");
+
+            if (pedidos != null) {
+                for (Pedido pedido : pedidos) {
+                    System.out.println("DEBUG - Pedido #" + pedido.getId() + " - Estado: " + pedido.getStatus());
+                    // Cargar relaciones para cada pedido
+                    pedidoService.obtenerPedidoConDetalles(pedido.getId());
+                }
+            }
+
             model.addAttribute("pedidos", pedidos != null ? pedidos : Collections.emptyList());
 
         } catch (Exception e) {
+            System.out.println("ERROR en pedidos admin: " + e.getMessage());
+            e.printStackTrace();
             model.addAttribute("pedidos", Collections.emptyList());
-            // Mensaje amigable en lugar del error técnico
-            model.addAttribute("error", "Los filtros aplicados no son válidos. Por favor, verifica los valores.");
+            model.addAttribute("error", "Error al cargar pedidos: " + e.getMessage());
         }
 
-        // Mantener los parámetros en el modelo para que los filtros se mantengan
+        // Mantener los parámetros en el modelo
         model.addAttribute("filtros", Map.of(
                 "numero", numero != null ? numero : "",
                 "clienteId", clienteId != null ? clienteId : "",
@@ -467,12 +487,12 @@ public class AdminPagesController {
         if (redireccion != null) return redireccion;
 
         try {
-            // Convertir el string del formulario al enum
-            EstadoPedido nuevoEstado = switch(estado) {
-                case "en_cola" -> EstadoPedido.EN_COLA;
-                case "en_preparacion" -> EstadoPedido.EN_PREPARACION;
-                case "en_camino" -> EstadoPedido.EN_CAMINO;
-                case "entregado" -> EstadoPedido.ENTREGADO;
+            // Convertir el string del formulario al enum (aceptar tanto mayúsculas como minúsculas)
+            EstadoPedido nuevoEstado = switch(estado.toUpperCase()) {
+                case "EN_COLA" -> EstadoPedido.EN_COLA;
+                case "EN_PREPARACION" -> EstadoPedido.EN_PREPARACION;
+                case "EN_CAMINO" -> EstadoPedido.EN_CAMINO;
+                case "ENTREGADO" -> EstadoPedido.ENTREGADO;
                 default -> throw new IllegalArgumentException("Estado inválido: " + estado);
             };
 
@@ -480,7 +500,7 @@ public class AdminPagesController {
 
             ra.addFlashAttribute("msg",
                     "Pedido #" + String.format("%06d", pedido_id) +
-                            " actualizado a: " + estado.replace("_", " "));
+                            " actualizado a: " + nuevoEstado.getDisplayName());
 
         } catch (Exception e) {
             ra.addFlashAttribute("error",
@@ -625,5 +645,25 @@ public class AdminPagesController {
 
         ra.addFlashAttribute("msg", "Sesión de administrador cerrada correctamente.");
         return "redirect:/admin/login";
+    }
+
+    // TEMPORAL - Para debug
+    @GetMapping("/pedidos/debug")
+    public String pedidosDebug(HttpSession session, Model model) {
+        System.out.println("=== DEBUG PEDIDOS ADMIN ===");
+
+        // Mostrar todos los pedidos en la base de datos
+        List<Pedido> todosLosPedidos = pedidoRepository.findAll();
+        System.out.println("Total pedidos en BD: " + todosLosPedidos.size());
+
+        for (Pedido p : todosLosPedidos) {
+            System.out.println("Pedido #" + p.getId() +
+                    " - Cliente: " + p.getClient().getId() +
+                    " - Estado: " + p.getStatus() +
+                    " - Fecha: " + p.getDate());
+        }
+
+        model.addAttribute("pedidos", todosLosPedidos);
+        return "admin/pedidos-admin";
     }
 }

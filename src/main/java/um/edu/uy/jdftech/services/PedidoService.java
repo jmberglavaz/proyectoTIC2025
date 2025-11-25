@@ -8,10 +8,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import um.edu.uy.jdftech.dto.TicketDGIDTO;
-import um.edu.uy.jdftech.entitites.Acompanamiento;
-import um.edu.uy.jdftech.entitites.Bebida;
-import um.edu.uy.jdftech.entitites.Cliente;
-import um.edu.uy.jdftech.entitites.Pedido;
+import um.edu.uy.jdftech.entitites.*;
+import um.edu.uy.jdftech.entitites.tablasIntermedias.HamburguesaAderezo;
+import um.edu.uy.jdftech.entitites.tablasIntermedias.HamburguesaTopping;
+import um.edu.uy.jdftech.entitites.tablasIntermedias.PizzaTopping;
 import um.edu.uy.jdftech.enums.EstadoPedido;
 import um.edu.uy.jdftech.repositories.AcompanamientoRepository;
 import um.edu.uy.jdftech.repositories.BebidaRepository;
@@ -112,16 +112,17 @@ public class PedidoService {
     }
 
     // Cancelar pedido (solo si está EN_COLA)
-    public void cancelarPedido(Long pedidoId) {
+    public Pedido cancelarPedido(Long pedidoId) {
         Pedido pedido = obtenerPedidoPorId(pedidoId);
 
         if (pedido.getStatus() != EstadoPedido.EN_COLA) {
-            throw new RuntimeException("Solo se pueden cancelar pedidos en estado EN_COLA");
+            throw new RuntimeException("Solo se pueden cancelar pedidos en cola");
         }
 
-        // Eliminar el pedido
-        pedidoRepository.delete(pedido);
+        pedido.setStatus(EstadoPedido.CANCELADO);
+        return pedidoRepository.save(pedido);
     }
+
 
     public List<Pedido> findPedidosActivos() {
         try {
@@ -146,6 +147,9 @@ public class PedidoService {
 
     public List<Pedido> findWithFilters(String numero, String clienteId, String estado,
                                         String tipo, String desde, String hasta) {
+        System.out.println("=== FIND WITH FILTERS ===");
+        System.out.println("numero: " + numero + ", clienteId: " + clienteId + ", estado: " + estado);
+
         try {
             // Convertir parámetros
             Long numeroLong = null;
@@ -314,6 +318,62 @@ public class PedidoService {
                 .stream()
                 .limit(limite)
                 .collect(Collectors.toList());
+    }
+
+    public Pedido obtenerPedidoConDetalles(Long pedidoId) {
+        Pedido pedido = pedidoRepository.findByIdWithDetails(pedidoId)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));
+
+        // Forzar carga de TODAS las relaciones LAZY
+        if (pedido.getPizzas() != null) {
+            pedido.getPizzas().size(); // Fuerza carga de pizzas
+
+            for (Pizza pizza : pedido.getPizzas()) {
+                if (pizza.getPizzaToppings() != null) {
+                    pizza.getPizzaToppings().size(); // Fuerza carga de toppings de pizza
+                    for (PizzaTopping pt : pizza.getPizzaToppings()) {
+                        if (pt.getTopping() != null) {
+                            pt.getTopping().getNombre(); // Fuerza carga del topping
+                        }
+                    }
+                }
+            }
+        }
+
+        if (pedido.getHamburguesas() != null) {
+            pedido.getHamburguesas().size(); // Fuerza carga de hamburguesas
+
+            for (Hamburguesa hamburguesa : pedido.getHamburguesas()) {
+                if (hamburguesa.getHamburguesaToppings() != null) {
+                    hamburguesa.getHamburguesaToppings().size(); // Fuerza carga de toppings
+                    for (HamburguesaTopping ht : hamburguesa.getHamburguesaToppings()) {
+                        if (ht.getTopping() != null) {
+                            ht.getTopping().getNombre(); // Fuerza carga del topping
+                        }
+                    }
+                }
+
+                if (hamburguesa.getHamburguesaAderezos() != null) {
+                    hamburguesa.getHamburguesaAderezos().size(); // Fuerza carga de aderezos
+                    for (HamburguesaAderezo ha : hamburguesa.getHamburguesaAderezos()) {
+                        if (ha.getAderezo() != null) {
+                            ha.getAderezo().getNombre(); // Fuerza carga del aderezo
+                        }
+                    }
+                }
+            }
+        }
+
+        // Fuerza carga de bebidas y acompañamientos
+        if (pedido.getBebidas() != null) {
+            pedido.getBebidas().size();
+        }
+
+        if (pedido.getAcompanamientos() != null) {
+            pedido.getAcompanamientos().size();
+        }
+
+        return pedido;
     }
 
 }

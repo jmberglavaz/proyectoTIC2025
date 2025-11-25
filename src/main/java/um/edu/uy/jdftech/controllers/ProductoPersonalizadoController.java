@@ -1,21 +1,21 @@
 package um.edu.uy.jdftech.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import um.edu.uy.jdftech.dto.CarritoItem;
+import um.edu.uy.jdftech.dto.CarritoItemDTO;
 import um.edu.uy.jdftech.entitites.Aderezo;
+import um.edu.uy.jdftech.entitites.Cliente;
 import um.edu.uy.jdftech.entitites.Topping;
 import um.edu.uy.jdftech.services.AderezoService;
 import um.edu.uy.jdftech.services.CarritoService;
 import um.edu.uy.jdftech.services.ToppingService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class ProductoPersonalizadoController {
@@ -37,7 +37,14 @@ public class ProductoPersonalizadoController {
     // ============================================================
 
     @GetMapping("/crear-pizza")
-    public String mostrarPizza(Model model) {
+    public String mostrarPizza(HttpSession session, Model model, RedirectAttributes ra) {
+        // ⭐ Verificar si hay cliente logueado
+        Cliente cliente = (Cliente) session.getAttribute("cliente");
+        if (cliente == null) {
+            ra.addFlashAttribute("error", "Debés iniciar sesión para crear una pizza");
+            return "redirect:/login";
+        }
+
         model.addAttribute("page", "pizza");
         cargarOpcionesPizza(model);
         inicializarModeloPizza(model);
@@ -54,7 +61,14 @@ public class ProductoPersonalizadoController {
                              @RequestParam(required = false) String observaciones,
                              @RequestParam(value = "accion", required = false) String accion,
                              Model model,
+                             HttpSession session,
                              RedirectAttributes redirectAttributes) {
+        // ⭐ Verificar si hay cliente logueado
+        Cliente cliente = (Cliente) session.getAttribute("cliente");
+        if (cliente == null) {
+            redirectAttributes.addFlashAttribute("error", "Debés iniciar sesión para crear una pizza");
+            return "redirect:/login";
+        }
 
         List<Long> toppingsIdsSeguros = toppingsIds != null ? toppingsIds : Collections.emptyList();
 
@@ -128,15 +142,27 @@ public class ProductoPersonalizadoController {
         model.addAttribute("totalEstimado", "$ " + totalFinal);
 
         if ("agregar".equals(accion)) {
+            // ⭐ CREAR CONFIGURACIÓN ESTRUCTURADA
+            Map<String, Object> configuracion = new HashMap<>();
+            configuracion.put("tamanio", tamanio);
+            configuracion.put("masaId", masaId);
+            configuracion.put("salsaId", salsaId);
+            configuracion.put("quesoId", quesoId);
+            configuracion.put("toppingsIds", toppingsIdsSeguros);
+
             String descripcion = construirDescripcionPizza(
                     tamanio, masa, salsa, queso, toppingsSeleccionados, observaciones);
-            carritoService.addItem(new CarritoItem(
+
+            // ⭐ USAR NUEVO CONSTRUCTOR CON CONFIGURACIÓN
+            carritoService.addItem(new CarritoItemDTO(
                     "pizza",
                     "Pizza personalizada",
                     descripcion,
                     cantidadFinal,
-                    precioUnitario
+                    precioUnitario,
+                    configuracion  // ⭐ NUEVO PARÁMETRO
             ));
+
             redirectAttributes.addFlashAttribute("mensaje", "Tu pizza fue agregada al carrito");
             return "redirect:/carrito";
         }
@@ -218,7 +244,14 @@ public class ProductoPersonalizadoController {
     // ============================================================
 
     @GetMapping("/crear-burger")
-    public String mostrarBurger(Model model) {
+    public String mostrarBurger(HttpSession session, Model model, RedirectAttributes ra) {
+        // ⭐ Verificar si hay cliente logueado
+        Cliente cliente = (Cliente) session.getAttribute("cliente");
+        if (cliente == null) {
+            ra.addFlashAttribute("error", "Debés iniciar sesión para crear una hamburguesa");
+            return "redirect:/login";
+        }
+
         model.addAttribute("page", "burger");
         cargarOpcionesBurger(model);
         inicializarModeloBurger(model);
@@ -235,7 +268,14 @@ public class ProductoPersonalizadoController {
                               @RequestParam(required = false) String observaciones,
                               @RequestParam(value = "accion", required = false) String accion,
                               Model model,
+                              HttpSession session,
                               RedirectAttributes redirectAttributes) {
+        // ⭐ Verificar si hay cliente logueado
+        Cliente cliente = (Cliente) session.getAttribute("cliente");
+        if (cliente == null) {
+            redirectAttributes.addFlashAttribute("error", "Debés iniciar sesión para crear una hamburguesa");
+            return "redirect:/login";
+        }
 
         List<Long> aderezosIdsSeguros = aderezosIds != null ? aderezosIds : Collections.emptyList();
         List<Long> extrasIdsSeguros = extrasIds != null ? extrasIds : Collections.emptyList();
@@ -333,15 +373,27 @@ public class ProductoPersonalizadoController {
         model.addAttribute("totalEstimado", "$ " + totalFinal);
 
         if ("agregar".equals(accion)) {
+            // ⭐ CREAR CONFIGURACIÓN ESTRUCTURADA
+            Map<String, Object> configuracion = new HashMap<>();
+            configuracion.put("cantidadCarnes", cantidadCarnes);
+            configuracion.put("carneId", carneId);
+            configuracion.put("panId", panId);
+            configuracion.put("aderezosIds", aderezosIdsSeguros);
+            configuracion.put("extrasIds", extrasIdsSeguros);
+
             String descripcion = construirDescripcionHamburguesa(
                     cantidadCarnes, carne, pan, aderezosSeleccionados, extrasSeleccionados, observaciones);
-            carritoService.addItem(new CarritoItem(
+
+            // ⭐ USAR NUEVO CONSTRUCTOR CON CONFIGURACIÓN
+            carritoService.addItem(new CarritoItemDTO(
                     "burger",
                     "Hamburguesa personalizada",
                     descripcion,
                     cantidadFinal,
-                    precioUnitario
+                    precioUnitario,
+                    configuracion  // ⭐ NUEVO PARÁMETRO
             ));
+
             redirectAttributes.addFlashAttribute("mensaje", "Tu hamburguesa fue agregada al carrito");
             return "redirect:/carrito";
         }
