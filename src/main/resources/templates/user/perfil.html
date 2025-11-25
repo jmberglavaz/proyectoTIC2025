@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mi Perfil - PizzUM & BurgUM</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/pages.css}">
+</head>
+<body class="theme-italian">
+<header class="site-header">
+    <div class="container header__inner">
+        <div class="header-left">
+            <a class="brand" th:href="@{/}">
+                <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+                <span class="brand__name">PizzUM &amp; BurgUM</span>
+            </a>
+        </div>
+        <nav class="site-nav">
+            <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
+            <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
+            <a class="nav__link" th:href="@{/carrito}">Carrito</a>
+            <a class="nav__link" th:href="@{/pedido}">Pedidos</a>
+        </nav>
+        <div class="header-right">
+            <div class="user-info">
+                <a th:href="@{/perfil}" class="user-link" style="text-decoration: none; color: inherit;">
+                    <span>Hola, <strong th:text="${session.clienteNombre}">Usuario</strong></span>
+                </a>
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="btn btn--link">Cerrar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <div class="profile-container">
+        <h1 class="page-title">Mi Perfil</h1>
+
+        <!-- Información Personal -->
+        <section class="profile-section">
+            <h2 class="section-title">Información Personal</h2>
+            <div class="user-info-grid">
+                <div class="info-item">
+                    <label>Nombre:</label>
+                    <span th:text="${cliente.firstName}"></span>
+                </div>
+                <div class="info-item">
+                    <label>Apellido:</label>
+                    <span th:text="${cliente.lastName}"></span>
+                </div>
+                <div class="info-item">
+                    <label>Fecha de Nacimiento:</label>
+                    <span th:text="${#temporals.format(cliente.birthDate, 'dd/MM/yyyy')}"></span>
+                </div>
+                <div class="info-item">
+                    <label>Email:</label>
+                    <span th:text="${cliente.email}"></span>
+                </div>
+                <div class="info-item">
+                    <label>Cédula:</label>
+                    <span th:text="${cliente.id}"></span>
+                </div>
+                <div class="info-item">
+                    <label>Teléfono:</label>
+                    <span th:text="${cliente.phoneNumber}"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cambiar Contraseña -->
+        <section class="profile-section">
+            <h2 class="section-title">Cambiar Contraseña</h2>
+            <form th:action="@{/perfil/cambiar-password}" method="post" class="password-form">
+                <div class="form-group">
+                    <label for="nuevaPassword">Nueva Contraseña:</label>
+                    <input type="password" id="nuevaPassword" name="nuevaPassword"
+                           class="form-input" required placeholder="Ingresa nueva contraseña">
+                </div>
+                <button type="submit" class="btn btn--primary">Actualizar Contraseña</button>
+            </form>
+        </section>
+
+        <!-- Direcciones -->
+        <section class="profile-section">
+            <div class="section-header">
+                <h2 class="section-title">Mis Direcciones</h2>
+            </div>
+
+            <!-- Agregar Nueva Dirección -->
+            <div class="add-address-card">
+                <h3>Agregar Nueva Dirección</h3>
+                <form th:action="@{/perfil/direcciones}" method="post" th:object="${nuevaDireccion}">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="alias">Alias (ej: Casa, Trabajo):</label>
+                            <input type="text" id="alias" th:field="*{alias}"
+                                   class="form-input" required placeholder="Casa">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Dirección Completa:</label>
+                            <input type="text" id="address" th:field="*{address}"
+                                   class="form-input" required placeholder="Calle, número, ciudad">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="indications">Indicaciones Adicionales:</label>
+                            <textarea id="indications" th:field="*{indications}"
+                                      class="form-input" rows="3"
+                                      placeholder="Instrucciones para el delivery"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn--primary">Agregar Dirección</button>
+                </form>
+            </div>
+
+            <!-- Lista de Direcciones Existentes -->
+            <div class="addresses-list">
+                <div th:each="direccion : ${direcciones}" class="address-card">
+                    <div class="address-header">
+                        <h3 class="address-alias" th:text="${direccion.alias}"></h3>
+                        <div class="address-badges">
+                            <span th:if="${direccion.defect}" class="badge badge--primary">Predeterminada</span>
+                        </div>
+                    </div>
+                    <p class="address-text" th:text="${direccion.address}"></p>
+                    <p th:if="${direccion.indications}" class="address-indications"
+                       th:text="${direccion.indications}"></p>
+
+                    <div class="address-actions">
+                        <form th:action="@{/perfil/direcciones/{id}/default(id=${direccion.id})}"
+                              method="post" class="action-form">
+                            <button type="submit" class="btn btn--outline"
+                                    th:disabled="${direccion.defect}">
+                                <span th:if="${!direccion.defect}">Establecer como Predeterminada</span>
+                                <span th:if="${direccion.defect}">Ya es Predeterminada</span>
+                            </button>
+                        </form>
+
+                        <form th:action="@{/perfil/direcciones/{id}/delete(id=${direccion.id})}"
+                              method="post" class="action-form"
+                              th:if="${!direccion.defect or direcciones.size() > 1}">
+                            <button type="submit" class="btn btn--danger"
+                                    onclick="return confirm('¿Estás seguro de que quieres eliminar esta dirección?')">
+                                Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(direcciones)}" class="empty-state">
+                    <p>No tienes direcciones registradas. Agrega una para empezar.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer__inner">
+        <small>&copy; 2025 PizzUM &amp; BurgUM</small>
+        <nav class="footer-nav">
+            <a th:href="@{/ayuda}" class="footer__link">Ayuda</a>
+            <a th:href="@{/terminos}" class="footer__link">Términos</a>
+            <a th:href="@{/privacidad}" class="footer__link">Privacidad</a>
+        </nav>
+    </div>
+</footer>
+</body>
+</html>

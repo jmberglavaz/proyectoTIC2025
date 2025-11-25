@@ -239,12 +239,19 @@
     color: var(--color-primary-dark);
 }
 
-/* Header Layout Mejorado */
-.header__inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
+/* =========================
+   Header / Nav / Footer
+   ========================= */
+.site-header{
+    position: sticky; top: 0; z-index: 100;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: 1rem 0; /* ← AGREGAR PADDING AL HEADER */
+}
+.header__inner{
+    display: flex; align-items: center; justify-content: space-between;
+    /* QUITAR: height: 64px; */
+    min-height: 64px; /* ← MEJOR: altura mínima en lugar de fija */
 }
 
 .header-left {
@@ -347,4 +354,51 @@
     .brand__name {
         font-size: 1.1rem;
     }
+}
+
+/* Estilos para la sección de acceso admin */
+.admin-access-section {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border-top: 3px solid #ffc107;
+    padding: var(--space-8) 0;
+    margin-top: var(--space-8);
+}
+
+.admin-access-card {
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: var(--space-6);
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.admin-access-title {
+    color: #856404;
+    margin-bottom: var(--space-3);
+    font-size: 1.5rem;
+}
+
+.admin-access-text {
+    color: #664d03;
+    margin-bottom: var(--space-5);
+    font-size: 1rem;
+}
+
+/* Botón amarillo/warning */
+.btn--warning {
+    background-color: #ffc107;
+    color: #212529;
+    border: 2px solid #ffc107;
+    font-weight: 600;
+    padding: var(--space-3) var(--space-5);
+    font-size: 1.1rem;
+}
+
+.btn--warning:hover {
+    background-color: #e0a800;
+    border-color: #e0a800;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
 }

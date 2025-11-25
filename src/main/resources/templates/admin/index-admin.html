@@ -11,23 +11,33 @@
   <link rel="stylesheet" th:href="@{/css/pages.css}">
 </head>
 <body>
-  <!-- Header admin -->
-  <header class="site-header">
+<!-- Header admin -->
+<header class="site-header">
     <div class="container header__inner">
-      <a class="brand" th:href="@{/static}">
-        <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
-        <span class="brand__name">PizzUM &amp; BurgUM</span>
-      </a>
-      <nav class="site-nav">
-        <a class="nav__link is-active" th:href="@{/templates/admin}">Panel</a>
-        <a class="nav__link" th:href="@{/admin/productos}">Productos</a>
-        <a class="nav__link" th:href="@{/admin/pedidos}">Pedidos</a>
-        <a class="nav__link" th:href="@{/admin/historial}">Historial</a>
-        <a class="nav__link" th:href="@{/admin/administradores}">Administradores</a>
-        <a class="nav__link" th:href="@{/login}">Cerrar sesión</a>
-      </nav>
+        <a class="brand" th:href="@{/admin}">
+            <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+            <span class="brand__name">PizzUM &amp; BurgUM</span>
+        </a>
+
+        <!-- Info del admin logueado -->
+        <div class="admin-info">
+            <span class="admin-welcome">Hola, <strong th:text="${session.adminNombre}">Admin</strong></span>
+            <form th:action="@{/admin/logout}" method="post" class="logout-form">
+                <button type="submit" class="btn btn--danger btn--small">Cerrar Sesión</button>
+            </form>
+        </div>
+
+        <nav class="site-nav">
+            <a class="nav__link is-active" th:href="@{/admin}">Panel</a>
+            <a class="nav__link" th:href="@{/admin/productos}">Productos</a>
+            <a class="nav__link" th:href="@{/admin/pedidos}">Pedidos</a>
+            <a class="nav__link" th:href="@{/admin/historial}">Historial</a>
+            <a class="nav__link" th:href="@{/admin/administradores}">Administradores</a>
+            <a class="nav__link" th:href="@{/admin/tarjetas}">Consulta Tarjetas</a>
+            <a class="nav__link" th:href="@{/admin/organismos-publicos}">Organismos Públicos</a>
+        </nav>
     </div>
-  </header>
+</header>
 
   <main>
     <!-- Título principal -->
@@ -81,7 +91,31 @@
           <a class="btn btn--primary" th:href="@{/admin/administradores}">Gestionar administradores</a>
         </div>
       </article>
+
+        <!-- Consulta de Tarjetas -->
+        <article class="card">
+            <h2>Consulta de Tarjetas</h2>
+            <p class="form-hint">
+                Buscar información de tarjetas de crédito registradas por número de tarjeta.
+            </p>
+            <div class="form-actions">
+                <a class="btn btn--primary" th:href="@{/admin/tarjetas}">Consultar tarjetas</a>
+            </div>
+        </article>
+
+        <!-- Organismos Públicos -->
+        <article class="card">
+            <h2>Organismos Públicos</h2>
+            <p class="form-hint">
+                Servicios para DGI (tickets de venta) y BPS (cantidad de funcionarios).
+            </p>
+            <div class="form-actions">
+                <a class="btn btn--primary" th:href="@{/admin/organismos-publicos}">Servicios Públicos</a>
+            </div>
+        </article>
     </section>
+
+
 
     <!-- Cerrar sesión -->
     <section class="container section">

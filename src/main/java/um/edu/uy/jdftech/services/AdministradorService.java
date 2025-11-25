@@ -8,6 +8,7 @@ import um.edu.uy.jdftech.entitites.Administrador;
 import um.edu.uy.jdftech.repositories.AdministradorRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -49,5 +50,13 @@ public class AdministradorService {
         return administradorRepository.findByFullNameContaining(firstName + " " + lastName);
     }
 
+    public boolean validarLogin(Long cedula, String password) {
+        try {
+            Administrador administrador = findById(cedula);
+            return administrador.getPassword().equals(password);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 }

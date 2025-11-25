@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import um.edu.uy.jdftech.dto.TicketDGIDTO;
 import um.edu.uy.jdftech.entitites.Acompanamiento;
 import um.edu.uy.jdftech.entitites.Bebida;
 import um.edu.uy.jdftech.entitites.Cliente;
@@ -18,9 +19,11 @@ import um.edu.uy.jdftech.repositories.ClienteRepository;
 import um.edu.uy.jdftech.repositories.PedidoRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -39,7 +42,8 @@ public class PedidoService {
     }
 
     public Pedido addDrink(Long pedidoId, Long bebidaId) {
-        Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));;
+        Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));
+        ;
         Bebida bebida = bebidaRepository.findById(bebidaId).orElseThrow(() -> new EntityNotFoundException("Bebida no pudo ser agregada"));
         pedido.getBebidas().add(bebida);
         bebida.getPedidos().add(pedido);
@@ -49,7 +53,8 @@ public class PedidoService {
     }
 
     public Pedido removeDrink(Long pedidoId, Long bebidaId) {
-        Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));;
+        Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));
+        ;
         Bebida bebida = bebidaRepository.findById(bebidaId).orElseThrow(() -> new EntityNotFoundException("Bebida no fue encontrada para eliminarla"));
         pedido.getBebidas().remove(bebida);
         bebida.getPedidos().remove(pedido);
@@ -59,7 +64,8 @@ public class PedidoService {
     }
 
     public Pedido agregarAcompanamiento(Long pedidoId, Long acompanamientoId) {
-        Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));;
+        Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));
+        ;
         Acompanamiento acompanamiento = acompanamientoRepository.findById(acompanamientoId).orElseThrow(() -> new EntityNotFoundException("Acompañamiento no pudo ser agregado"));
         pedido.getAcompanamientos().add(acompanamiento);
         acompanamiento.getPedidos().add(pedido);
@@ -69,7 +75,8 @@ public class PedidoService {
     }
 
     public Pedido removeAcompanamiento(Long pedidoId, Long acompanamientoId) {
-        Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));;
+        Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));
+        ;
         Acompanamiento acompanamiento = acompanamientoRepository.findById(acompanamientoId).orElseThrow(() -> new EntityNotFoundException("Acompañamiento no fue encontrado para eliminarla"));
         pedido.getBebidas().remove(acompanamiento);
         acompanamiento.getPedidos().remove(pedido);
@@ -115,6 +122,7 @@ public class PedidoService {
         // Eliminar el pedido
         pedidoRepository.delete(pedido);
     }
+
     public List<Pedido> findPedidosActivos() {
         try {
             return pedidoRepository.findByStatusIn(List.of(
@@ -131,8 +139,8 @@ public class PedidoService {
         return pedidoRepository.findById(id);
     }
 
-            // Obtener todos los pedidos de un cliente
-    public List<Pedido> obtenerPedidosCliente (Cliente cliente){
+    // Obtener todos los pedidos de un cliente
+    public List<Pedido> obtenerPedidosCliente(Cliente cliente) {
         return pedidoRepository.findByClientIdOrderByDateDesc(cliente.getId());
     }
 
@@ -232,4 +240,73 @@ public class PedidoService {
         List<Pedido> pedidosActivos = pedidoRepository.findPedidosActivosByClientId(cliente.getId());
         return pedidosActivos.isEmpty() ? Optional.empty() : Optional.of(pedidosActivos.get(0));
     }
+
+    /**
+     * Servicio para DGI - Obtener todos los tickets/pedidos de una fecha específica
+     */
+    public List<TicketDGIDTO> obtenerTicketsPorFecha(LocalDateTime fecha) {
+        LocalDateTime inicioDia = fecha.toLocalDate().atStartOfDay();
+        LocalDateTime finDia = fecha.toLocalDate().atTime(23, 59, 59);
+
+        List<Pedido> pedidos = pedidoRepository.findByDateBetween(inicioDia, finDia);
+
+        return pedidos.stream()
+                .map(this::convertirATicketDGI)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Servicio para DGI - Obtener tickets por rango de fechas
+     */
+    public List<TicketDGIDTO> obtenerTicketsPorRangoFechas(LocalDateTime desde, LocalDateTime hasta) {
+        List<Pedido> pedidos = pedidoRepository.findByDateBetween(desde, hasta);
+
+        return pedidos.stream()
+                .map(this::convertirATicketDGI)
+                .collect(Collectors.toList());
+    }
+
+    private TicketDGIDTO convertirATicketDGI(Pedido pedido) {
+        List<String> items = new ArrayList<>();
+
+        // Agregar pizzas
+        if (pedido.getPizzas() != null) {
+            pedido.getPizzas().forEach(pizza ->
+                    items.add("Pizza: " + pizza.getClass().getSimpleName())
+            );
+        }
+
+        // Agregar hamburguesas
+        if (pedido.getHamburguesas() != null) {
+            pedido.getHamburguesas().forEach(hamburguesa ->
+                    items.add("Hamburguesa: " + hamburguesa.getClass().getSimpleName())
+            );
+        }
+
+        // Agregar bebidas
+        if (pedido.getBebidas() != null) {
+            pedido.getBebidas().forEach(bebida ->
+                    items.add("Bebida: " + bebida.getName() + " (" + bebida.getSize() + ")")
+            );
+        }
+
+        // Agregar acompañamientos
+        if (pedido.getAcompanamientos() != null) {
+            pedido.getAcompanamientos().forEach(acompanamiento ->
+                    items.add("Acompañamiento: " + acompanamiento.getName() + " (" + acompanamiento.getSize() + ")")
+            );
+        }
+
+        return TicketDGIDTO.builder()
+                .id(pedido.getId())
+                .fecha(pedido.getDate())
+                .clienteNombre(pedido.getClient().getFirstName() + " " + pedido.getClient().getLastName())
+                .clienteCedula(pedido.getClient().getId().toString())
+                .clienteEmail(pedido.getClient().getEmail())
+                .total(pedido.getTotalCost())
+                .estado(pedido.getStatus())
+                .items(items)
+                .build();
+    }
+
 }
