@@ -147,6 +147,9 @@ public class PedidoService {
 
     public List<Pedido> findWithFilters(String numero, String clienteId, String estado,
                                         String tipo, String desde, String hasta) {
+        System.out.println("=== FIND WITH FILTERS ===");
+        System.out.println("numero: " + numero + ", clienteId: " + clienteId + ", estado: " + estado);
+
         try {
             // Convertir parámetros
             Long numeroLong = null;
