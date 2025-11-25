@@ -20,6 +20,22 @@ public class PedidoClienteController {
 
     private final PedidoService pedidoService;
 
+//    @GetMapping
+//    public String misPedidos(HttpSession session, Model model) {
+//        Cliente cliente = (Cliente) session.getAttribute("cliente");
+//        if (cliente == null) {
+//            return "redirect:/login";
+//        }
+//
+//        // Obtener los últimos 10 pedidos del cliente ordenados por fecha DESC
+//        List<Pedido> pedidos = pedidoService.findUltimosPedidosByClienteWithDetails(cliente.getId(), 10);
+//
+//        model.addAttribute("pedidos", pedidos);
+//        model.addAttribute("cliente", cliente);
+//
+//        return "user/mis-pedidos";
+//    }
+
     @GetMapping
     public String misPedidos(HttpSession session, Model model) {
         Cliente cliente = (Cliente) session.getAttribute("cliente");
@@ -27,7 +43,7 @@ public class PedidoClienteController {
             return "redirect:/login";
         }
 
-        // Obtener los últimos 10 pedidos del cliente ordenados por fecha DESC
+        // Obtener solo información básica de los pedidos (sin cargar relaciones pesadas)
         List<Pedido> pedidos = pedidoService.findUltimosPedidosByCliente(cliente.getId(), 10);
 
         model.addAttribute("pedidos", pedidos);

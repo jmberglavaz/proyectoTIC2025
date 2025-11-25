@@ -44,90 +44,47 @@
             Mostrando tus últimos <span th:text="${pedidos.size()}">10</span> pedidos
         </p>
 
-        <!-- Lista de Pedidos -->
+        <!-- Lista de Pedidos Simplificada -->
         <div class="pedidos-list" th:if="${pedidos != null and !pedidos.isEmpty()}">
             <div th:each="pedido : ${pedidos}" class="pedido-card">
-                <div class="pedido-header">
-                    <div class="pedido-info">
-                        <h3 class="pedido-numero">Pedido #<span th:text="${pedido.id}">123</span></h3>
-                        <p class="pedido-fecha" th:text="${#temporals.format(pedido.date, 'dd/MM/yyyy HH:mm')}">
-                            24/11/2025 20:18
-                        </p>
-                        <p class="pedido-direccion" th:if="${pedido.direccion != null}">
-                            📍 <span th:text="${pedido.direccion.alias}">Casa</span>:
-                            <span th:text="${pedido.direccion.address}">Av. Siempre Viva 742</span>
-                        </p>
-                    </div>
-                    <div class="pedido-estado">
-                        <span th:classappend="'estado-badge estado--' + ${pedido.status?.name()?.toLowerCase()}"
-                              class="estado-badge">
-                            <th:block th:text="${pedido.status?.displayName}">En cola</th:block>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="pedido-content">
-                    <!-- Pizzas -->
-                    <div class="pedido-items" th:if="${pedido.pizzas != null and !pedido.pizzas.isEmpty()}">
-                        <h4>🍕 Pizzas:</h4>
-                        <ul class="items-list">
-                            <li th:each="pizza : ${pedido.pizzas}" class="item">
-                                <span class="item-nombre" th:text="${pizza.nombre}">Pizza Personalizada</span>
-                                <span class="item-precio" th:text="'$' + ${#numbers.formatDecimal(pizza.precioTotal, 1, 2)}">$450.00</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Hamburguesas -->
-                    <div class="pedido-items" th:if="${pedido.hamburguesas != null and !pedido.hamburguesas.isEmpty()}">
-                        <h4>🍔 Hamburguesas:</h4>
-                        <ul class="items-list">
-                            <li th:each="hamburguesa : ${pedido.hamburguesas}" class="item">
-                                <span class="item-nombre" th:text="${hamburguesa.nombre}">Hamburguesa Personalizada</span>
-                                <span class="item-precio" th:text="'$' + ${#numbers.formatDecimal(hamburguesa.precioTotal, 1, 2)}">$380.00</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Bebidas -->
-                    <div class="pedido-items" th:if="${pedido.bebidas != null and !pedido.bebidas.isEmpty()}">
-                        <h4>🥤 Bebidas:</h4>
-                        <ul class="items-list">
-                            <li th:each="bebida : ${pedido.bebidas}" class="item">
-                                <span class="item-nombre" th:text="${bebida.nombre}">Coca-Cola 500ml</span>
-                                <span class="item-precio" th:text="'$' + ${#numbers.formatDecimal(bebida.price, 1, 2)}">$120.00</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Acompañamientos -->
-                    <div class="pedido-items" th:if="${pedido.acompanamientos != null and !pedido.acompanamientos.isEmpty()}">
-                        <h4>🍟 Acompañamientos:</h4>
-                        <ul class="items-list">
-                            <li th:each="acompanamiento : ${pedido.acompanamientos}" class="item">
-                                <span class="item-nombre" th:text="${acompanamiento.nombre}">Papas Fritas</span>
-                                <span class="item-precio" th:text="'$' + ${#numbers.formatDecimal(acompanamiento.price, 1, 2)}">$150.00</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="pedido-totals">
-                        <div class="total-line">
-                            <span>Total:</span>
-                            <strong class="total-amount" th:text="'$' + ${#numbers.formatDecimal(pedido.totalCost, 1, 2)}">
-                                $850.00
-                            </strong>
+                <a th:href="@{/pedido/{id}(id=${pedido.id})}" class="pedido-link" style="text-decoration: none; color: inherit;">
+                    <div class="pedido-header">
+                        <div class="pedido-info">
+                            <h3 class="pedido-numero">Pedido #<span th:text="${pedido.id}">123</span></h3>
+                            <p class="pedido-fecha" th:text="${#temporals.format(pedido.date, 'dd/MM/yyyy HH:mm')}">
+                                24/11/2025 20:18
+                            </p>
+                            <p class="pedido-direccion" th:if="${pedido.direccion != null}">
+                                📍 <span th:text="${pedido.direccion.alias}">Casa</span>
+                            </p>
+                        </div>
+                        <div class="pedido-estado">
+                            <span th:classappend="'estado-badge estado--' + ${pedido.status?.name()?.toLowerCase()}"
+                                  class="estado-badge">
+                                <th:block th:text="${pedido.status?.displayName}">En cola</th:block>
+                            </span>
                         </div>
                     </div>
-                </div>
 
-                <div class="pedido-actions">
-                    <a th:href="@{/pedido/{id}(id=${pedido.id})}" class="btn btn--primary btn--small">
-                        📋 Ver Detalles
-                    </a>
+                    <div class="pedido-content-simple" style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                        <div class="pedido-totals">
+                            <div class="total-line" style="background: none; border: none; padding: 0;">
+                                <span style="font-weight: 600;">Total:</span>
+                                <strong class="total-amount" th:text="'$' + ${#numbers.formatDecimal(pedido.totalCost, 1, 2)}">
+                                    $850.00
+                                </strong>
+                            </div>
+                        </div>
+                        <div class="pedido-arrow" style="font-size: 1.5rem; color: var(--color-primary);">
+                            <span>→</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Solo mostrar botón de cancelar si está en estado cancelable -->
+                <div class="pedido-actions" th:if="${pedido.status.name() == 'EN_COLA' or pedido.status.name() == 'EN_PREPARACION'}">
                     <form th:action="@{/pedido/{id}/cancelar(id=${pedido.id})}" method="post"
-                          class="action-form"
-                          th:if="${pedido.status.name() == 'EN_COLA' or pedido.status.name() == 'EN_PREPARACION'}">
+                          class="action-form">
                         <button type="submit" class="btn btn--danger btn--small"
                                 onclick="return confirm('¿Estás seguro de que quieres cancelar este pedido?')">
                             🗑️ Cancelar
