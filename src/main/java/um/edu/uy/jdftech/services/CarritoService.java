@@ -1,14 +1,14 @@
 package um.edu.uy.jdftech.services;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import um.edu.uy.jdftech.dto.CarritoItemDTO;
 import um.edu.uy.jdftech.entitites.*;
 import um.edu.uy.jdftech.repositories.*;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +48,7 @@ public class CarritoService {
     @Transactional
     public CarritoItem agregarProducto(Carrito carrito, Long productoId, String tipoProducto, Integer cantidad) {
         // Verificar que el producto existe y obtener su precio
-        BigDecimal precioUnitario = obtenerPrecioProducto(productoId, tipoProducto);
+        Double precioUnitario = obtenerPrecioProducto(productoId, tipoProducto);
 
         // Buscar si ya existe el item en el carrito
         Optional<CarritoItem> itemExistente = carritoItemRepository
@@ -78,11 +78,11 @@ public class CarritoService {
     public CarritoItem actualizarCantidad(Long itemId, Integer nuevaCantidad) {
         CarritoItem item = carritoItemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Item no encontrado"));
-        
+
         if (nuevaCantidad <= 0) {
             throw new IllegalArgumentException("La cantidad debe ser mayor a 0");
         }
-        
+
         item.setCantidad(nuevaCantidad);
         return carritoItemRepository.save(item);
     }
@@ -102,32 +102,30 @@ public class CarritoService {
     }
 
     // Calcular total del carrito
-    public BigDecimal calcularTotal(Carrito carrito) {
+    public Double calcularTotal(Carrito carrito) {
         return carrito.calcularTotal();
     }
 
     // Método auxiliar para obtener precio del producto
-    private BigDecimal obtenerPrecioProducto(Long productoId, String tipoProducto) {
+    private Double obtenerPrecioProducto(Long productoId, String tipoProducto) {
         if ("PIZZA".equals(tipoProducto)) {
             Pizza pizza = pizzaRepository.findByIdPizza(productoId)
                     .orElseThrow(() -> new RuntimeException("Pizza no encontrada"));
-            return BigDecimal.valueOf(pizza.getPrecioTotal());
+            return pizza.getPrecioTotal();
         } else if ("HAMBURGUESA".equals(tipoProducto)) {
             Hamburguesa hamburguesa = hamburguesaRepository.findByIdHamburguesa(productoId)
                     .orElseThrow(() -> new RuntimeException("Hamburguesa no encontrada"));
-            return BigDecimal.valueOf(hamburguesa.getPrecioTotal());
+            return hamburguesa.getPrecioTotal();
         } else {
             throw new IllegalArgumentException("Tipo de producto no válido: " + tipoProducto);
         }
     }
 
-    private final List<um.edu.uy.jdftech.dto.CarritoItem> items = new ArrayList<>();
+    // Retorna la lista de items en memoria
+    @Getter
+    private final List<CarritoItemDTO> items = new ArrayList<>();
 
-    public List<um.edu.uy.jdftech.dto.CarritoItem> getItems() {
-        return Collections.unmodifiableList(items);
-    }
-
-    public void addItem(um.edu.uy.jdftech.dto.CarritoItem item) {
+    public void addItem(CarritoItemDTO item) {
         items.add(item);
     }
 
@@ -136,7 +134,7 @@ public class CarritoService {
     }
 
     public void updateQuantity(String id, int cantidad) {
-        Optional<um.edu.uy.jdftech.dto.CarritoItem> item = items.stream()
+        Optional<CarritoItemDTO> item = items.stream()
                 .filter(i -> i.getId().equals(id))
                 .findFirst();
         item.ifPresent(i -> i.setCantidad(cantidad));
@@ -144,11 +142,13 @@ public class CarritoService {
 
     public double getSubtotal() {
         return items.stream()
-                .mapToDouble(um.edu.uy.jdftech.dto.CarritoItem::getSubtotal)
+                .mapToDouble(CarritoItemDTO::getSubtotal)
                 .sum();
     }
 
     public void clear() {
         items.clear();
+        System.out.println("🧹 Carrito en memoria limpiado");
+
     }
 }

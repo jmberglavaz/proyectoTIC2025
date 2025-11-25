@@ -62,13 +62,13 @@ public class PedidoController {
         model.addAttribute("pedido", pedido);
         model.addAttribute("cliente", cliente);
         model.addAttribute("page", "pedido");
-        
+
         // Estados para el timeline
         model.addAttribute("enCola", pedido.getStatus() == EstadoPedido.EN_COLA);
         model.addAttribute("enPreparacion", pedido.getStatus() == EstadoPedido.EN_PREPARACION);
         model.addAttribute("enCamino", pedido.getStatus() == EstadoPedido.EN_CAMINO);
         model.addAttribute("entregado", pedido.getStatus() == EstadoPedido.ENTREGADO);
-        
+
         return "user/pedido";
     }
 
@@ -79,8 +79,7 @@ public class PedidoController {
                                  RedirectAttributes ra) {
         try {
             Pedido pedido = pedidoService.obtenerPedidoPorId(pedidoId);
-            
-            // Verificar que el pedido pertenezca al cliente actual
+
             Cliente cliente = obtenerClienteActual(session);
             if (!pedido.getClient().getId().equals(cliente.getId())) {
                 ra.addFlashAttribute("error", "No autorizado");
@@ -89,13 +88,13 @@ public class PedidoController {
 
             pedidoService.cancelarPedido(pedidoId);
             ra.addFlashAttribute("msg", "Pedido cancelado exitosamente");
-            return "redirect:/"; // Va al home después de cancelar
-            
+            return "redirect:/pedido/" + pedidoId; // mostrar el pedido cancelado
         } catch (RuntimeException e) {
             ra.addFlashAttribute("error", e.getMessage());
             return "redirect:/pedido/" + pedidoId;
         }
     }
+
 
     // POST: Cambiar estado del pedido (solo para testing/admin)
     @PostMapping("/{pedidoId}/cambiar-estado")

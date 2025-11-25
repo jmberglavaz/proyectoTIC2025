@@ -3,7 +3,7 @@ package um.edu.uy.jdftech.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import um.edu.uy.jdftech.dto.CarritoItem;
+import um.edu.uy.jdftech.dto.CarritoItemDTO;
 import um.edu.uy.jdftech.services.CarritoService;
 
 @Controller

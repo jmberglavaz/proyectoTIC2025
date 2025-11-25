@@ -10,6 +10,7 @@ import um.edu.uy.jdftech.enums.EstadoPedido;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
@@ -63,4 +64,11 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     // Buscar pedidos ACTIVOS de un cliente (EN_COLA, EN_PREPARACION, EN_CAMINO)
     @Query("SELECT p FROM Pedido p WHERE p.client.id = :clientId AND p.status IN (um.edu.uy.jdftech.enums.EstadoPedido.EN_COLA, um.edu.uy.jdftech.enums.EstadoPedido.EN_PREPARACION, um.edu.uy.jdftech.enums.EstadoPedido.EN_CAMINO) ORDER BY p.date DESC")
     List<Pedido> findPedidosActivosByClientId(@Param("clientId") Long clientId);
+
+    @Query("SELECT p FROM Pedido p " +
+            "LEFT JOIN FETCH p.direccion " +
+            "LEFT JOIN FETCH p.medioDePago " +
+            "LEFT JOIN FETCH p.client " +
+            "WHERE p.id = :pedidoId")
+    Optional<Pedido> findByIdWithDetails(@Param("pedidoId") Long pedidoId);
 }

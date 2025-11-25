@@ -8,10 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import um.edu.uy.jdftech.dto.TicketDGIDTO;
-import um.edu.uy.jdftech.entitites.Acompanamiento;
-import um.edu.uy.jdftech.entitites.Bebida;
-import um.edu.uy.jdftech.entitites.Cliente;
-import um.edu.uy.jdftech.entitites.Pedido;
+import um.edu.uy.jdftech.entitites.*;
 import um.edu.uy.jdftech.enums.EstadoPedido;
 import um.edu.uy.jdftech.repositories.AcompanamientoRepository;
 import um.edu.uy.jdftech.repositories.BebidaRepository;
@@ -112,16 +109,17 @@ public class PedidoService {
     }
 
     // Cancelar pedido (solo si está EN_COLA)
-    public void cancelarPedido(Long pedidoId) {
+    public Pedido cancelarPedido(Long pedidoId) {
         Pedido pedido = obtenerPedidoPorId(pedidoId);
 
         if (pedido.getStatus() != EstadoPedido.EN_COLA) {
-            throw new RuntimeException("Solo se pueden cancelar pedidos en estado EN_COLA");
+            throw new RuntimeException("Solo se pueden cancelar pedidos en cola");
         }
 
-        // Eliminar el pedido
-        pedidoRepository.delete(pedido);
+        pedido.setStatus(EstadoPedido.CANCELADO);
+        return pedidoRepository.save(pedido);
     }
+
 
     public List<Pedido> findPedidosActivos() {
         try {
@@ -314,6 +312,23 @@ public class PedidoService {
                 .stream()
                 .limit(limite)
                 .collect(Collectors.toList());
+    }
+
+    // Obtener pedido por ID con todos los detalles (para la vista)
+    public Pedido obtenerPedidoConDetalles(Long pedidoId) {
+        Pedido pedido = pedidoRepository.findByIdWithDetails(pedidoId)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con id: " + pedidoId));
+
+        // Inicializar las relaciones faltantes manualmente
+        if (pedido.getHamburguesas() != null) {
+            for (Hamburguesa hamburguesa : pedido.getHamburguesas()) {
+                // Esto fuerza la carga de las relaciones LAZY
+                hamburguesa.getHamburguesaToppings().size();
+                hamburguesa.getHamburguesaAderezos().size();
+            }
+        }
+
+        return pedido;
     }
 
 }

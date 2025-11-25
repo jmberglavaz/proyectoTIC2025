@@ -42,10 +42,10 @@ public class Carrito {
     }
     
     // Calcular total del carrito
-    public BigDecimal calcularTotal() {
+    public Double calcularTotal() {
         return items.stream()
-                .map(CarritoItem::calcularSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .mapToDouble(CarritoItem::calcularSubtotal)
+                .sum();
     }
     
     // Limpiar carrito
