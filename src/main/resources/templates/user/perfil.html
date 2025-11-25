@@ -27,7 +27,7 @@
         <div class="header-right">
             <div class="user-info">
                 <a th:href="@{/perfil}" class="user-link" style="text-decoration: none; color: inherit;">
-                    <span>Hola, <strong th:text="${session.clienteNombre}">Usuario</strong></span>
+                    <span>Hola, <strong th:text="${session.clienteNombre}"></strong></span>
                 </a>
                 <form th:action="@{/logout}" method="post" class="logout-form">
                     <button type="submit" class="btn btn--link">Cerrar Sesión</button>
@@ -40,6 +40,17 @@
 <main class="container">
     <div class="profile-container">
         <h1 class="page-title">Mi Perfil</h1>
+
+        <!-- Mensajes Flash -->
+        <div th:if="${success}" class="alert alert--success">
+            <span class="alert__icon">✅</span>
+            <span class="alert__message" th:text="${success}"></span>
+        </div>
+
+        <div th:if="${error}" class="alert alert--error">
+            <span class="alert__icon">❌</span>
+            <span class="alert__message" th:text="${error}"></span>
+        </div>
 
         <!-- Información Personal -->
         <section class="profile-section">
@@ -79,7 +90,7 @@
                 <div class="form-group">
                     <label for="nuevaPassword">Nueva Contraseña:</label>
                     <input type="password" id="nuevaPassword" name="nuevaPassword"
-                           class="form-input" required placeholder="Ingresa nueva contraseña">
+                           class="form-input" required>
                 </div>
                 <button type="submit" class="btn btn--primary">Actualizar Contraseña</button>
             </form>
@@ -87,9 +98,7 @@
 
         <!-- Direcciones -->
         <section class="profile-section">
-            <div class="section-header">
-                <h2 class="section-title">Mis Direcciones</h2>
-            </div>
+            <h2 class="section-title">Mis Direcciones</h2>
 
             <!-- Agregar Nueva Dirección -->
             <div class="add-address-card">
@@ -99,21 +108,20 @@
                         <div class="form-group">
                             <label for="alias">Alias (ej: Casa, Trabajo):</label>
                             <input type="text" id="alias" th:field="*{alias}"
-                                   class="form-input" required placeholder="Casa">
+                                   class="form-input" required>
                         </div>
                         <div class="form-group">
                             <label for="address">Dirección Completa:</label>
                             <input type="text" id="address" th:field="*{address}"
-                                   class="form-input" required placeholder="Calle, número, ciudad">
+                                   class="form-input" required>
                         </div>
                         <div class="form-group full-width">
                             <label for="indications">Indicaciones Adicionales:</label>
                             <textarea id="indications" th:field="*{indications}"
-                                      class="form-input" rows="3"
-                                      placeholder="Instrucciones para el delivery"></textarea>
+                                      class="form-input" rows="4"></textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn--primary">Agregar Dirección</button>
+                    <button type="submit" class="btn btn--primary">➕ Agregar Dirección</button>
                 </form>
             </div>
 
@@ -123,7 +131,7 @@
                     <div class="address-header">
                         <h3 class="address-alias" th:text="${direccion.alias}"></h3>
                         <div class="address-badges">
-                            <span th:if="${direccion.defect}" class="badge badge--primary">Predeterminada</span>
+                            <span th:if="${direccion.isDefect}" class="badge badge--primary">📍 Predeterminada</span>
                         </div>
                     </div>
                     <p class="address-text" th:text="${direccion.address}"></p>
@@ -134,27 +142,113 @@
                         <form th:action="@{/perfil/direcciones/{id}/default(id=${direccion.id})}"
                               method="post" class="action-form">
                             <button type="submit" class="btn btn--outline"
-                                    th:disabled="${direccion.defect}">
-                                <span th:if="${!direccion.defect}">Establecer como Predeterminada</span>
-                                <span th:if="${direccion.defect}">Ya es Predeterminada</span>
+                                    th:classappend="${direccion.isDefect} ? 'btn--primary' : 'btn--outline'"
+                                    th:disabled="${direccion.isDefect}">
+                                <span th:if="${!direccion.isDefect}">🎯 Establecer como Predeterminada</span>
+                                <span th:if="${direccion.isDefect}">✅ Ya es Predeterminada</span>
                             </button>
                         </form>
 
                         <form th:action="@{/perfil/direcciones/{id}/delete(id=${direccion.id})}"
                               method="post" class="action-form"
-                              th:if="${!direccion.defect or direcciones.size() > 1}">
+                              th:if="${!direccion.isDefect or direcciones.size() > 1}">
                             <button type="submit" class="btn btn--danger"
                                     onclick="return confirm('¿Estás seguro de que quieres eliminar esta dirección?')">
-                                Eliminar
+                                🗑️ Eliminar Dirección
                             </button>
                         </form>
                     </div>
                 </div>
 
                 <div th:if="${#lists.isEmpty(direcciones)}" class="empty-state">
-                    <p>No tienes direcciones registradas. Agrega una para empezar.</p>
+                    <p>📭 No tienes direcciones registradas</p>
+                    <p class="empty-state__text">Agrega tu primera dirección para recibir tus pedidos</p>
                 </div>
             </div>
+        </section>
+
+        <!-- Medios de Pago -->
+        <section class="profile-section">
+            <h2 class="section-title">Mis Medios de Pago</h2>
+
+            <!-- Medios de Pago - Versión Simplificada -->
+            <section class="profile-section">
+                <h2 class="section-title">Mis Medios de Pago</h2>
+
+                <!-- Agregar Nueva Tarjeta (mantenemos igual) -->
+                <div class="add-card-card">
+                    <h3>Agregar Nueva Tarjeta</h3>
+                    <form th:action="@{/perfil/medios-pago}" method="post">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="cardNumber">Número de Tarjeta:</label>
+                                <input type="text" id="cardNumber" name="cardNumber" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV:</label>
+                                <input type="text" id="cvv" name="cvv" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="firstNameOnCard">Nombre en la Tarjeta:</label>
+                                <input type="text" id="firstNameOnCard" name="firstNameOnCard" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastNameOnCard">Apellido en la Tarjeta:</label>
+                                <input type="text" id="lastNameOnCard" name="lastNameOnCard" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="expirationMonth">Mes de Vencimiento:</label>
+                                <input type="text" id="expirationMonth" name="expirationMonth" class="form-input" required placeholder="MM" inputmode="numeric" pattern="[0-9]{1,2}">
+                            </div>
+                            <div class="form-group">
+                                <label for="expirationYear">Año de Vencimiento:</label>
+                                <input type="text" id="expirationYear" name="expirationYear" class="form-input" required placeholder="AA o AAAA" inputmode="numeric" pattern="[0-9]{2,4}">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn--primary">💳 Agregar Tarjeta</button>
+                    </form>
+                </div>
+
+                <!-- Lista Simplificada de Tarjetas -->
+                <div class="simple-cards-list">
+                    <h3>Tus Tarjetas:</h3>
+
+                    <div th:each="tarjeta : ${mediosDePago}" class="simple-card-item"
+                         style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background: #f9f9f9;">
+
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>
+                                    <span th:if="${tarjeta.cardNumber.toString().startsWith('4')}">💳 Visa</span>
+                                    <span th:if="${tarjeta.cardNumber.toString().startsWith('5')}">💳 Mastercard</span>
+                                    <span th:if="${!tarjeta.cardNumber.toString().startsWith('4') and !tarjeta.cardNumber.toString().startsWith('5')}">💳 Otra</span>
+                                </strong>
+                                - ****<span th:text="${#strings.substring(tarjeta.cardNumber.toString(), #strings.length(tarjeta.cardNumber.toString()) - 4)}"></span>
+                                <br>
+                                <small>
+                                    <span th:text="${tarjeta.firstNameOnCard}"></span>
+                                    <span th:text="${tarjeta.lastNameOnCard}"></span>
+                                    • Vence: <span th:text="${#temporals.format(tarjeta.expirationDate, 'MM/yyyy')}"></span>
+                                </small>
+                            </div>
+
+                            <form th:action="@{/perfil/medios-pago/{cardNumber}/delete(cardNumber=${tarjeta.cardNumber})}"
+                                  method="post" style="margin: 0;">
+                                <button type="submit" class="btn btn--danger"
+                                        onclick="return confirm('¿Estás seguro de que quieres eliminar esta tarjeta?')"
+                                        style="padding: 5px 10px; font-size: 12px;">
+                                    🗑️ Eliminar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(mediosDePago)}" class="empty-state">
+                        <p>💳 No tienes tarjetas registradas</p>
+                        <p class="empty-state__text">Agrega una tarjeta para pagar tus pedidos más rápido</p>
+                    </div>
+                </div>
+            </section>
         </section>
     </div>
 </main>

@@ -57,30 +57,27 @@ public class ValidacionDeMetodoDePago {
     private boolean validarNroDeTarjeta(Long nroDeTarjeta) {
         char[] arrayNroDeTarjeta = nroDeTarjeta.toString().toCharArray();
         int[] arrayNrosACheckear = new int[arrayNroDeTarjeta.length];
-        
-        for (int i = arrayNroDeTarjeta.length - 2; i >= 0; i-=2) {
-            int intValue = Character.getNumericValue(arrayNroDeTarjeta[i]);
-            intValue = intValue * 2;
-            if (String.valueOf(intValue).length() > 1) {
-                char[] arrayValue = String.valueOf(intValue).toCharArray();
-                int sumValue = 0;
-                for (char c : arrayValue) {
-                    sumValue += Character.getNumericValue(c);
-                }
-                intValue = sumValue;
+
+        // Copiar todos los dígitos primero
+        for (int i = 0; i < arrayNroDeTarjeta.length; i++) {
+            arrayNrosACheckear[i] = Character.getNumericValue(arrayNroDeTarjeta[i]);
+        }
+
+        // Aplicar Luhn: duplicar cada segundo dígito empezando desde la derecha
+        for (int i = arrayNroDeTarjeta.length - 2; i >= 0; i -= 2) {
+            int intValue = arrayNrosACheckear[i] * 2;
+            if (intValue > 9) {
+                intValue = intValue - 9; // Equivalente a sumar los dígitos
             }
             arrayNrosACheckear[i] = intValue;
         }
 
         int verifySum = 0;
-        for (int count = 0; count <= arrayNrosACheckear.length; count++) {
+        for (int count = 0; count < arrayNrosACheckear.length; count++) {
             verifySum += arrayNrosACheckear[count];
         }
 
-        if (verifySum % 10 == 0) {
-            return true;
-        }
-        return false;
+        return verifySum % 10 == 0;
     }
 
 

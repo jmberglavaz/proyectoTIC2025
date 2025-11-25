@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class BPSResponseDTO {
     private int cantidadFuncionarios;
     private String fechaConsulta;
-    private String empresa = "PizzUM & BurgUM";
 }

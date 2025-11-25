@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mis Pedidos - PizzUM & BurgUM</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/pages.css}">
+</head>
+<body class="theme-italian">
+<header class="site-header">
+    <div class="container header__inner">
+        <div class="header-left">
+            <a class="brand" th:href="@{/}">
+                <img th:src="@{/img/logo.png}" alt="PizzUM &amp; BurgUM" class="brand__logo">
+                <span class="brand__name">PizzUM &amp; BurgUM</span>
+            </a>
+        </div>
+        <nav class="site-nav">
+            <a class="nav__link" th:href="@{/crear-pizza}">Crear pizza</a>
+            <a class="nav__link" th:href="@{/crear-burger}">Crear hamburguesa</a>
+            <a class="nav__link" th:href="@{/carrito}">Carrito</a>
+            <a class="nav__link is-active" th:href="@{/mis-pedidos}">Mis Pedidos</a>
+        </nav>
+        <div class="header-right">
+            <div class="user-info">
+                <a th:href="@{/perfil}" class="user-link">
+                    <span>Hola, <strong th:text="${session.clienteNombre}">Usuario</strong></span>
+                </a>
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="btn btn--link">Cerrar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <div class="pedidos-container">
+        <h1 class="page-title">Mis Pedidos</h1>
+        <p class="page-subtitle" th:if="${pedidos != null and !pedidos.isEmpty()}">
+            Mostrando tus últimos <span th:text="${pedidos.size()}">10</span> pedidos
+        </p>
+
+        <!-- Lista de Pedidos -->
+        <div class="pedidos-list" th:if="${pedidos != null and !pedidos.isEmpty()}">
+            <div th:each="pedido : ${pedidos}" class="pedido-card">
+                <div class="pedido-header">
+                    <div class="pedido-info">
+                        <h3 class="pedido-numero">Pedido #<span th:text="${pedido.id}">123</span></h3>
+                        <p class="pedido-fecha" th:text="${#temporals.format(pedido.date, 'dd/MM/yyyy HH:mm')}">
+                            24/11/2025 20:18
+                        </p>
+                        <p class="pedido-direccion" th:if="${pedido.direccion != null}">
+                            📍 <span th:text="${pedido.direccion.alias}">Casa</span>:
+                            <span th:text="${pedido.direccion.address}">Av. Siempre Viva 742</span>
+                        </p>
+                    </div>
+                    <div class="pedido-estado">
+                        <span th:classappend="'estado-badge estado--' + ${pedido.status?.name()?.toLowerCase()}"
+                              class="estado-badge">
+                            <th:block th:text="${pedido.status?.displayName}">En cola</th:block>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="pedido-content">
+                    <!-- Pizzas -->
+                    <div class="pedido-items" th:if="${pedido.pizzas != null and !pedido.pizzas.isEmpty()}">
+                        <h4>🍕 Pizzas:</h4>
+                        <ul class="items-list">
+                            <li th:each="pizza : ${pedido.pizzas}" class="item">
+                                <span class="item-nombre" th:text="${pizza.nombre}">Pizza Personalizada</span>
+                                <span class="item-precio" th:text="'$' + ${#numbers.formatDecimal(pizza.precioTotal, 1, 2)}">$450.00</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Hamburguesas -->
+                    <div class="pedido-items" th:if="${pedido.hamburguesas != null and !pedido.hamburguesas.isEmpty()}">
+                        <h4>🍔 Hamburguesas:</h4>
+                        <ul class="items-list">
+                            <li th:each="hamburguesa : ${pedido.hamburguesas}" class="item">
+                                <span class="item-nombre" th:text="${hamburguesa.nombre}">Hamburguesa Personalizada</span>
+                                <span class="item-precio" th:text="'$' + ${#numbers.formatDecimal(hamburguesa.precioTotal, 1, 2)}">$380.00</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Bebidas -->
+                    <div class="pedido-items" th:if="${pedido.bebidas != null and !pedido.bebidas.isEmpty()}">
+                        <h4>🥤 Bebidas:</h4>
+                        <ul class="items-list">
+                            <li th:each="bebida : ${pedido.bebidas}" class="item">
+                                <span class="item-nombre" th:text="${bebida.nombre}">Coca-Cola 500ml</span>
+                                <span class="item-precio" th:text="'$' + ${#numbers.formatDecimal(bebida.price, 1, 2)}">$120.00</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Acompañamientos -->
+                    <div class="pedido-items" th:if="${pedido.acompanamientos != null and !pedido.acompanamientos.isEmpty()}">
+                        <h4>🍟 Acompañamientos:</h4>
+                        <ul class="items-list">
+                            <li th:each="acompanamiento : ${pedido.acompanamientos}" class="item">
+                                <span class="item-nombre" th:text="${acompanamiento.nombre}">Papas Fritas</span>
+                                <span class="item-precio" th:text="'$' + ${#numbers.formatDecimal(acompanamiento.price, 1, 2)}">$150.00</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="pedido-totals">
+                        <div class="total-line">
+                            <span>Total:</span>
+                            <strong class="total-amount" th:text="'$' + ${#numbers.formatDecimal(pedido.totalCost, 1, 2)}">
+                                $850.00
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pedido-actions">
+                    <a th:href="@{/pedido/{id}(id=${pedido.id})}" class="btn btn--primary btn--small">
+                        📋 Ver Detalles
+                    </a>
+                    <form th:action="@{/pedido/{id}/cancelar(id=${pedido.id})}" method="post"
+                          class="action-form"
+                          th:if="${pedido.status.name() == 'EN_COLA' or pedido.status.name() == 'EN_PREPARACION'}">
+                        <button type="submit" class="btn btn--danger btn--small"
+                                onclick="return confirm('¿Estás seguro de que quieres cancelar este pedido?')">
+                            🗑️ Cancelar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado vacío -->
+        <div th:if="${pedidos == null or pedidos.isEmpty()}" class="empty-state">
+            <div class="empty-state__icon">📭</div>
+            <h2 class="empty-state__title">Todavía no tenés pedidos</h2>
+            <p class="empty-state__text">Cuando realices tu primer pedido, aparecerá aquí para que puedas seguir su estado.</p>
+            <div class="empty-state__actions">
+                <a th:href="@{/crear-pizza}" class="btn btn--primary">🍕 Crear mi primera pizza</a>
+                <a th:href="@{/crear-burger}" class="btn btn--secondary">🍔 Crear mi primera hamburguesa</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer__inner">
+        <small>&copy; 2025 PizzUM &amp; BurgUM</small>
+        <nav class="footer-nav">
+            <a th:href="@{/ayuda}" class="footer__link">Ayuda</a>
+            <a th:href="@{/terminos}" class="footer__link">Términos</a>
+            <a th:href="@{/privacidad}" class="footer__link">Privacidad</a>
+        </nav>
+    </div>
+</footer>
+</body>
+</html>
