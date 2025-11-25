@@ -998,3 +998,55 @@
         justify-content: center;
     }
 }
+
+/* =========================
+   Mis Pedidos - Estilos específicos
+   ========================= */
+.pedido-link {
+    display: block;
+    padding: var(--space-4);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.pedido-link:hover {
+    background: var(--color-muted);
+    border-radius: var(--radius-md);
+}
+
+.pedido-content-simple {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-3);
+}
+
+.pedido-arrow {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    transition: transform 0.2s ease;
+}
+
+.pedido-link:hover .pedido-arrow {
+    transform: translateX(4px);
+}
+
+/* Asegurar que las tarjetas sean clickeables */
+.pedido-card {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pedido-card:hover {
+    border-color: var(--color-primary-light);
+    box-shadow: var(--shadow-md);
+}
+
+/* Espacio para el botón de cancelar */
+.pedido-actions {
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-muted);
+}

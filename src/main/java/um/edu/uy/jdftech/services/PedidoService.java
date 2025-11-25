@@ -376,4 +376,20 @@ public class PedidoService {
         return pedido;
     }
 
+    public List<Pedido> findUltimosPedidosByClienteWithDetails(Long clienteId, int limite) {
+        List<Pedido> pedidos = pedidoRepository.findByClientIdOrderByDateDesc(clienteId)
+                .stream()
+                .limit(limite)
+                .collect(Collectors.toList());
+
+        // Forzar carga de relaciones para cada pedido
+        for (Pedido pedido : pedidos) {
+            // Usar el método existente que carga todas las relaciones
+            Pedido pedidoConDetalles = obtenerPedidoConDetalles(pedido.getId());
+            // Copiar las relaciones cargadas al pedido original si es necesario
+        }
+
+        return pedidos;
+    }
+
 }
