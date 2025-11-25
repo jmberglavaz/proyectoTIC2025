@@ -309,4 +309,11 @@ public class PedidoService {
                 .build();
     }
 
+    public List<Pedido> findUltimosPedidosByCliente(Long clienteId, int limite) {
+        return pedidoRepository.findByClientIdOrderByDateDesc(clienteId)
+                .stream()
+                .limit(limite)
+                .collect(Collectors.toList());
+    }
+
 }

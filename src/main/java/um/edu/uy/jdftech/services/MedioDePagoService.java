@@ -13,6 +13,8 @@ import um.edu.uy.jdftech.validators.ValidationResult;
 import um.edu.uy.jdftech.dto.TarjetaInfoDTO;
 import um.edu.uy.jdftech.exceptions.EntityNotFoundException;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -52,5 +54,22 @@ public class MedioDePagoService {
 
     public boolean existeTarjeta(Long numeroTarjeta) {
         return medioDePagoRepository.findByCardNumber(numeroTarjeta).isPresent();
+    }
+
+    // MedioDePagoService.java - Agregar estos métodos
+
+    public List<MedioDePago> findByClienteId(Long clienteId) {
+        return medioDePagoRepository.findByClienteId(clienteId);
+    }
+
+    public void deleteByCardNumber(Long cardNumber, Long clienteId) {
+        MedioDePago medio = medioDePagoRepository.findByCardNumber(cardNumber)
+                .orElseThrow(() -> new RuntimeException("Medio de pago no encontrado"));
+
+        if (!medio.getCliente().getId().equals(clienteId)) {
+            throw new RuntimeException("No autorizado");
+        }
+
+        medioDePagoRepository.delete(medio);
     }
 }
