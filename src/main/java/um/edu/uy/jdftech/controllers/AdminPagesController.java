@@ -183,40 +183,91 @@ public class AdminPagesController {
     }
 
     @GetMapping("/historial")
-    public String historial(@RequestParam(required = false) String numero,
-                            @RequestParam(required = false) String clienteId,
-                            @RequestParam(required = false) String estado,
-                            @RequestParam(required = false) String tipo,
-                            @RequestParam(required = false) String desde,
-                            @RequestParam(required = false) String hasta,
+    public String historial(@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
+                            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta,
                             HttpSession session, RedirectAttributes ra, Model model) {
 
         String redireccion = redirigirSiNoAutenticado(session, ra);
         if (redireccion != null) return redireccion;
 
-        List<Pedido> pedidos;
+        try {
+            List<Pedido> pedidos;
 
-        // Si hay filtros aplicados, usarlos
-        if (numero != null || clienteId != null || estado != null || tipo != null || desde != null || hasta != null) {
-            pedidos = pedidoService.findWithFilters(numero, clienteId, estado, tipo, desde, hasta);
-        } else {
-            // Si no hay filtros, mostrar los últimos 10 pedidos ordenados por fecha de creación (más recientes primero)
-            pedidos = pedidoService.findLast10Orders();
+            // Convertir fechas a LocalDateTime si están presentes
+            LocalDateTime desdeDateTime = null;
+            LocalDateTime hastaDateTime = null;
+
+            if (desde != null) {
+                desdeDateTime = desde.atStartOfDay();
+            }
+            if (hasta != null) {
+                hastaDateTime = hasta.atTime(23, 59, 59);
+            }
+
+            // Estados que queremos mostrar: ENTREGADO y CANCELADO
+            List<EstadoPedido> estadosFinalizados = List.of(EstadoPedido.ENTREGADO, EstadoPedido.CANCELADO);
+
+            // SI HAY FILTROS DE FECHA, aplicarlos
+            if (desde != null || hasta != null) {
+                // Si no se especifica una fecha, usar límites por defecto
+                LocalDateTime fechaDesde = desdeDateTime != null ? desdeDateTime : LocalDateTime.of(2020, 1, 1, 0, 0);
+                LocalDateTime fechaHasta = hastaDateTime != null ? hastaDateTime : LocalDateTime.now();
+
+                // Buscar pedidos ENTREGADOS o CANCELADOS en el rango de fechas
+                pedidos = pedidoRepository.findByStatusInAndDateBetween(estadosFinalizados, fechaDesde, fechaHasta);
+            } else {
+                // Si no hay filtros, mostrar todos los pedidos ENTREGADOS o CANCELADOS
+                pedidos = pedidoRepository.findByStatusIn(estadosFinalizados);
+            }
+
+            // Ordenar por fecha descendente
+            if (pedidos != null) {
+                pedidos.sort((p1, p2) -> p2.getDate().compareTo(p1.getDate()));
+
+                // Cargar detalles básicos SIN usar métodos transaccionales
+                for (Pedido pedido : pedidos) {
+                    cargarDetallesBasicosPedido(pedido);
+                }
+            }
+
+            model.addAttribute("pedidos", pedidos != null ? pedidos : Collections.emptyList());
+
+        } catch (Exception e) {
+            System.out.println("ERROR en historial admin: " + e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("pedidos", Collections.emptyList());
+            model.addAttribute("error", "Error al cargar el historial: " + e.getMessage());
         }
 
-        model.addAttribute("pedidos", pedidos != null ? pedidos : Collections.emptyList());
-
-        // Mantener los parámetros en el modelo para que los filtros se mantengan
+        // Mantener los parámetros en el modelo
         model.addAttribute("filtros", Map.of(
-                "numero", numero != null ? numero : "",
-                "clienteId", clienteId != null ? clienteId : "",
-                "estado", estado != null ? estado : "",
-                "tipo", tipo != null ? tipo : "",
-                "desde", desde != null ? desde : "",
-                "hasta", hasta != null ? hasta : ""
+                "desde", desde != null ? desde.toString() : "",
+                "hasta", hasta != null ? hasta.toString() : ""
         ));
 
         return "admin/historial-admin";
+    }
+
+    private void cargarDetallesBasicosPedido(Pedido pedido) {
+        // Fuerza carga de relaciones LAZY básicas
+        if (pedido.getPizzas() != null) {
+            pedido.getPizzas().size();
+        }
+        if (pedido.getHamburguesas() != null) {
+            pedido.getHamburguesas().size();
+        }
+        if (pedido.getBebidas() != null) {
+            pedido.getBebidas().size();
+        }
+        if (pedido.getAcompanamientos() != null) {
+            pedido.getAcompanamientos().size();
+        }
+        if (pedido.getClient() != null) {
+            pedido.getClient().getFirstName(); // Fuerza carga del cliente
+        }
+        if (pedido.getDireccion() != null) {
+            pedido.getDireccion().getAddress(); // Fuerza carga de dirección
+        }
     }
 
     /* ======================
