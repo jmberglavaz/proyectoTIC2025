@@ -69,6 +69,10 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
             "LEFT JOIN FETCH p.direccion " +
             "LEFT JOIN FETCH p.medioDePago " +
             "LEFT JOIN FETCH p.client " +
+            "LEFT JOIN FETCH p.pizzas " +
+            "LEFT JOIN FETCH p.hamburguesas " +
+            "LEFT JOIN FETCH p.bebidas " +
+            "LEFT JOIN FETCH p.acompanamientos " +
             "WHERE p.id = :pedidoId")
     Optional<Pedido> findByIdWithDetails(@Param("pedidoId") Long pedidoId);
 }

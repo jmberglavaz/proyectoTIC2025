@@ -61,11 +61,15 @@
                     <h3>En cola</h3>
                     <p>Tu pedido está en la cola de la cocina.</p>
                     <!-- Cancelar solo en este estado -->
-                    <form th:if="${pedido.status == T(um.edu.uy.jdftech.enums.EstadoPedido).EN_COLA}" class="inline-form" method="post" th:action="@{'/pedido/' + ${pedido.id} + '/cancelar'}">
+                    <form th:if="${pedido.status == T(um.edu.uy.jdftech.enums.EstadoPedido).EN_COLA}"
+                          class="inline-form"
+                          method="post"
+                          th:action="@{'/pedido/' + ${pedido.id} + '/cancelar'}">
                         <button class="btn btn--danger" type="submit">Cancelar pedido</button>
                     </form>
                 </div>
             </li>
+
             <li class="timeline__step" th:classappend="${pedido.status == T(um.edu.uy.jdftech.enums.EstadoPedido).EN_PREPARACION} ? 'is-current' : ''">
                 <div class="timeline__marker"></div>
                 <div class="timeline__content">
@@ -73,6 +77,7 @@
                     <p>Estamos preparando tus productos.</p>
                 </div>
             </li>
+
             <li class="timeline__step" th:classappend="${pedido.status == T(um.edu.uy.jdftech.enums.EstadoPedido).EN_CAMINO} ? 'is-current' : ''">
                 <div class="timeline__marker"></div>
                 <div class="timeline__content">
@@ -80,6 +85,7 @@
                     <p>El repartidor ya salió hacia tu domicilio.</p>
                 </div>
             </li>
+
             <li class="timeline__step" th:classappend="${pedido.status == T(um.edu.uy.jdftech.enums.EstadoPedido).ENTREGADO} ? 'is-current' : ''">
                 <div class="timeline__marker"></div>
                 <div class="timeline__content">
@@ -88,7 +94,7 @@
                 </div>
             </li>
 
-            <!-- Estado cancelado -->
+            <!-- Estado cancelado (se muestra solo si está cancelado) -->
             <li class="timeline__step is-current" th:if="${pedido.status == T(um.edu.uy.jdftech.enums.EstadoPedido).CANCELADO}">
                 <div class="timeline__marker"></div>
                 <div class="timeline__content">
@@ -198,7 +204,9 @@
     <section class="container section">
         <div class="final-actions">
             <a class="btn btn--primary" th:href="@{/}">Volver al inicio</a>
-            <a class="btn btn--ghost" th:href="@{'/pedido/' + ${pedido.id}}">Actualizar estado</a>
+            <form method="post" th:action="@{'/pedido/' + ${pedido.id} + '/actualizar'}" style="display: inline;">
+                <button class="btn btn--ghost" type="submit">Actualizar estado</button>
+            </form>
         </div>
     </section>
 </main>

@@ -1,5 +1,7 @@
 package um.edu.uy.jdftech.enums;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 public enum EstadoPedido {
     EN_COLA("En cola"),
     EN_PREPARACION("En preparación"),

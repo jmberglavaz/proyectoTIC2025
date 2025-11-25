@@ -51,7 +51,7 @@ public class PedidoController {
     public String verPedido(@PathVariable Long pedidoId,
                             HttpSession session,
                             Model model) {
-        Pedido pedido = pedidoService.obtenerPedidoPorId(pedidoId);
+        Pedido pedido = pedidoService.obtenerPedidoConDetalles(pedidoId);
 
         // Verificar que el pedido pertenezca al cliente actual
         Cliente cliente = obtenerClienteActual(session);
@@ -72,13 +72,16 @@ public class PedidoController {
         return "user/pedido";
     }
 
-    // POST: Cancelar pedido (lo borra de la BD)
     @PostMapping("/{pedidoId}/cancelar")
     public String cancelarPedido(@PathVariable Long pedidoId,
                                  HttpSession session,
                                  RedirectAttributes ra) {
         try {
+            System.out.println("=== INTENTANDO CANCELAR PEDIDO " + pedidoId + " ===");
+
             Pedido pedido = pedidoService.obtenerPedidoPorId(pedidoId);
+            System.out.println("Estado actual del pedido: " + pedido.getStatus());
+            System.out.println("¿Está en cola? " + (pedido.getStatus() == EstadoPedido.EN_COLA));
 
             Cliente cliente = obtenerClienteActual(session);
             if (!pedido.getClient().getId().equals(cliente.getId())) {
@@ -87,9 +90,15 @@ public class PedidoController {
             }
 
             pedidoService.cancelarPedido(pedidoId);
+
+            // Verificar que se canceló
+            Pedido pedidoCancelado = pedidoService.obtenerPedidoPorId(pedidoId);
+            System.out.println("Estado después de cancelar: " + pedidoCancelado.getStatus());
+
             ra.addFlashAttribute("msg", "Pedido cancelado exitosamente");
-            return "redirect:/pedido/" + pedidoId; // mostrar el pedido cancelado
+            return "redirect:/pedido/" + pedidoId;
         } catch (RuntimeException e) {
+            System.out.println("ERROR al cancelar: " + e.getMessage());
             ra.addFlashAttribute("error", e.getMessage());
             return "redirect:/pedido/" + pedidoId;
         }
@@ -111,5 +120,11 @@ public class PedidoController {
             ra.addFlashAttribute("error", e.getMessage());
             return "redirect:/pedido/" + pedidoId;
         }
+    }
+
+    @PostMapping("/{pedidoId}/actualizar")
+    public String actualizarPedido(@PathVariable Long pedidoId, HttpSession session) {
+        // Esto fuerza una recarga desde la BD con todas las relaciones
+        return "redirect:/pedido/" + pedidoId;
     }
 }
