@@ -85,15 +85,6 @@ public class AuthPagesController {
                                  @RequestParam String email,
                                  @RequestParam String password,
                                  @RequestParam("password_confirm") String passwordConfirm,
-                                 @RequestParam String domicilio,
-                                 @RequestParam(value = "indicaciones", required = false) String indicaciones,
-                                 // Parámetros de tarjeta (opcionales)
-                                 @RequestParam(value = "tarjeta_numero", required = false) String tarjetaNumero,
-                                 @RequestParam(value = "tarjeta_nombre", required = false) String tarjetaNombre,
-                                 @RequestParam(value = "tarjeta_exp_mes", required = false) String tarjetaExpMes,
-                                 @RequestParam(value = "tarjeta_exp_anio", required = false) String tarjetaExpAnio,
-                                 @RequestParam(value = "tarjeta_cvv", required = false) String tarjetaCvv,
-                                 @RequestParam(value = "guardar_tarjeta", required = false) String guardarTarjeta,
                                  RedirectAttributes ra) {
 
         try {
@@ -117,21 +108,8 @@ public class AuthPagesController {
                     .phoneNumber(telefono)
                     .build();
 
-            // Guardar cliente primero
+            // Guardar cliente sin dirección (se agregará después)
             Cliente clienteGuardado = clienteService.crear(nuevoCliente);
-
-            // Crear y agregar dirección (usando la nueva estructura)
-            if (domicilio != null && !domicilio.trim().isEmpty()) {
-                Direccion direccion = Direccion.builder()
-                        .address(domicilio.trim()) // Usamos el domicilio completo como address
-                        .indications(indicaciones != null ? indicaciones.trim() : null)
-                        .alias("Casa") // Dirección principal
-                        .isDefect(true) // Es la dirección por defecto
-                        .cliente(clienteGuardado)
-                        .build();
-
-                clienteGuardado.agregarDireccion(direccion);
-            }
 
             ra.addFlashAttribute("msg", "¡Cuenta creada exitosamente! Ahora podés iniciar sesión con tu cédula.");
             return "redirect:/login";
