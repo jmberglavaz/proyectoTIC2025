@@ -33,7 +33,7 @@
 
     <!-- Carrito vacío -->
     <div th:if="${#lists.isEmpty(items)}" class="empty-state" aria-live="polite">
-      <img class="empty-state__img" th:src="@{/img/empty-cart.svg}" alt="Carrito vacío">
+      <img class="empty-state__img" th:src="@{/img/carrito-vacio-illustration.png}" alt="Carrito vacío">
       <p class="empty-state__text">Tu carrito está vacío.</p>
       <div class="empty-state__actions">
         <a class="btn btn--primary" th:href="@{/crear-pizza}">Crear una pizza</a>
